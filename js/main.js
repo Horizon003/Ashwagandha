@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initChemTooltips();
   initMedProgressBars();
   initTradCards();
+  initMisconceptionCards();
   initAccordion();
   initViewer360();
   initStatCounters();
@@ -337,6 +338,26 @@ function initTradCards() {
   });
 }
 
+
+/* ────────────────────────────────────────────────
+   11B. MISCONCEPTION CARDS (tap/click to flip repeatedly)
+──────────────────────────────────────────────── */
+function initMisconceptionCards() {
+  document.querySelectorAll('.flip-card').forEach(card => {
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+
+    const toggle = (event) => {
+      if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
+      if (event.type === 'keydown') event.preventDefault();
+      card.classList.toggle('is-flipped');
+    };
+
+    card.addEventListener('click', toggle);
+    card.addEventListener('keydown', toggle);
+  });
+}
+
 /* ────────────────────────────────────────────────
    12. ACCORDION
 ──────────────────────────────────────────────── */
@@ -369,78 +390,107 @@ function initAccordion() {
    — NO scroll interaction (as required)
 ──────────────────────────────────────────────── */
 function initViewer360() {
-  const stage    = document.getElementById('viewer-stage');
-  const img      = document.getElementById('viewer-img');
-  const slider   = document.getElementById('viewer-slider');
+  const stage = document.getElementById('viewer-stage');
+  const img = document.getElementById('viewer-img');
+  const slider = document.getElementById('viewer-slider');
   const resetBtn = document.getElementById('viewer-reset');
   const frameNum = document.getElementById('viewer-frame-num');
   if (!stage || !img) return;
 
   const TOTAL_FRAMES = 9;
-  const DRAG_SENSITIVITY = 26;
+  const DRAG_SENSITIVITY = 18;
+  const frameSources = Array.from({ length: TOTAL_FRAMES }, (_, i) => `assets/products/product-360/product-${i + 1}.webp`);
+
   let currentFrame = 0;
-  let isDragging = false;
   let dragStartX = 0;
   let dragStartFrame = 0;
+  let isDragging = false;
+  let activePointerId = null;
 
-  for (let i = 1; i <= TOTAL_FRAMES; i++) {
+  frameSources.forEach(src => {
     const preload = new Image();
-    preload.src = `assets/products/product-360/product-${i}.webp`;
-  }
+    preload.src = src;
+  });
 
   function setFrame(n) {
     currentFrame = ((n % TOTAL_FRAMES) + TOTAL_FRAMES) % TOTAL_FRAMES;
-    const src = `assets/products/product-360/product-${currentFrame + 1}.webp`;
-    if (!img.src.endsWith(src)) img.src = src;
-    if (slider) slider.value = currentFrame;
-    if (frameNum) frameNum.textContent = currentFrame + 1;
+    const nextSrc = frameSources[currentFrame];
+    img.style.display = 'block';
+    const fallback = stage.querySelector('.viewer-fallback-text');
+    if (fallback) fallback.style.display = 'none';
+    stage.classList.remove('viewer-fallback');
+    img.src = nextSrc;
+    if (slider) slider.value = String(currentFrame);
+    if (frameNum) frameNum.textContent = String(currentFrame + 1);
   }
 
-  function handleDrag(clientX) {
+  function beginDrag(clientX, pointerId = null) {
+    isDragging = true;
+    activePointerId = pointerId;
+    dragStartX = clientX;
+    dragStartFrame = currentFrame;
+    stage.classList.add('is-dragging');
+  }
+
+  function updateDrag(clientX) {
     const delta = clientX - dragStartX;
     const frameDelta = Math.round(delta / DRAG_SENSITIVITY);
     setFrame(dragStartFrame + frameDelta);
   }
 
-  if (slider) {
-    slider.max = TOTAL_FRAMES - 1;
-    slider.addEventListener('input', () => setFrame(parseInt(slider.value, 10)));
+  function endDrag(pointerId = null) {
+    if (pointerId !== null && activePointerId !== null && pointerId !== activePointerId) return;
+    isDragging = false;
+    activePointerId = null;
+    stage.classList.remove('is-dragging');
   }
 
-  stage.addEventListener('mousedown', e => {
-    e.preventDefault();
-    isDragging = true;
-    dragStartX = e.clientX;
-    dragStartFrame = currentFrame;
-    stage.classList.add('is-dragging');
-  });
+  if (slider) {
+    slider.max = String(TOTAL_FRAMES - 1);
+    slider.addEventListener('input', () => setFrame(parseInt(slider.value, 10) || 0));
+  }
 
-  window.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    handleDrag(e.clientX);
-  });
+  if (window.PointerEvent) {
+    stage.addEventListener('pointerdown', event => {
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+      event.preventDefault();
+      beginDrag(event.clientX, event.pointerId);
+      if (stage.setPointerCapture) stage.setPointerCapture(event.pointerId);
+    });
 
-  window.addEventListener('mouseup', () => {
-    isDragging = false;
-    stage.classList.remove('is-dragging');
-  });
+    stage.addEventListener('pointermove', event => {
+      if (!isDragging) return;
+      if (activePointerId !== null && event.pointerId !== activePointerId) return;
+      updateDrag(event.clientX);
+    });
 
-  stage.addEventListener('touchstart', e => {
-    isDragging = true;
-    dragStartX = e.touches[0].clientX;
-    dragStartFrame = currentFrame;
-    stage.classList.add('is-dragging');
-  }, { passive: true });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => {
+      stage.addEventListener(type, event => endDrag(event.pointerId));
+    });
+  } else {
+    stage.addEventListener('mousedown', event => {
+      event.preventDefault();
+      beginDrag(event.clientX);
+    });
 
-  stage.addEventListener('touchmove', e => {
-    if (!isDragging) return;
-    handleDrag(e.touches[0].clientX);
-  }, { passive: true });
+    window.addEventListener('mousemove', event => {
+      if (!isDragging) return;
+      updateDrag(event.clientX);
+    });
 
-  stage.addEventListener('touchend', () => {
-    isDragging = false;
-    stage.classList.remove('is-dragging');
-  });
+    window.addEventListener('mouseup', () => endDrag());
+
+    stage.addEventListener('touchstart', event => {
+      beginDrag(event.touches[0].clientX);
+    }, { passive: true });
+
+    stage.addEventListener('touchmove', event => {
+      if (!isDragging) return;
+      updateDrag(event.touches[0].clientX);
+    }, { passive: true });
+
+    stage.addEventListener('touchend', () => endDrag(), { passive: true });
+  }
 
   if (resetBtn) {
     resetBtn.addEventListener('click', () => setFrame(0));
@@ -449,6 +499,7 @@ function initViewer360() {
   img.addEventListener('error', () => {
     const fallback = stage.querySelector('.viewer-fallback-text');
     if (fallback) fallback.style.display = 'flex';
+    stage.classList.add('viewer-fallback');
     img.style.display = 'none';
   });
 
