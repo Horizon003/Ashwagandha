@@ -394,25 +394,39 @@ function initTradCards() {
 
 
 /* ────────────────────────────────────────────────
-   11B. MISCONCEPTION CARDS — tap/click ONLY (no hover)
+   11B. MISCONCEPTION CARDS — ONE card at a time
+   Tap = flip open. Tap same card = flip back. Tap another = close old, open new.
 ──────────────────────────────────────────────── */
 function initMisconceptionCards() {
-  document.querySelectorAll('.flip-card').forEach(card => {
+  const cards = document.querySelectorAll('.flip-card');
+  let activeCard = null;
+
+  cards.forEach(card => {
     card.setAttribute('tabindex', '0');
     card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', 'Tap to flip card');
+    card.setAttribute('aria-label', 'Tap to flip');
 
     const toggle = (event) => {
       if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
       if (event.type === 'keydown') event.preventDefault();
-      card.classList.toggle('is-flipped');
+
+      const alreadyFlipped = card.classList.contains('is-flipped');
+
+      // Close any open card first
+      cards.forEach(c => c.classList.remove('is-flipped'));
+
+      if (!alreadyFlipped) {
+        // Open tapped card
+        card.classList.add('is-flipped');
+        activeCard = card;
+      } else {
+        // Was open — now closed (already removed above)
+        activeCard = null;
+      }
     };
 
     card.addEventListener('click', toggle);
     card.addEventListener('keydown', toggle);
-
-    // Remove any CSS hover by preventing mouseenter from triggering visual change
-    card.addEventListener('mouseenter', (e) => e.stopPropagation());
   });
 }
 
