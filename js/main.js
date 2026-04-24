@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGSAPAnimations();
   initTimeline();
   initChemTooltips();
+  initChemGroupInfo();
   initMedProgressBars();
   initTradCards();
   initMisconceptionCards();
@@ -122,7 +123,7 @@ function initParticles() {
 }
 
 /* ────────────────────────────────────────────────
-   5. HERO TYPING EFFECT
+   5. HERO TYPING EFFECT + GLITCH RETYPE
 ──────────────────────────────────────────────── */
 function initHeroTyping() {
   const el = document.getElementById('hero-typing');
@@ -140,8 +141,61 @@ function initHeroTyping() {
       el.appendChild(cursor);
       i++;
       setTimeout(type, 100);
+    } else {
+      // After 2.5s, start glitch cycle
+      setTimeout(startGlitch, 2500);
     }
   };
+
+  const glitchChars = '!@#$%Ω∑√∏αβγδΨ?<>[]';
+
+  function startGlitch() {
+    let glitchCount = 0;
+    const maxGlitches = 10;
+    el.classList.add('hero-title-glitch');
+
+    const glitchInterval = setInterval(() => {
+      if (glitchCount >= maxGlitches) {
+        clearInterval(glitchInterval);
+        el.classList.remove('hero-title-glitch');
+        el.textContent = text;
+        el.appendChild(cursor);
+        // Short pause then retype in gold italic
+        setTimeout(retypeAlt, 400);
+        return;
+      }
+      // Randomise characters
+      const glitched = text.split('').map(ch =>
+        Math.random() > 0.55
+          ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
+          : ch
+      ).join('');
+      el.textContent = glitched;
+      el.appendChild(cursor);
+      glitchCount++;
+    }, 90);
+  }
+
+  function retypeAlt() {
+    el.textContent = '';
+    el.classList.add('hero-title-alt');
+    el.appendChild(cursor);
+    let j = 0;
+    const retypeInterval = setInterval(() => {
+      el.textContent = text.slice(0, j);
+      el.appendChild(cursor);
+      j++;
+      if (j > text.length) {
+        clearInterval(retypeInterval);
+        // Keep gold italic for 2s, then reset to normal
+        setTimeout(() => {
+          el.classList.remove('hero-title-alt');
+          el.textContent = text;
+          el.appendChild(cursor);
+        }, 2000);
+      }
+    }, 85);
+  }
 
   // Start after slight delay
   setTimeout(type, 600);
@@ -340,12 +394,13 @@ function initTradCards() {
 
 
 /* ────────────────────────────────────────────────
-   11B. MISCONCEPTION CARDS (tap/click to flip repeatedly)
+   11B. MISCONCEPTION CARDS — tap/click ONLY (no hover)
 ──────────────────────────────────────────────── */
 function initMisconceptionCards() {
   document.querySelectorAll('.flip-card').forEach(card => {
     card.setAttribute('tabindex', '0');
     card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', 'Tap to flip card');
 
     const toggle = (event) => {
       if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
@@ -355,6 +410,9 @@ function initMisconceptionCards() {
 
     card.addEventListener('click', toggle);
     card.addEventListener('keydown', toggle);
+
+    // Remove any CSS hover by preventing mouseenter from triggering visual change
+    card.addEventListener('mouseenter', (e) => e.stopPropagation());
   });
 }
 
@@ -619,3 +677,82 @@ function initImageFallbacks() {
     }
   }, { passive: true });
 })();
+
+/* ────────────────────────────────────────────────
+   9B. CHEMICAL GROUP NAME INFO POPUP (tap/hover)
+──────────────────────────────────────────────── */
+function initChemGroupInfo() {
+  const groupInfoData = {
+    'withanolides': {
+      title: 'Withanolides',
+      info: 'Steroidal lactones unique to the Withania genus. They are the primary bioactive compounds responsible for most of ashwagandha\'s adaptogenic, anti-cancer, and anti-inflammatory properties.'
+    },
+    'alkaloids': {
+      title: 'Alkaloids',
+      info: 'Nitrogen-containing organic compounds produced by plants. They are biologically active and exert potent effects on the nervous system — contributing to ashwagandha\'s sedative and neuro-modulating actions.'
+    },
+    'glycosides': {
+      title: 'Glycosides',
+      info: 'Compounds where a sugar molecule is bonded to a non-sugar (aglycone). In ashwagandha, withanosides and sitoindosides act on GABA receptors to produce anxiolytic and immunostimulant effects.'
+    },
+    'others': {
+      title: 'Flavonoids & Sterols',
+      info: 'Plant polyphenols and phytosterols with strong antioxidant, anti-inflammatory, and cardioprotective properties. They neutralize free radicals and support lipid metabolism.'
+    }
+  };
+
+  // Create popup element
+  const popup = document.createElement('div');
+  popup.className = 'group-info-popup';
+  popup.id = 'group-info-popup';
+  document.body.appendChild(popup);
+
+  let hideTimer = null;
+
+  function showPopup(groupKey, refEl) {
+    const data = groupInfoData[groupKey];
+    if (!data) return;
+    clearTimeout(hideTimer);
+    popup.innerHTML = `<div class="group-info-title">${data.title}</div><p>${data.info}</p>`;
+    popup.classList.add('visible');
+    positionPopup(refEl);
+  }
+
+  function hidePopup() {
+    hideTimer = setTimeout(() => popup.classList.remove('visible'), 200);
+  }
+
+  function positionPopup(refEl) {
+    const rect = refEl.getBoundingClientRect();
+    const pw = popup.offsetWidth || 280;
+    let left = rect.left;
+    let top = rect.bottom + 10;
+    if (left + pw > window.innerWidth - 12) left = window.innerWidth - pw - 12;
+    if (top + 140 > window.innerHeight - 12) top = rect.top - 145;
+    popup.style.left = left + 'px';
+    popup.style.top  = top + 'px';
+  }
+
+  document.querySelectorAll('.chem-group').forEach(group => {
+    const key = group.dataset.group;
+    const h3 = group.querySelector('h3');
+    if (!h3 || !key) return;
+
+    // Tap / click
+    h3.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (popup.classList.contains('visible')) {
+        popup.classList.remove('visible');
+      } else {
+        showPopup(key, h3);
+      }
+    });
+
+    // Hover (desktop)
+    h3.addEventListener('mouseenter', () => showPopup(key, h3));
+    h3.addEventListener('mouseleave', hidePopup);
+  });
+
+  // Close on outside click
+  document.addEventListener('click', () => popup.classList.remove('visible'));
+}
