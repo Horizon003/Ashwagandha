@@ -1,0 +1,2549 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Withania Somnifera – Ashwagandha | QCP Pattoki</title>
+
+<!-- Fonts -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Nunito:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet"/>
+
+<!-- Tailwind CDN -->
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- GSAP + ScrollTrigger -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+  :root {
+    --green-deep: #0f3d1f;
+    --green-mid: #1e6b3a;
+    --green-light: #4a9b6f;
+    --green-pale: #a8d5b5;
+    --cream: #f7f2e9;
+    --cream-dark: #ede5d3;
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --brown: #6b3f1f;
+    --brown-light: #a0642a;
+    --text-dark: #1a2a1a;
+    --text-mid: #3a5a3a;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* Scroll Progress Bar */
+  #scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--green-mid), var(--gold), var(--green-light));
+    z-index: 9999;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 10px rgba(201,168,76,0.6);
+  }
+
+  /* HEADER */
+  #main-header {
+    position: fixed;
+    top: 3px;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 2px 30px rgba(0,0,0,0.08);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    transition: all 0.3s ease;
+  }
+
+  #main-header.scrolled {
+    box-shadow: 0 4px 40px rgba(0,0,0,0.12);
+  }
+
+  .header-logo {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: var(--cream-dark);
+    padding: 2px;
+  }
+
+  .header-center-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(12px, 2.2vw, 19px);
+    font-weight: 700;
+    color: var(--green-deep);
+    letter-spacing: 0.15em;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .header-center-subtitle {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(9px, 1.4vw, 13px);
+    color: var(--gold);
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  /* HERO */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--green-deep);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('assets/main/ashwagandha-main.webp');
+    background-size: cover;
+    background-position: center;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  /* Fallback: beautiful botanical bg if image missing */
+  .hero-bg-fallback {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 60%, #1e6b3a 0%, #0f3d1f 40%, #061a0c 100%);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(6,26,12,0.3) 0%,
+      rgba(15,61,31,0.55) 50%,
+      rgba(6,15,8,0.85) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.5);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: clamp(9px, 1.5vw, 12px);
+    letter-spacing: 0.25em;
+    padding: 6px 20px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .hero-main-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 900;
+    font-style: italic;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    overflow: hidden;
+  }
+
+  .hero-sci-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1rem, 2.5vw, 1.8rem);
+    color: var(--gold-light);
+    letter-spacing: 0.1em;
+    margin: 10px 0;
+    opacity: 0;
+  }
+
+  .hero-tagline {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
+    color: rgba(255,255,255,0.75);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    opacity: 0;
+  }
+
+  /* Scroll Indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+  }
+
+  .scroll-indicator span {
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.15em;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+  }
+
+  .scroll-mouse {
+    width: 24px;
+    height: 38px;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 12px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .scroll-mouse::before {
+    content: '';
+    width: 4px;
+    height: 8px;
+    background: var(--gold-light);
+    border-radius: 2px;
+    position: absolute;
+    top: 6px;
+    animation: scrollPulse 2s infinite;
+  }
+
+  @keyframes scrollPulse {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(14px); }
+  }
+
+  /* SECTION BASE */
+  .section {
+    padding: 100px 20px;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--green-deep);
+    line-height: 1.15;
+  }
+
+  .section-divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--green-light));
+    border-radius: 2px;
+    margin: 16px 0 40px;
+  }
+
+  /* Section 1 – Taxonomy */
+  #taxonomy {
+    background: linear-gradient(135deg, #fff 0%, var(--cream) 100%);
+  }
+
+  .taxon-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    border: 1px solid rgba(201,168,76,0.15);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .taxon-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--gold), var(--green-light));
+    border-radius: 4px 0 0 4px;
+  }
+
+  .taxon-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(30,107,58,0.15);
+  }
+
+  .taxon-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 22px;
+  }
+
+  /* Section 2 – Timeline */
+  #history {
+    background: linear-gradient(135deg, var(--green-deep) 0%, #0d3318 100%);
+    color: #fff;
+  }
+
+  .timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, transparent, var(--gold) 10%, var(--gold) 90%, transparent);
+    transform: translateX(-50%);
+  }
+
+  .timeline-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 60px;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 3px solid var(--green-deep);
+    box-shadow: 0 0 0 4px rgba(201,168,76,0.3);
+    z-index: 2;
+    flex-shrink: 0;
+  }
+
+  .timeline-content {
+    width: 45%;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .timeline-item:nth-child(odd) .timeline-content {
+    margin-left: auto;
+    margin-right: 8%;
+  }
+
+  .timeline-item:nth-child(even) .timeline-content {
+    margin-left: 8%;
+  }
+
+  /* Section 3 – Compounds */
+  #compounds {
+    background: var(--cream);
+  }
+
+  .compound-group {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+  }
+
+  .compound-header {
+    padding: 20px 28px;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.3s;
+  }
+
+  .compound-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+  }
+
+  .compound-tag.withanolide { background: rgba(30,107,58,0.1); color: var(--green-mid); border-color: var(--green-mid); }
+  .compound-tag.alkaloid { background: rgba(107,63,31,0.1); color: var(--brown); border-color: var(--brown); }
+  .compound-tag.glycoside { background: rgba(201,168,76,0.15); color: var(--brown-light); border-color: var(--gold); }
+  .compound-tag.flavonoid { background: rgba(74,155,111,0.1); color: var(--green-light); border-color: var(--green-light); }
+
+  .compound-tag:hover,
+  .compound-tag.active {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+
+  .compound-tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green-deep);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 12px;
+    width: 200px;
+    text-align: center;
+    z-index: 100;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+
+  .compound-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--green-deep);
+  }
+
+  .compound-tag:hover .compound-tooltip,
+  .compound-tag.active .compound-tooltip { display: block; }
+
+  /* Section 4 – Modern Uses */
+  #modern-uses {
+    background: linear-gradient(135deg, #fff 0%, var(--cream) 100%);
+  }
+
+  .use-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .use-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    border-radius: 20px;
+  }
+
+  .use-card:hover::before { opacity: 1; }
+  .use-card:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 24px 60px rgba(30,107,58,0.2); }
+  .use-card:hover .use-icon, .use-card:hover .use-title, .use-card:hover .use-desc { color: #fff; }
+
+  .use-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    display: block;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.4s ease, color 0.4s;
+  }
+
+  .use-card:hover .use-icon { transform: scale(1.3) rotate(-8deg); }
+
+  .use-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--green-deep);
+    position: relative;
+    z-index: 1;
+    transition: color 0.4s;
+  }
+
+  .use-desc {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+    transition: color 0.4s;
+  }
+
+  /* Section 5 – Traditional */
+  #traditional {
+    background: linear-gradient(135deg, var(--cream-dark) 0%, var(--cream) 100%);
+  }
+
+  .trad-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .trad-card.active {
+    border-color: var(--gold);
+    box-shadow: 0 12px 40px rgba(201,168,76,0.2);
+  }
+
+  .trad-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+  }
+
+  .trad-expand {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+
+  .trad-card.active .trad-expand {
+    max-height: 200px;
+  }
+
+  /* Section 6 – Accordion */
+  #pharmacology {
+    background: linear-gradient(135deg, var(--green-deep) 0%, #163d22 100%);
+    color: #fff;
+  }
+
+  .accord-item {
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .accord-header {
+    background: rgba(255,255,255,0.05);
+    padding: 20px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.3s;
+  }
+
+  .accord-header:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .accord-header.open {
+    background: rgba(201,168,76,0.15);
+  }
+
+  .accord-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    background: rgba(255,255,255,0.03);
+    padding: 0 24px;
+  }
+
+  .accord-body.open {
+    max-height: 300px;
+    padding: 0 24px 20px;
+  }
+
+  .accord-arrow {
+    transition: transform 0.3s ease;
+    font-size: 20px;
+    color: var(--gold);
+  }
+
+  .accord-header.open .accord-arrow {
+    transform: rotate(180deg);
+  }
+
+  /* Section 7 – Flip Cards */
+  #misconceptions {
+    background: var(--cream);
+  }
+
+  .flip-card {
+    perspective: 1000px;
+    cursor: pointer;
+  }
+
+  .flip-inner {
+    position: relative;
+    transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transform-style: preserve-3d;
+    height: 280px;
+  }
+
+  .flip-card.flipped .flip-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-front, .flip-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .flip-front {
+    background: linear-gradient(135deg, #f5e9e9, #fdf5f5);
+    border: 2px solid rgba(220,53,69,0.2);
+  }
+
+  .flip-back {
+    background: linear-gradient(135deg, #e9f5ee, #f0faf4);
+    border: 2px solid rgba(40,167,69,0.2);
+    transform: rotateY(180deg);
+  }
+
+  .flip-false-icon {
+    font-size: 3.5rem;
+    margin-bottom: 12px;
+    animation: shake 0.5s ease infinite alternate;
+  }
+
+  .flip-true-icon {
+    font-size: 3.5rem;
+    margin-bottom: 12px;
+  }
+
+  @keyframes shake {
+    0% { transform: rotate(-5deg); }
+    100% { transform: rotate(5deg); }
+  }
+
+  .flip-hint {
+    font-size: 11px;
+    color: #999;
+    position: absolute;
+    bottom: 14px;
+    letter-spacing: 0.1em;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+  }
+
+  /* Section 8 – 360 Viewer */
+  #dosage {
+    background: linear-gradient(135deg, #fff 0%, var(--cream) 100%);
+    overflow: hidden;
+  }
+
+  .product-360-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+  }
+
+  .product-360-wrap {
+    position: sticky;
+    top: 100px;
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+  }
+
+  .product-360-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+    filter: drop-shadow(0 20px 60px rgba(30,107,58,0.25));
+  }
+
+  .product-360-img.active { display: block; }
+
+  .product-img-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    transition: transform 0.4s ease;
+  }
+
+  .product-img-card:hover { transform: scale(1.04) translateY(-6px); }
+
+  .product-img-card img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: var(--cream);
+  }
+
+  /* Image fallbacks */
+  .img-fallback {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    font-size: 3rem;
+    gap: 8px;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  /* Section 9 – Conclusion */
+  #conclusion {
+    background: linear-gradient(135deg, var(--green-deep) 0%, #112a17 100%);
+    color: #fff;
+    text-align: center;
+    padding: 120px 20px;
+  }
+
+  .highlight-word {
+    color: var(--gold-light);
+    font-style: italic;
+  }
+
+  /* Section 10 – Team */
+  #team {
+    background: var(--cream);
+  }
+
+  .team-card {
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s ease;
+  }
+
+  .team-img-wrap {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+
+  .team-img-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--green-light), var(--gold));
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: -1;
+  }
+
+  .team-card:hover .team-img-wrap::before { opacity: 1; }
+  .team-card:hover .team-img-wrap { transform: scale(1.08); box-shadow: 0 12px 40px rgba(201,168,76,0.3); }
+
+  .team-img-wrap img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+  }
+
+  .team-avatar-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    border: 3px solid #fff;
+  }
+
+  /* Section 11 – Instructor */
+  #instructor {
+    background: linear-gradient(135deg, var(--green-deep) 0%, #0d3318 100%);
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px;
+  }
+
+  .instructor-card {
+    display: inline-block;
+    padding: 50px 60px;
+    border-radius: 32px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(201,168,76,0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .instructor-card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 34px;
+    background: linear-gradient(135deg, var(--gold), transparent, var(--gold));
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: -1;
+  }
+
+  .instructor-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 80px rgba(201,168,76,0.25);
+  }
+
+  .instructor-card:hover::before { opacity: 0.6; }
+
+  .instructor-img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--gold);
+    margin: 0 auto 24px;
+    display: block;
+    box-shadow: 0 0 40px rgba(201,168,76,0.4);
+  }
+
+  .glow-ring {
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(201,168,76,0.3), 0 0 40px rgba(201,168,76,0.15); }
+    50% { box-shadow: 0 0 40px rgba(201,168,76,0.6), 0 0 80px rgba(201,168,76,0.3); }
+  }
+
+  /* References */
+  #references {
+    background: var(--cream-dark);
+    padding: 80px 20px;
+  }
+
+  /* Footer */
+  #footer {
+    background: var(--green-deep);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 30px;
+    font-size: 13px;
+  }
+
+  /* Floating particles */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatUp linear infinite;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-20vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Cursor trail */
+  .cursor-dot {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s;
+    box-shadow: 0 0 12px rgba(201,168,76,0.8);
+  }
+
+  .cursor-ring {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9997;
+    width: 32px;
+    height: 32px;
+    border: 2px solid rgba(201,168,76,0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+  }
+
+  /* Nav dots */
+  #nav-dots {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nav-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(30,107,58,0.3);
+    border: 1px solid rgba(30,107,58,0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .nav-dot.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    transform: scale(1.5);
+  }
+
+  .nav-dot:hover {
+    transform: scale(1.5);
+    background: var(--green-mid);
+  }
+
+  .nav-dot .dot-label {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    background: var(--green-deep);
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-family: 'Cinzel', serif;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+
+  .nav-dot:hover .dot-label { opacity: 1; }
+
+  /* Typing cursor */
+  .typing-cursor {
+    display: inline-block;
+    width: 3px;
+    height: 0.85em;
+    background: rgba(255,255,255,0.9);
+    margin-left: 2px;
+    animation: blink 0.7s infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Counter animation */
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--gold-light);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .timeline-line { left: 24px; }
+    .timeline-dot { left: 24px; }
+    .timeline-content { width: calc(100% - 60px); margin-left: 60px !important; margin-right: 0 !important; }
+    #nav-dots { display: none; }
+    .instructor-card { padding: 32px 24px; }
+    .hero-main-title { font-size: clamp(3rem, 12vw, 5rem); }
+  }
+
+  /* Smooth section transitions */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+
+  /* Botanical decorations */
+  .botanical-bg {
+    position: absolute;
+    opacity: 0.03;
+    pointer-events: none;
+    font-size: 20rem;
+    user-select: none;
+    font-family: serif;
+  }
+
+  /* Stats section */
+  .stats-bar {
+    background: linear-gradient(135deg, var(--gold), var(--brown-light));
+    padding: 40px 20px;
+    color: #fff;
+  }
+
+  /* Progress rings */
+  .progress-ring circle {
+    stroke-dasharray: 283;
+    stroke-dashoffset: 283;
+    transition: stroke-dashoffset 1.5s ease;
+  }
+</style>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'green-deep': '#0f3d1f',
+          'green-mid': '#1e6b3a',
+          'green-light': '#4a9b6f',
+          'cream': '#f7f2e9',
+          'gold': '#c9a84c',
+          'brown': '#6b3f1f',
+        }
+      }
+    }
+  }
+</script>
+
+</head>
+
+<body>
+
+<!-- SCROLL PROGRESS BAR -->
+
+<div id="scroll-progress"></div>
+
+<!-- CURSOR -->
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV DOTS -->
+
+<nav id="nav-dots">
+  <div class="nav-dot active" data-target="hero"><span class="dot-label">Home</span></div>
+  <div class="nav-dot" data-target="taxonomy"><span class="dot-label">Taxonomy</span></div>
+  <div class="nav-dot" data-target="history"><span class="dot-label">History</span></div>
+  <div class="nav-dot" data-target="compounds"><span class="dot-label">Compounds</span></div>
+  <div class="nav-dot" data-target="modern-uses"><span class="dot-label">Modern Uses</span></div>
+  <div class="nav-dot" data-target="traditional"><span class="dot-label">Traditional</span></div>
+  <div class="nav-dot" data-target="pharmacology"><span class="dot-label">Pharma</span></div>
+  <div class="nav-dot" data-target="misconceptions"><span class="dot-label">Myths</span></div>
+  <div class="nav-dot" data-target="dosage"><span class="dot-label">Dosage</span></div>
+  <div class="nav-dot" data-target="team"><span class="dot-label">Team</span></div>
+</nav>
+
+<!-- ==================== HEADER ==================== -->
+
+<header id="main-header">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+
+```
+<!-- LEFT: QCP -->
+<div class="flex items-center gap-3 flex-1">
+  <img src="assets/logos/qacp-logo.webp" alt="QCP Logo" class="header-logo" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+  <div style="display:none;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1e6b3a,#4a9b6f);align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px;flex-shrink:0;">QCP</div>
+  <div class="hidden sm:block">
+    <div style="font-family:'Cinzel',serif;font-size:clamp(9px,1.4vw,13px);font-weight:700;color:#0f3d1f;line-height:1.2;">Quaid-e-Azam</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:clamp(8px,1.1vw,11px);color:#4a9b6f;font-weight:500;">College of Pharmacy</div>
+  </div>
+</div>
+
+<!-- CENTER -->
+<div class="flex-1 text-center">
+  <div class="header-center-title">WITHANIA SOMNIFERA</div>
+  <div class="header-center-subtitle">Ashwagandha Presentation</div>
+</div>
+
+<!-- RIGHT: UoS -->
+<div class="flex items-center gap-3 justify-end flex-1">
+  <div class="hidden sm:block text-right">
+    <div style="font-family:'Cinzel',serif;font-size:clamp(9px,1.4vw,13px);font-weight:700;color:#0f3d1f;line-height:1.2;">University of</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:clamp(8px,1.1vw,11px);color:#4a9b6f;font-weight:500;">Sargodha</div>
+  </div>
+  <img src="assets/logos/uos-logo.webp" alt="UoS Logo" class="header-logo" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+  <div style="display:none;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1e6b3a,#c9a84c);align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px;flex-shrink:0;">UoS</div>
+</div>
+```
+
+  </div>
+</header>
+
+<!-- ==================== HERO ==================== -->
+
+<section id="hero">
+  <div class="hero-bg-fallback"></div>
+  <div class="hero-bg" id="heroBg" style="background-image:url('assets/main/ashwagandha-main.webp');"></div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge reveal" id="heroBadge">🌿 Pharmacognosy Presentation</div>
+
+```
+<h1 class="hero-main-title" id="heroTitle"></h1>
+
+<div class="hero-sci-name" id="heroSci">
+  <em>Withania somnifera</em> (L.) Dunal
+</div>
+
+<p class="hero-tagline" id="heroTagline">
+  A Scientific &amp; Pharmacognostic Overview
+</p>
+
+<!-- STATS ROW -->
+<div class="flex justify-center gap-8 mt-10 flex-wrap" id="heroStats">
+  <div class="text-center opacity-0" style="transition:opacity 0.6s 1.8s">
+    <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:#f0d080;">3000+</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.15em;font-family:'Cinzel',serif;text-transform:uppercase;">Years of Use</div>
+  </div>
+  <div style="width:1px;background:rgba(255,255,255,0.2);"></div>
+  <div class="text-center opacity-0" style="transition:opacity 0.6s 2s">
+    <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:#f0d080;">35+</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.15em;font-family:'Cinzel',serif;text-transform:uppercase;">Withanolides</div>
+  </div>
+  <div style="width:1px;background:rgba(255,255,255,0.2);"></div>
+  <div class="text-center opacity-0" style="transition:opacity 0.6s 2.2s">
+    <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:#f0d080;">500+</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.15em;font-family:'Cinzel',serif;text-transform:uppercase;">Studies</div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- Scroll Indicator -->
+
+  <div class="scroll-indicator" id="scrollIndicator">
+    <div class="scroll-mouse"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ==================== STATS BAR ==================== -->
+
+<div class="stats-bar">
+  <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div class="reveal">
+      <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;" class="stat-val" data-val="3000">0</div>
+      <div style="font-size:12px;opacity:0.85;letter-spacing:0.1em;font-family:'Cinzel',serif;">YEARS IN USE</div>
+    </div>
+    <div class="reveal">
+      <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;" class="stat-val" data-val="35">0</div>
+      <div style="font-size:12px;opacity:0.85;letter-spacing:0.1em;font-family:'Cinzel',serif;">WITHANOLIDES</div>
+    </div>
+    <div class="reveal">
+      <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;" class="stat-val" data-val="12">0</div>
+      <div style="font-size:12px;opacity:0.85;letter-spacing:0.1em;font-family:'Cinzel',serif;">ALKALOIDS</div>
+    </div>
+    <div class="reveal">
+      <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;" class="stat-val" data-val="600">0</div>
+      <div style="font-size:12px;opacity:0.85;letter-spacing:0.1em;font-family:'Cinzel',serif;">MG DAILY DOSE</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 1: TAXONOMY ==================== -->
+
+<section id="taxonomy" class="section">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="section-label reveal">01 — Classification</span>
+      <h2 class="section-title reveal">Taxonomical Profile</h2>
+      <div class="section-divider mx-auto reveal"></div>
+      <p class="text-gray-500 max-w-lg mx-auto reveal" style="font-size:1rem;">Scientific classification and botanical identity of Withania somnifera</p>
+    </div>
+
+```
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="taxon-card reveal-left">
+    <div class="taxon-icon">🔬</div>
+    <div>
+      <div style="font-size:11px;letter-spacing:0.15em;color:var(--gold);font-family:'Cinzel',serif;text-transform:uppercase;margin-bottom:4px;">Botanical Name</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--green-deep);font-style:italic;">Withania somnifera</div>
+      <div style="font-size:0.85rem;color:#666;">(L.) Dunal</div>
+    </div>
+  </div>
+
+  <div class="taxon-card reveal">
+    <div class="taxon-icon">🌿</div>
+    <div>
+      <div style="font-size:11px;letter-spacing:0.15em;color:var(--gold);font-family:'Cinzel',serif;text-transform:uppercase;margin-bottom:4px;">Family</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--green-deep);">Solanaceae</div>
+      <div style="font-size:0.85rem;color:#666;">Nightshade Family</div>
+    </div>
+  </div>
+
+  <div class="taxon-card reveal-right">
+    <div class="taxon-icon">📋</div>
+    <div>
+      <div style="font-size:11px;letter-spacing:0.15em;color:var(--gold);font-family:'Cinzel',serif;text-transform:uppercase;margin-bottom:4px;">Common Names</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--green-deep);">Ashwagandha</div>
+      <div style="font-size:0.85rem;color:#666;">Indian Ginseng · Winter Cherry</div>
+    </div>
+  </div>
+
+  <div class="taxon-card reveal-left">
+    <div class="taxon-icon">🌱</div>
+    <div>
+      <div style="font-size:11px;letter-spacing:0.15em;color:var(--gold);font-family:'Cinzel',serif;text-transform:uppercase;margin-bottom:4px;">Part Used</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--green-deep);">Dried Roots & Stem Bases</div>
+      <div style="font-size:0.85rem;color:#666;">Primary pharmacological source</div>
+    </div>
+  </div>
+
+  <div class="taxon-card reveal">
+    <div class="taxon-icon">🌍</div>
+    <div>
+      <div style="font-size:11px;letter-spacing:0.15em;color:var(--gold);font-family:'Cinzel',serif;text-transform:uppercase;margin-bottom:4px;">Habitat</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--green-deep);">Pakistan · India · Africa</div>
+      <div style="font-size:0.85rem;color:#666;">Middle East & Mediterranean</div>
+    </div>
+  </div>
+
+  <div class="taxon-card reveal-right">
+    <div class="taxon-icon">📏</div>
+    <div>
+      <div style="font-size:11px;letter-spacing:0.15em;color:var(--gold);font-family:'Cinzel',serif;text-transform:uppercase;margin-bottom:4px;">Habit</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--green-deep);">Erect Shrub</div>
+      <div style="font-size:0.85rem;color:#666;">30–150 cm tall, perennial</div>
+    </div>
+  </div>
+</div>
+
+<!-- Phylo banner -->
+<div class="mt-12 p-6 rounded-2xl reveal" style="background:linear-gradient(135deg,var(--green-deep),#163d22);color:#fff;">
+  <div class="flex flex-wrap gap-2 items-center justify-center">
+    <span style="font-size:12px;color:var(--gold-light);font-family:'Cinzel',serif;letter-spacing:0.1em;">KINGDOM</span>
+    <span style="color:rgba(255,255,255,0.4);">→</span>
+    <span style="font-family:'Playfair Display',serif;">Plantae</span>
+    <span style="color:rgba(255,255,255,0.4);">→</span>
+    <span style="font-family:'Playfair Display',serif;">Angiosperms</span>
+    <span style="color:rgba(255,255,255,0.4);">→</span>
+    <span style="font-family:'Playfair Display',serif;">Eudicots</span>
+    <span style="color:rgba(255,255,255,0.4);">→</span>
+    <span style="font-family:'Playfair Display',serif;">Solanales</span>
+    <span style="color:rgba(255,255,255,0.4);">→</span>
+    <span style="font-family:'Playfair Display',serif;color:var(--gold-light);font-style:italic;">Withania somnifera</span>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 2: HISTORY ==================== -->
+
+<section id="history" class="section" style="background:linear-gradient(135deg,#0f3d1f 0%,#0d3318 100%);color:#fff;">
+  <span class="botanical-bg" style="right:-80px;top:50%;transform:translateY(-50%);">🌿</span>
+
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="section-label reveal" style="color:var(--gold-light);">02 — Heritage</span>
+      <h2 class="section-title reveal" style="color:#fff;">Historical Background</h2>
+      <div class="section-divider mx-auto reveal"></div>
+    </div>
+
+```
+<!-- TIMELINE -->
+<div class="relative">
+  <div class="timeline-line"></div>
+
+  <!-- Item 1 -->
+  <div class="timeline-item reveal">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+      <div style="font-size:11px;color:var(--gold-light);letter-spacing:0.2em;font-family:'Cinzel',serif;margin-bottom:8px;">3000+ BCE</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;">Vedic Origins</h3>
+      <p style="font-size:0.9rem;opacity:0.8;line-height:1.6;">First recorded use in ancient Ayurvedic medicine. Classified as a prime Rasayana herb for longevity and vitality.</p>
+    </div>
+  </div>
+
+  <!-- Item 2 -->
+  <div class="timeline-item reveal">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+      <div style="font-size:11px;color:var(--gold-light);letter-spacing:0.2em;font-family:'Cinzel',serif;margin-bottom:8px;">~600 BCE</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;">Charaka Samhita</h3>
+      <p style="font-size:0.9rem;opacity:0.8;line-height:1.6;">Extensively documented in Charaka Samhita as a powerful rejuvenating tonic and nervine tonic for stress and weakness.</p>
+    </div>
+  </div>
+
+  <!-- Item 3 -->
+  <div class="timeline-item reveal">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+      <div style="font-size:11px;color:var(--gold-light);letter-spacing:0.2em;font-family:'Cinzel',serif;margin-bottom:8px;">~600 BCE</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;">Sushruta Samhita</h3>
+      <p style="font-size:0.9rem;opacity:0.8;line-height:1.6;">Recommended in Sushruta Samhita for aphrodisiac properties, fertility support, and physical endurance.</p>
+    </div>
+  </div>
+
+  <!-- Item 4 -->
+  <div class="timeline-item reveal">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+      <div style="font-size:11px;color:var(--gold-light);letter-spacing:0.2em;font-family:'Cinzel',serif;margin-bottom:8px;">Etymology</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;">"Smell of Horse"</h3>
+      <p style="font-size:0.9rem;opacity:0.8;line-height:1.6;">"Ashwa" = horse, "Gandha" = smell. The name refers to the root's distinctive odor and the belief it imparts horse-like strength and virility.</p>
+    </div>
+  </div>
+
+  <!-- Item 5 -->
+  <div class="timeline-item reveal">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+      <div style="font-size:11px;color:var(--gold-light);letter-spacing:0.2em;font-family:'Cinzel',serif;margin-bottom:8px;">Rasayana Classification</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;">Rejuvenative Tonic</h3>
+      <p style="font-size:0.9rem;opacity:0.8;line-height:1.6;">Classified in the highest Rasayana category — herbs that promote longevity, enhance memory, and restore youthful energy.</p>
+    </div>
+  </div>
+
+  <!-- Item 6 -->
+  <div class="timeline-item reveal">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+      <div style="font-size:11px;color:var(--gold-light);letter-spacing:0.2em;font-family:'Cinzel',serif;margin-bottom:8px;">Modern Era</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;">Global Recognition</h3>
+      <p style="font-size:0.9rem;opacity:0.8;line-height:1.6;">500+ peer-reviewed clinical studies validate traditional uses. Now a $1B+ global botanical market leader in adaptogens.</p>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 3: COMPOUNDS ==================== -->
+
+<section id="compounds" class="section">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="section-label reveal">03 — Chemistry</span>
+      <h2 class="section-title reveal">Chemical Constituents</h2>
+      <div class="section-divider mx-auto reveal"></div>
+      <p class="text-gray-500 max-w-lg mx-auto reveal">Hover over compounds to learn about their pharmacological roles</p>
+    </div>
+
+```
+<!-- Interactive compound map -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+  <!-- Withanolides -->
+  <div class="compound-group reveal-left">
+    <div class="compound-header" style="cursor:default;">
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.1em;margin-bottom:4px;">PRIMARY CONSTITUENTS</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;">Withanolides</h3>
+      </div>
+      <span style="font-size:2rem;">⚗️</span>
+    </div>
+    <div class="p-6 flex flex-wrap gap-3">
+      <div class="compound-tag withanolide relative">
+        Withaferin A
+        <div class="compound-tooltip">Most potent withanolide. Strong anti-tumor, anti-inflammatory & immunomodulatory activity.</div>
+      </div>
+      <div class="compound-tag withanolide relative">
+        Withanolide D
+        <div class="compound-tooltip">Adaptogenic properties. Reduces cortisol levels and enhances stress resilience.</div>
+      </div>
+      <div class="compound-tag withanolide relative">
+        Withanolide A
+        <div class="compound-tooltip">Neuroprotective effects. Promotes axon growth and synaptic repair in brain cells.</div>
+      </div>
+      <div class="compound-tag withanolide relative">
+        Withanolide E
+        <div class="compound-tooltip">Anti-diabetic potential. Helps regulate blood glucose and insulin sensitivity.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alkaloids -->
+  <div class="compound-group reveal-right">
+    <div class="compound-header" style="cursor:default;background:linear-gradient(135deg,#6b3f1f,#a0642a);">
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.1em;margin-bottom:4px;">NITROGEN COMPOUNDS</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;">Alkaloids</h3>
+      </div>
+      <span style="font-size:2rem;">🧪</span>
+    </div>
+    <div class="p-6 flex flex-wrap gap-3">
+      <div class="compound-tag alkaloid relative">
+        Somniferine
+        <div class="compound-tooltip">Sedative & sleep-inducing properties. Modulates GABA receptors for anxiolytic effects.</div>
+      </div>
+      <div class="compound-tag alkaloid relative">
+        Anaferine
+        <div class="compound-tooltip">Neuromuscular blocking agent with potential cardiovascular effects.</div>
+      </div>
+      <div class="compound-tag alkaloid relative">
+        Withanine
+        <div class="compound-tooltip">Anti-inflammatory and analgesic. Reduces pain signaling pathways.</div>
+      </div>
+      <div class="compound-tag alkaloid relative">
+        Tropine
+        <div class="compound-tooltip">Mild anticholinergic effects. Present in trace amounts in root.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Glycosides -->
+  <div class="compound-group reveal-left">
+    <div class="compound-header" style="cursor:default;background:linear-gradient(135deg,#7a6020,#c9a84c);">
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.1em;margin-bottom:4px;">SUGAR-BOUND COMPOUNDS</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;">Glycosides</h3>
+      </div>
+      <span style="font-size:2rem;">🍬</span>
+    </div>
+    <div class="p-6 flex flex-wrap gap-3">
+      <div class="compound-tag glycoside relative">
+        Withanosides
+        <div class="compound-tooltip">Group of glycowithanolides with immunostimulant and adaptogenic properties.</div>
+      </div>
+      <div class="compound-tag glycoside relative">
+        Sitoindosides
+        <div class="compound-tooltip">Sitoindosides VII–X: Powerful cognitive enhancers. Improve memory and learning.</div>
+      </div>
+      <div class="compound-tag glycoside relative">
+        Withanolide Glycosides
+        <div class="compound-tooltip">Bioavailable form of withanolides. Better absorbed and utilized by the body.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Others -->
+  <div class="compound-group reveal-right">
+    <div class="compound-header" style="cursor:default;background:linear-gradient(135deg,#2d6b4a,#4a9b6f);">
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.1em;margin-bottom:4px;">POLYPHENOLS & STEROLS</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;">Flavonoids & Sterols</h3>
+      </div>
+      <span style="font-size:2rem;">🌸</span>
+    </div>
+    <div class="p-6 flex flex-wrap gap-3">
+      <div class="compound-tag flavonoid relative">
+        Kaempferol
+        <div class="compound-tooltip">Potent antioxidant flavonoid. Anti-cancer, anti-inflammatory, cardioprotective.</div>
+      </div>
+      <div class="compound-tag flavonoid relative">
+        Quercetin
+        <div class="compound-tooltip">Free radical scavenger. Anti-histamine and anti-allergic properties.</div>
+      </div>
+      <div class="compound-tag flavonoid relative">
+        β-Sitosterol
+        <div class="compound-tooltip">Plant sterol. Lowers cholesterol and supports prostate health.</div>
+      </div>
+      <div class="compound-tag flavonoid relative">
+        Iron & Zinc
+        <div class="compound-tooltip">Mineral content supports blood formation and immune function.</div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 4: MODERN USES ==================== -->
+
+<section id="modern-uses" class="section" style="background:linear-gradient(135deg,#fff,var(--cream));">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="section-label reveal">04 — Applications</span>
+      <h2 class="section-title reveal">Modern Medicinal Uses</h2>
+      <div class="section-divider mx-auto reveal"></div>
+    </div>
+
+```
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+  <div class="use-card reveal">
+    <span class="use-icon">🧘</span>
+    <div class="use-title">Stress & Anxiety</div>
+    <div class="use-desc">Reduces cortisol by up to 27.9% in clinical studies</div>
+  </div>
+  <div class="use-card reveal">
+    <span class="use-icon">😴</span>
+    <div class="use-title">Sleep Quality</div>
+    <div class="use-desc">Improves sleep onset and duration; natural sedative</div>
+  </div>
+  <div class="use-card reveal">
+    <span class="use-icon">🧠</span>
+    <div class="use-title">Cognitive Boost</div>
+    <div class="use-desc">Enhances memory, reaction time, attention span</div>
+  </div>
+  <div class="use-card reveal">
+    <span class="use-icon">🛡️</span>
+    <div class="use-title">Immune Support</div>
+    <div class="use-desc">Increases NK cells, macrophage activity and IgG</div>
+  </div>
+  <div class="use-card reveal">
+    <span class="use-icon">🩸</span>
+    <div class="use-title">Blood Sugar</div>
+    <div class="use-desc">Anti-diabetic; regulates fasting glucose levels</div>
+  </div>
+  <div class="use-card reveal">
+    <span class="use-icon">💪</span>
+    <div class="use-title">Muscle Strength</div>
+    <div class="use-desc">Significantly improves muscle mass and recovery</div>
+  </div>
+  <div class="use-card reveal">
+    <span class="use-icon">❤️</span>
+    <div class="use-title">Heart Health</div>
+    <div class="use-desc">Lowers LDL cholesterol and blood pressure</div>
+  </div>
+  <div class="use-card reveal">
+    <span class="use-icon">🌿</span>
+    <div class="use-title">Anti-Tumor</div>
+    <div class="use-desc">Withaferin A shows pro-apoptotic cancer cell activity</div>
+  </div>
+  <div class="use-card reveal">
+    <span class="use-icon">⚡</span>
+    <div class="use-title">Energy & Stamina</div>
+    <div class="use-desc">Increases VO₂ max and reduces fatigue significantly</div>
+  </div>
+  <div class="use-card reveal">
+    <span class="use-icon">🦴</span>
+    <div class="use-title">Bone & Joint</div>
+    <div class="use-desc">Anti-arthritic; reduces joint inflammation and pain</div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 5: TRADITIONAL ==================== -->
+
+<section id="traditional" class="section" style="background:linear-gradient(135deg,var(--cream-dark),var(--cream));">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="section-label reveal">05 — Ayurveda</span>
+      <h2 class="section-title reveal">Traditional Uses</h2>
+      <div class="section-divider mx-auto reveal"></div>
+      <p class="text-gray-500 reveal">Click each card to learn more about traditional applications</p>
+    </div>
+
+```
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="trad-card reveal-left" onclick="this.classList.toggle('active')">
+    <div class="flex items-center gap-4 mb-3">
+      <span style="font-size:2.5rem;">🌙</span>
+      <div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--green-deep);">Insomnia Treatment</h3>
+        <div style="font-size:12px;color:var(--gold);font-family:'Cinzel',serif;letter-spacing:0.1em;">TRADITIONAL USE</div>
+      </div>
+      <span style="margin-left:auto;color:var(--gold);font-size:1.3rem;">＋</span>
+    </div>
+    <div class="trad-expand">
+      <p style="font-size:0.9rem;color:#555;line-height:1.7;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);">Ashwagandha root milk (Ashwagandhadi) consumed before bed. Somniferine alkaloids facilitate GABA-mediated sedation. Traditionally used in "Brahmi-Ashwagandha" combinations for deep, restorative sleep.</p>
+    </div>
+  </div>
+
+  <div class="trad-card reveal-right" onclick="this.classList.toggle('active')">
+    <div class="flex items-center gap-4 mb-3">
+      <span style="font-size:2.5rem;">🦵</span>
+      <div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--green-deep);">Arthritis Relief</h3>
+        <div style="font-size:12px;color:var(--gold);font-family:'Cinzel',serif;letter-spacing:0.1em;">TRADITIONAL USE</div>
+      </div>
+      <span style="margin-left:auto;color:var(--gold);font-size:1.3rem;">＋</span>
+    </div>
+    <div class="trad-expand">
+      <p style="font-size:0.9rem;color:#555;line-height:1.7;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);">Oral and topical application of Ashwagandha paste for joint inflammation. Withaferin A inhibits NF-κB pathway, suppressing pro-inflammatory cytokines TNF-α and IL-1β effectively.</p>
+    </div>
+  </div>
+
+  <div class="trad-card reveal-left" onclick="this.classList.toggle('active')">
+    <div class="flex items-center gap-4 mb-3">
+      <span style="font-size:2.5rem;">⚡</span>
+      <div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--green-deep);">Weakness & Fatigue</h3>
+        <div style="font-size:12px;color:var(--gold);font-family:'Cinzel',serif;letter-spacing:0.1em;">TRADITIONAL USE</div>
+      </div>
+      <span style="margin-left:auto;color:var(--gold);font-size:1.3rem;">＋</span>
+    </div>
+    <div class="trad-expand">
+      <p style="font-size:0.9rem;color:#555;line-height:1.7;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);">Used as a Bala (strength-promoting) herb. Consumed with milk, ghee and honey as "Ashwagandha Rasayana" to build ojas (vital essence) and combat debilitating fatigue in convalescence.</p>
+    </div>
+  </div>
+
+  <div class="trad-card reveal-right" onclick="this.classList.toggle('active')">
+    <div class="flex items-center gap-4 mb-3">
+      <span style="font-size:2.5rem;">🌹</span>
+      <div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--green-deep);">Aphrodisiac & Fertility</h3>
+        <div style="font-size:12px;color:var(--gold);font-family:'Cinzel',serif;letter-spacing:0.1em;">TRADITIONAL USE</div>
+      </div>
+      <span style="margin-left:auto;color:var(--gold);font-size:1.3rem;">＋</span>
+    </div>
+    <div class="trad-expand">
+      <p style="font-size:0.9rem;color:#555;line-height:1.7;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);">Classified as Vajikarana (aphrodisiac) in Ayurveda. Increases testosterone & LH levels. Studies show improved sperm quality, count, and motility in infertile men after supplementation.</p>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 6: PHARMACOLOGY ==================== -->
+
+<section id="pharmacology" class="section" style="background:linear-gradient(135deg,#0f3d1f,#163d22);color:#fff;">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="section-label reveal" style="color:var(--gold-light);">06 — Science</span>
+      <h2 class="section-title reveal" style="color:#fff;">Pharmacological Actions</h2>
+      <div class="section-divider mx-auto reveal"></div>
+    </div>
+
+```
+<div id="accordion">
+  <div class="accord-item reveal">
+    <div class="accord-header" onclick="toggleAccord(this)">
+      <div class="flex items-center gap-4">
+        <span style="font-size:1.8rem;">🧘</span>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;">Adaptogenic & Anti-Stress</div>
+          <div style="font-size:12px;opacity:0.6;font-family:'Cinzel',serif;letter-spacing:0.1em;">Primary Action</div>
+        </div>
+      </div>
+      <span class="accord-arrow">▼</span>
+    </div>
+    <div class="accord-body">
+      <p style="font-size:0.9rem;opacity:0.85;line-height:1.7;padding-top:16px;">Withanolides modulate the HPA (hypothalamic-pituitary-adrenal) axis, reducing serum cortisol levels. Clinical RCTs demonstrate 27.9% reduction in cortisol, 44% reduction in stress scores, and significant improvements in Perceived Stress Scale (PSS) and General Health Questionnaire (GHQ) measures after 60 days of use.</p>
+    </div>
+  </div>
+
+  <div class="accord-item reveal">
+    <div class="accord-header" onclick="toggleAccord(this)">
+      <div class="flex items-center gap-4">
+        <span style="font-size:1.8rem;">🩸</span>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;">Anti-Diabetic Potential</div>
+          <div style="font-size:12px;opacity:0.6;font-family:'Cinzel',serif;letter-spacing:0.1em;">Metabolic Action</div>
+        </div>
+      </div>
+      <span class="accord-arrow">▼</span>
+    </div>
+    <div class="accord-body">
+      <p style="font-size:0.9rem;opacity:0.85;line-height:1.7;padding-top:16px;">Withaferin A and Withanolide D stimulate glucose uptake by activating GLUT4 transporters, comparable to metformin in animal models. Reduces fasting blood glucose, HbA1c, and insulin resistance. Anti-oxidative protection of pancreatic β-cells has also been demonstrated.</p>
+    </div>
+  </div>
+
+  <div class="accord-item reveal">
+    <div class="accord-header" onclick="toggleAccord(this)">
+      <div class="flex items-center gap-4">
+        <span style="font-size:1.8rem;">🧠</span>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;">Neuroprotective & Anxiolytic</div>
+          <div style="font-size:12px;opacity:0.6;font-family:'Cinzel',serif;letter-spacing:0.1em;">CNS Action</div>
+        </div>
+      </div>
+      <span class="accord-arrow">▼</span>
+    </div>
+    <div class="accord-body">
+      <p style="font-size:0.9rem;opacity:0.85;line-height:1.7;padding-top:16px;">Sitoindosides and Withanolide A promote neurite outgrowth and synaptogenesis in cortical neurons. GABA-mimetic activity explains anxiolytic effects. Reduces amyloid-β plaques in Alzheimer's models. Protects against glutamate-induced neurotoxicity and oxidative stress in brain tissue.</p>
+    </div>
+  </div>
+
+  <div class="accord-item reveal">
+    <div class="accord-header" onclick="toggleAccord(this)">
+      <div class="flex items-center gap-4">
+        <span style="font-size:1.8rem;">❤️</span>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;">Cardio-Protective Effects</div>
+          <div style="font-size:12px;opacity:0.6;font-family:'Cinzel',serif;letter-spacing:0.1em;">Cardiovascular Action</div>
+        </div>
+      </div>
+      <span class="accord-arrow">▼</span>
+    </div>
+    <div class="accord-body">
+      <p style="font-size:0.9rem;opacity:0.85;line-height:1.7;padding-top:16px;">β-Sitosterol reduces LDL cholesterol absorption. Withaferin A inhibits platelet aggregation and reduces arterial inflammation. Documented reduction in triglycerides (11%), LDL (up to 17%), and systolic blood pressure in hypertensive patients. Antioxidant protection of cardiomyocytes against ischemia-reperfusion injury.</p>
+    </div>
+  </div>
+
+  <div class="accord-item reveal">
+    <div class="accord-header" onclick="toggleAccord(this)">
+      <div class="flex items-center gap-4">
+        <span style="font-size:1.8rem;">🛡️</span>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;">Anti-Inflammatory & Antioxidant</div>
+          <div style="font-size:12px;opacity:0.6;font-family:'Cinzel',serif;letter-spacing:0.1em;">Protective Action</div>
+        </div>
+      </div>
+      <span class="accord-arrow">▼</span>
+    </div>
+    <div class="accord-body">
+      <p style="font-size:0.9rem;opacity:0.85;line-height:1.7;padding-top:16px;">Withaferin A strongly inhibits NF-κB, COX-2, and iNOS pathways. Increases superoxide dismutase (SOD), catalase, and glutathione peroxidase activity. Reduces lipid peroxidation markers. Anti-tumor activity linked to pro-apoptotic and anti-angiogenic mechanisms targeting cancer cell lines in vitro and in vivo.</p>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 7: MISCONCEPTIONS ==================== -->
+
+<section id="misconceptions" class="section">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="section-label reveal">07 — Myth vs Reality</span>
+      <h2 class="section-title reveal">Common Misconceptions</h2>
+      <div class="section-divider mx-auto reveal"></div>
+      <p class="text-gray-500 reveal">Click each card to flip and reveal the truth 👆</p>
+    </div>
+
+```
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+  <!-- Card 1 -->
+  <div class="flip-card reveal" onclick="this.classList.toggle('flipped')">
+    <div class="flip-inner">
+      <div class="flip-front">
+        <div class="flip-false-icon">❌</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#c0392b;margin-bottom:8px;">Instant Results</h3>
+        <p style="font-size:0.85rem;color:#666;line-height:1.5;">"Ashwagandha works immediately and you'll feel benefits overnight."</p>
+        <div class="flip-hint">Tap to flip</div>
+      </div>
+      <div class="flip-back">
+        <div class="flip-true-icon" style="animation:popIn 0.5s ease;">✅</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#27ae60;margin-bottom:8px;">Gradual Action</h3>
+        <p style="font-size:0.85rem;color:#555;line-height:1.5;">Benefits accumulate over 4–8 weeks of consistent use. Adaptogens work by slowly normalizing physiological stress responses.</p>
+        <div class="flip-hint" style="color:#999;">Tap to flip back</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="flip-card reveal" onclick="this.classList.toggle('flipped')">
+    <div class="flip-inner">
+      <div class="flip-front">
+        <div class="flip-false-icon">❌</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#c0392b;margin-bottom:8px;">Only for Gym</h3>
+        <p style="font-size:0.85rem;color:#666;line-height:1.5;">"Ashwagandha is just a sports supplement for gym-goers and athletes."</p>
+        <div class="flip-hint">Tap to flip</div>
+      </div>
+      <div class="flip-back">
+        <div class="flip-true-icon">✅</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#27ae60;margin-bottom:8px;">Multi-System Benefits</h3>
+        <p style="font-size:0.85rem;color:#555;line-height:1.5;">Benefits span neurology, immunology, endocrinology, and oncology. It's a whole-body adaptogen — not limited to physical performance.</p>
+        <div class="flip-hint" style="color:#999;">Tap to flip back</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="flip-card reveal" onclick="this.classList.toggle('flipped')">
+    <div class="flip-inner">
+      <div class="flip-front">
+        <div class="flip-false-icon">❌</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#c0392b;margin-bottom:8px;">No Side Effects</h3>
+        <p style="font-size:0.85rem;color:#666;line-height:1.5;">"It's herbal and completely safe to take in any amount."</p>
+        <div class="flip-hint">Tap to flip</div>
+      </div>
+      <div class="flip-back">
+        <div class="flip-true-icon">✅</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#27ae60;margin-bottom:8px;">Dose-Dependent Safety</h3>
+        <p style="font-size:0.85rem;color:#555;line-height:1.5;">High doses may cause GI distress, diarrhea, hepatotoxicity. Contraindicated in pregnancy, autoimmune conditions, and thyroid disorders.</p>
+        <div class="flip-hint" style="color:#999;">Tap to flip back</div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 8: DOSAGE FORMS ==================== -->
+
+<section id="dosage" class="section" style="overflow:hidden;">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="section-label reveal">08 — Formulations</span>
+      <h2 class="section-title reveal">Dosage Forms</h2>
+      <div class="section-divider mx-auto reveal"></div>
+    </div>
+
+```
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+  <!-- LEFT: Capsules -->
+  <div class="product-img-card reveal-left">
+    <div class="relative overflow-hidden" style="background:linear-gradient(135deg,#e8f4ec,#d4eedd);">
+      <img src="assets/products/ashwagandha-capsules.webp" alt="Capsules" class="w-full" style="aspect-ratio:1;object-fit:cover;"
+           onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+      <div class="img-fallback" style="display:none;">
+        <span style="font-size:4rem;">💊</span>
+        <span>Capsules</span>
+      </div>
+    </div>
+    <div class="p-6">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--green-deep);margin-bottom:8px;">Capsules / Tablets</h3>
+      <p style="font-size:0.85rem;color:#666;line-height:1.6;">Standardized to 5% withanolides. Most popular pharmaceutical form. Easy dosing with consistent potency.</p>
+      <div class="mt-4 p-3 rounded-xl" style="background:rgba(30,107,58,0.08);">
+        <div style="font-size:11px;color:var(--green-mid);font-family:'Cinzel',serif;letter-spacing:0.1em;margin-bottom:4px;">STANDARD DOSE</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--green-deep);">250–600 mg</div>
+        <div style="font-size:11px;color:#888;">Root extract daily</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER: 360 VIEWER -->
+  <div class="reveal text-center">
+    <div style="background:linear-gradient(135deg,var(--cream),#e8f4ec);border-radius:24px;padding:32px;border:2px solid rgba(30,107,58,0.15);position:relative;">
+      <div style="font-size:11px;color:var(--green-mid);font-family:'Cinzel',serif;letter-spacing:0.15em;margin-bottom:16px;text-transform:uppercase;">360° Product Viewer</div>
+
+      <!-- 360 Viewer Container -->
+      <div id="viewer360" style="position:relative;width:100%;max-width:260px;aspect-ratio:1;margin:0 auto;cursor:grab;user-select:none;">
+        <!-- Images (1-9) -->
+        <img src="assets/products/product-360/product-1.webp" data-frame="0" alt="" class="product-360-img active" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="handleImgError(this)"/>
+        <img src="assets/products/product-360/product-2.webp" data-frame="1" alt="" class="product-360-img" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="handleImgError(this)"/>
+        <img src="assets/products/product-360/product-3.webp" data-frame="2" alt="" class="product-360-img" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="handleImgError(this)"/>
+        <img src="assets/products/product-360/product-4.webp" data-frame="3" alt="" class="product-360-img" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="handleImgError(this)"/>
+        <img src="assets/products/product-360/product-5.webp" data-frame="4" alt="" class="product-360-img" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="handleImgError(this)"/>
+        <img src="assets/products/product-360/product-6.webp" data-frame="5" alt="" class="product-360-img" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="handleImgError(this)"/>
+        <img src="assets/products/product-360/product-7.webp" data-frame="6" alt="" class="product-360-img" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="handleImgError(this)"/>
+        <img src="assets/products/product-360/product-8.webp" data-frame="7" alt="" class="product-360-img" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="handleImgError(this)"/>
+        <img src="assets/products/product-360/product-9.webp" data-frame="8" alt="" class="product-360-img" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="handleImgError(this)"/>
+
+        <!-- Fallback when no images -->
+        <div id="viewer360Fallback" class="product-360-img" style="width:100%;height:100%;border-radius:16px;background:linear-gradient(135deg,var(--green-mid),var(--green-light));display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;">
+          <div id="rotateEmoji" style="font-size:5rem;transition:transform 0.1s;">🫙</div>
+          <div style="font-size:0.85rem;opacity:0.85;font-family:'Nunito',sans-serif;">Drag to rotate</div>
+        </div>
+
+        <!-- 360 rotate arrows overlay -->
+        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.5);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-family:'Cinzel',serif;letter-spacing:0.1em;backdrop-filter:blur(8px);">
+          ← Drag to rotate →
+        </div>
+      </div>
+
+      <!-- Rotation progress -->
+      <div style="margin-top:16px;background:rgba(30,107,58,0.1);border-radius:8px;height:4px;overflow:hidden;">
+        <div id="rotationBar" style="height:100%;background:linear-gradient(90deg,var(--green-mid),var(--gold));width:11.1%;transition:width 0.1s;border-radius:8px;"></div>
+      </div>
+
+      <div style="margin-top:12px;font-size:0.85rem;color:var(--text-mid);">
+        <span id="rotateAngle" style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--green-deep);">0°</span>
+        <span style="font-size:11px;color:#888;margin-left:6px;">rotation</span>
+      </div>
+    </div>
+
+    <div class="p-6">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--green-deep);margin-bottom:8px;">360° View</h3>
+      <p style="font-size:0.85rem;color:#666;">Drag to inspect the product from all angles</p>
+    </div>
+  </div>
+
+  <!-- RIGHT: Powder -->
+  <div class="product-img-card reveal-right">
+    <div class="relative overflow-hidden" style="background:linear-gradient(135deg,#f4ece0,#ede0cc);">
+      <img src="assets/products/ashwagandha-powder.webp" alt="Powder" class="w-full" style="aspect-ratio:1;object-fit:cover;"
+           onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+      <div class="img-fallback" style="display:none;background:linear-gradient(135deg,#c9a84c,#a0642a);">
+        <span style="font-size:4rem;">🌾</span>
+        <span>Churna</span>
+      </div>
+    </div>
+    <div class="p-6">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--green-deep);margin-bottom:8px;">Powder (Churna)</h3>
+      <p style="font-size:0.85rem;color:#666;line-height:1.6;">Traditional Ayurvedic form. Mixed with warm milk, honey, or ghee. Highest bioavailability when taken with fat.</p>
+      <div class="mt-4 p-3 rounded-xl" style="background:rgba(201,168,76,0.1);">
+        <div style="font-size:11px;color:var(--brown-light);font-family:'Cinzel',serif;letter-spacing:0.1em;margin-bottom:4px;">TRADITIONAL DOSE</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--brown);">3–6 g</div>
+        <div style="font-size:11px;color:#888;">Root powder with warm milk</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Other forms -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+  <div class="reveal" style="background:#fff;border-radius:16px;padding:20px;text-align:center;border:1px solid rgba(0,0,0,0.06);transition:transform 0.3s;cursor:default;" onmouseenter="this.style.transform='translateY(-6px)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:2rem;margin-bottom:8px;">🍵</div>
+    <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--green-deep);">Herbal Tea</div>
+    <div style="font-size:12px;color:#888;margin-top:4px;">Decoction form</div>
+  </div>
+  <div class="reveal" style="background:#fff;border-radius:16px;padding:20px;text-align:center;border:1px solid rgba(0,0,0,0.06);transition:transform 0.3s;cursor:default;" onmouseenter="this.style.transform='translateY(-6px)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:2rem;margin-bottom:8px;">💧</div>
+    <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--green-deep);">Liquid Extract</div>
+    <div style="font-size:12px;color:#888;margin-top:4px;">Tincture / drops</div>
+  </div>
+  <div class="reveal" style="background:#fff;border-radius:16px;padding:20px;text-align:center;border:1px solid rgba(0,0,0,0.06);transition:transform 0.3s;cursor:default;" onmouseenter="this.style.transform='translateY(-6px)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:2rem;margin-bottom:8px;">🧴</div>
+    <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--green-deep);">Topical Oil</div>
+    <div style="font-size:12px;color:#888;margin-top:4px;">Ashwagandha taila</div>
+  </div>
+  <div class="reveal" style="background:#fff;border-radius:16px;padding:20px;text-align:center;border:1px solid rgba(0,0,0,0.06);transition:transform 0.3s;cursor:default;" onmouseenter="this.style.transform='translateY(-6px)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:2rem;margin-bottom:8px;">🍬</div>
+    <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--green-deep);">Gummies</div>
+    <div style="font-size:12px;color:#888;margin-top:4px;">Modern supplement</div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 9: CONCLUSION ==================== -->
+
+<section id="conclusion" style="background:linear-gradient(135deg,#0f3d1f,#112a17);color:#fff;padding:120px 20px;text-align:center;position:relative;overflow:hidden;">
+  <div class="botanical-bg" style="left:50%;top:50%;transform:translate(-50%,-50%);opacity:0.02;font-size:30rem;">🌿</div>
+
+  <div class="max-w-3xl mx-auto relative">
+    <span class="section-label reveal" style="color:var(--gold-light);">09 — Summary</span>
+    <h2 class="section-title reveal" style="color:#fff;font-size:clamp(2rem,5vw,3rem);margin-bottom:40px;">Conclusion</h2>
+    <div class="section-divider mx-auto reveal"></div>
+
+```
+<p class="reveal" style="font-size:clamp(1rem,2.5vw,1.25rem);line-height:1.9;font-weight:300;opacity:0.9;font-family:'Nunito',sans-serif;">
+  <span class="highlight-word">Withania somnifera</span> is a cornerstone medicinal plant of the
+  <span class="highlight-word">Solanaceae</span> family, revered across millennia. Its rich
+  <span class="highlight-word">withanolide</span> chemistry bridges ancient Ayurvedic wisdom and modern
+  <span class="highlight-word">evidence-based pharmacology</span>, delivering proven benefits in
+  <span class="highlight-word">stress management</span>, immune modulation, cognitive enhancement,
+  and <span class="highlight-word">metabolic regulation</span> — making it one of the most comprehensively
+  studied adaptogens in contemporary botanical medicine.
+</p>
+
+<div class="mt-16 grid grid-cols-3 gap-8 reveal">
+  <div>
+    <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold-light);">✓</div>
+    <div style="font-size:0.85rem;opacity:0.75;margin-top:8px;">Traditional Validated</div>
+  </div>
+  <div>
+    <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold-light);">✓</div>
+    <div style="font-size:0.85rem;opacity:0.75;margin-top:8px;">Clinically Proven</div>
+  </div>
+  <div>
+    <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold-light);">✓</div>
+    <div style="font-size:0.85rem;opacity:0.75;margin-top:8px;">Safe at Therapeutic Dose</div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 10: TEAM ==================== -->
+
+<section id="team" class="section" style="background:var(--cream);">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="section-label reveal">10 — Credits</span>
+      <h2 class="section-title reveal">Presented By</h2>
+      <div class="section-divider mx-auto reveal"></div>
+    </div>
+
+```
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+  <div class="team-card reveal">
+    <div class="team-img-wrap">
+      <img src="assets/team/haris-horizon.webp" alt="Muhammad Haris" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+      <div class="team-avatar-fallback" style="display:none;">🧑‍🎓</div>
+    </div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--green-deep);">Muhammad Haris</div>
+    <div style="font-size:12px;color:var(--gold);font-family:'Cinzel',serif;margin-top:3px;">Roll No. ___</div>
+  </div>
+
+  <div class="team-card reveal">
+    <div class="team-img-wrap">
+      <img src="assets/team/zohaib-tahir.webp" alt="Zohaib Tahir" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+      <div class="team-avatar-fallback" style="display:none;">🧑‍🎓</div>
+    </div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--green-deep);">Zohaib Tahir</div>
+    <div style="font-size:12px;color:var(--gold);font-family:'Cinzel',serif;margin-top:3px;">Roll No. ___</div>
+  </div>
+
+  <div class="team-card reveal">
+    <div class="team-img-wrap">
+      <img src="assets/team/ali-haider.webp" alt="Ali Haider" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+      <div class="team-avatar-fallback" style="display:none;">🧑‍🎓</div>
+    </div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--green-deep);">Ali Haider</div>
+    <div style="font-size:12px;color:var(--gold);font-family:'Cinzel',serif;margin-top:3px;">Roll No. ___</div>
+  </div>
+
+  <div class="team-card reveal">
+    <div class="team-img-wrap">
+      <img src="assets/team/salman.webp" alt="Salman" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+      <div class="team-avatar-fallback" style="display:none;">🧑‍🎓</div>
+    </div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--green-deep);">Salman</div>
+    <div style="font-size:12px;color:var(--gold);font-family:'Cinzel',serif;margin-top:3px;">Roll No. ___</div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 11: INSTRUCTOR ==================== -->
+
+<section id="instructor" style="background:linear-gradient(135deg,#0f3d1f,#0d3318);color:#fff;padding:100px 20px;text-align:center;">
+  <div class="max-w-xl mx-auto">
+    <span class="section-label reveal" style="color:var(--gold-light);">11 — Guidance</span>
+    <h2 class="section-title reveal" style="color:#fff;margin-bottom:50px;">Presented To</h2>
+
+```
+<div class="instructor-card reveal" style="display:inline-block;">
+  <div class="glow-ring" style="width:180px;height:180px;border-radius:50%;margin:0 auto 24px;position:relative;">
+    <img src="assets/team/dr-zeenat-aman.webp" alt="Dr. Zeenat Aman" class="instructor-img"
+         onerror="this.style.display='none';this.nextSibling.style.display='flex'"/>
+    <div style="display:none;width:180px;height:180px;border-radius:50%;background:linear-gradient(135deg,var(--green-mid),var(--green-light));align-items:center;justify-content:center;font-size:4rem;border:4px solid var(--gold);">👩‍🏫</div>
+  </div>
+
+  <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--gold-light);margin-bottom:6px;">Dr. Zeenat Aman</div>
+  <div style="font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.2em;opacity:0.8;text-transform:uppercase;">Course Instructor – Pharmacognosy</div>
+  <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.15em;opacity:0.55;margin-top:6px;">Quaid-e-Azam College of Pharmacy, Pattoki</div>
+
+  <!-- Stars -->
+  <div style="margin-top:20px;font-size:1.5rem;letter-spacing:4px;color:var(--gold);">★★★★★</div>
+  <div style="font-size:12px;opacity:0.6;margin-top:8px;font-style:italic;">"Inspiring excellence in pharmaceutical sciences"</div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ==================== SECTION 12: REFERENCES ==================== -->
+
+<section id="references" style="background:var(--cream-dark);padding:80px 20px;">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-12">
+      <span class="section-label reveal">12 — Sources</span>
+      <h2 class="section-title reveal" style="font-size:clamp(1.8rem,4vw,2.8rem);">References</h2>
+      <div class="section-divider mx-auto reveal"></div>
+    </div>
+
+```
+<div class="space-y-4">
+  <div class="reveal" style="background:#fff;border-radius:12px;padding:20px 24px;border-left:4px solid var(--gold);box-shadow:0 2px 12px rgba(0,0,0,0.04);">
+    <div style="font-size:11px;color:var(--gold);font-family:'Cinzel',serif;letter-spacing:0.15em;margin-bottom:4px;">TEXTBOOK</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--green-deep);font-weight:600;">Brady LR, Robbers JE.</div>
+    <div style="font-size:0.9rem;color:#555;font-style:italic;">Tyler's Pharmacognosy. 9th ed. Lea & Febiger.</div>
+  </div>
+
+  <div class="reveal" style="background:#fff;border-radius:12px;padding:20px 24px;border-left:4px solid var(--green-mid);box-shadow:0 2px 12px rgba(0,0,0,0.04);">
+    <div style="font-size:11px;color:var(--green-mid);font-family:'Cinzel',serif;letter-spacing:0.15em;margin-bottom:4px;">ANCIENT TEXT</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--green-deep);font-weight:600;">Charaka Samhita</div>
+    <div style="font-size:0.9rem;color:#555;font-style:italic;">Ancient Ayurvedic treatise on internal medicine. ~600 BCE.</div>
+  </div>
+
+  <div class="reveal" style="background:#fff;border-radius:12px;padding:20px 24px;border-left:4px solid var(--green-mid);box-shadow:0 2px 12px rgba(0,0,0,0.04);">
+    <div style="font-size:11px;color:var(--green-mid);font-family:'Cinzel',serif;letter-spacing:0.15em;margin-bottom:4px;">ANCIENT TEXT</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--green-deep);font-weight:600;">Sushruta Samhita</div>
+    <div style="font-size:0.9rem;color:#555;font-style:italic;">Classical Ayurvedic text on surgery and pharmacology. ~600 BCE.</div>
+  </div>
+
+  <div class="reveal" style="background:#fff;border-radius:12px;padding:20px 24px;border-left:4px solid var(--brown-light);box-shadow:0 2px 12px rgba(0,0,0,0.04);">
+    <div style="font-size:11px;color:var(--brown-light);font-family:'Cinzel',serif;letter-spacing:0.15em;margin-bottom:4px;">RESEARCH ARTICLE</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--green-deep);font-weight:600;">Singh N et al. (2011)</div>
+    <div style="font-size:0.9rem;color:#555;font-style:italic;">An Overview on Ashwagandha: A Rasayana (Rejuvenator) of Ayurveda. African Journal of Traditional, Complementary and Alternative Medicines, 8(5).</div>
+  </div>
+
+  <div class="reveal" style="background:#fff;border-radius:12px;padding:20px 24px;border-left:4px solid var(--brown-light);box-shadow:0 2px 12px rgba(0,0,0,0.04);">
+    <div style="font-size:11px;color:var(--brown-light);font-family:'Cinzel',serif;letter-spacing:0.15em;margin-bottom:4px;">CLINICAL STUDY</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--green-deep);font-weight:600;">Chandrasekhar K et al. (2012)</div>
+    <div style="font-size:0.9rem;color:#555;font-style:italic;">A Prospective, Randomized Double-Blind, Placebo-Controlled Study of Safety and Efficacy of a High-Concentration Full-Spectrum Extract of Ashwagandha Root. Indian J Psychol Med, 34(3).</div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer id="footer" style="background:var(--green-deep);color:rgba(255,255,255,0.5);text-align:center;padding:30px 20px;">
+  <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:var(--gold-light);margin-bottom:8px;">QUAID-E-AZAM COLLEGE OF PHARMACY · PATTOKI</div>
+  <div style="font-size:12px;opacity:0.6;">Pharmacognosy Presentation · University of Sargodha · 2024–25</div>
+  <div style="margin-top:12px;font-size:11px;opacity:0.4;font-style:italic;">Designed with 💚 by Horizon – Media Cell QCP</div>
+</footer>
+
+<!-- ==================== SCRIPTS ==================== -->
+
+<script>
+// ===== GSAP Registration =====
+gsap.registerPlugin(ScrollTrigger);
+
+// ===== SCROLL PROGRESS =====
+window.addEventListener('scroll', () => {
+  const el = document.getElementById('scroll-progress');
+  const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  el.style.width = scrolled + '%';
+
+  // Header scroll state
+  const header = document.getElementById('main-header');
+  header.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ===== CUSTOM CURSOR =====
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  dot.style.left = mouseX + 'px';
+  dot.style.top = mouseY + 'px';
+});
+
+function animateRing() {
+  ringX += (mouseX - ringX) * 0.12;
+  ringY += (mouseY - ringY) * 0.12;
+  ring.style.left = ringX + 'px';
+  ring.style.top = ringY + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, .use-card, .flip-card, .trad-card, .accord-header, .nav-dot').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    dot.style.transform = 'translate(-50%, -50%) scale(2)';
+    ring.style.transform = 'translate(-50%, -50%) scale(1.5)';
+    ring.style.borderColor = 'rgba(201,168,76,0.7)';
+  });
+  el.addEventListener('mouseleave', () => {
+    dot.style.transform = 'translate(-50%, -50%) scale(1)';
+    ring.style.transform = 'translate(-50%, -50%) scale(1)';
+    ring.style.borderColor = 'rgba(201,168,76,0.4)';
+  });
+});
+
+// ===== HERO TYPING EFFECT =====
+function typeWriter(element, text, speed = 80) {
+  return new Promise(resolve => {
+    let i = 0;
+    element.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'typing-cursor';
+    element.appendChild(cursor);
+
+    function type() {
+      if (i < text.length) {
+        element.insertBefore(document.createTextNode(text[i]), cursor);
+        i++;
+        setTimeout(type, speed);
+      } else {
+        cursor.style.display = 'none';
+        resolve();
+      }
+    }
+    type();
+  });
+}
+
+// Hero entrance timeline
+const heroTL = gsap.timeline({ delay: 0.3 });
+heroTL
+  .to('#heroBadge', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' })
+  .add(() => {
+    typeWriter(document.getElementById('heroTitle'), 'Ashwagandha', 100);
+  }, '+=0.2')
+  .to('#heroSci', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '+=1.2')
+  .to('#heroTagline', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.4')
+  .to('#scrollIndicator', { opacity: 1, duration: 0.8 }, '+=0.4')
+  .to('#heroStats .opacity-0', { opacity: 1, stagger: 0.2, duration: 0.5 }, '+=0.2');
+
+// Hero parallax
+gsap.to('#heroBg', {
+  yPercent: 30,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: 1.5
+  }
+});
+
+// Hero slow zoom
+gsap.fromTo('#heroBg', { scale: 1 }, {
+  scale: 1.12,
+  duration: 12,
+  ease: 'none',
+  repeat: -1,
+  yoyo: true
+});
+
+// ===== COUNTER ANIMATION =====
+function animateCounter(el, target) {
+  let current = 0;
+  const increment = target / 60;
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+    el.textContent = Math.round(current).toLocaleString();
+  }, 16);
+}
+
+ScrollTrigger.create({
+  trigger: '.stats-bar',
+  start: 'top 80%',
+  onEnter: () => {
+    document.querySelectorAll('.stat-val').forEach(el => {
+      animateCounter(el, parseInt(el.dataset.val));
+    });
+  }
+});
+
+// ===== GSAP SCROLL REVEALS =====
+// Generic reveals
+gsap.utils.toArray('.reveal').forEach((el, i) => {
+  gsap.fromTo(el, { opacity: 0, y: 50 }, {
+    opacity: 1, y: 0,
+    duration: 0.9,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 88%',
+      toggleActions: 'play none none none'
+    },
+    delay: (i % 4) * 0.08
+  });
+});
+
+gsap.utils.toArray('.reveal-left').forEach(el => {
+  gsap.fromTo(el, { opacity: 0, x: -80 }, {
+    opacity: 1, x: 0,
+    duration: 0.9,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 88%' }
+  });
+});
+
+gsap.utils.toArray('.reveal-right').forEach(el => {
+  gsap.fromTo(el, { opacity: 0, x: 80 }, {
+    opacity: 1, x: 0,
+    duration: 0.9,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 88%' }
+  });
+});
+
+// ===== TIMELINE LINE DRAW =====
+gsap.fromTo('.timeline-line', { scaleY: 0, transformOrigin: 'top' }, {
+  scaleY: 1,
+  duration: 2,
+  ease: 'power2.out',
+  scrollTrigger: { trigger: '#history', start: 'top 70%' }
+});
+
+// ===== ACCORDION =====
+function toggleAccord(header) {
+  const body = header.nextElementSibling;
+  const allBodies = document.querySelectorAll('.accord-body');
+  const allHeaders = document.querySelectorAll('.accord-header');
+
+  allBodies.forEach((b, i) => {
+    if (b !== body) {
+      b.classList.remove('open');
+      allHeaders[i].classList.remove('open');
+    }
+  });
+
+  body.classList.toggle('open');
+  header.classList.toggle('open');
+}
+
+// ===== 360 VIEWER =====
+const viewer = document.getElementById('viewer360');
+const frames = viewer.querySelectorAll('.product-360-img');
+const rotBar = document.getElementById('rotationBar');
+const rotAngle = document.getElementById('rotateAngle');
+const totalFrames = 9;
+let currentFrame = 0;
+let isDragging = false;
+let startX = 0;
+let hasImages = false;
+
+// Check if any images loaded
+function handleImgError(img) {
+  img.style.display = 'none';
+  const fallback = document.getElementById('viewer360Fallback');
+  if (fallback) {
+    fallback.style.display = 'flex';
+    hasImages = false;
+  }
+}
+
+function setFrame(idx) {
+  const f = ((idx % totalFrames) + totalFrames) % totalFrames;
+  currentFrame = f;
+
+  frames.forEach((img, i) => {
+    img.classList.toggle('active', i === f);
+  });
+
+  const pct = ((f + 1) / totalFrames * 100).toFixed(0);
+  rotBar.style.width = pct + '%';
+  rotAngle.textContent = Math.round(f * (360 / totalFrames)) + '°';
+
+  // Fallback emoji rotation
+  const emoji = document.getElementById('rotateEmoji');
+  if (emoji) {
+    emoji.style.transform = `rotate(${f * (360 / totalFrames)}deg)`;
+  }
+}
+
+// Drag handlers
+viewer.addEventListener('mousedown', e => { isDragging = true; startX = e.clientX; viewer.style.cursor = 'grabbing'; });
+viewer.addEventListener('touchstart', e => { isDragging = true; startX = e.touches[0].clientX; }, { passive: true });
+
+window.addEventListener('mouseup', () => { isDragging = false; viewer.style.cursor = 'grab'; });
+window.addEventListener('touchend', () => { isDragging = false; });
+
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const diff = e.clientX - startX;
+  if (Math.abs(diff) > 15) {
+    setFrame(currentFrame + (diff > 0 ? 1 : -1));
+    startX = e.clientX;
+  }
+});
+
+window.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  const diff = e.touches[0].clientX - startX;
+  if (Math.abs(diff) > 15) {
+    setFrame(currentFrame + (diff > 0 ? 1 : -1));
+    startX = e.touches[0].clientX;
+  }
+}, { passive: true });
+
+// Auto spin on scroll
+ScrollTrigger.create({
+  trigger: '#dosage',
+  start: 'top top',
+  end: 'bottom bottom',
+  scrub: true,
+  onUpdate: self => {
+    const frame = Math.floor(self.progress * (totalFrames - 1));
+    setFrame(frame);
+  }
+});
+
+// ===== NAV DOTS =====
+const sections = ['hero','taxonomy','history','compounds','modern-uses','traditional','pharmacology','misconceptions','dosage','team'];
+const dots = document.querySelectorAll('.nav-dot');
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = document.getElementById(dot.dataset.target);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Update active dot
+const sectionObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      dots.forEach(d => d.classList.toggle('active', d.dataset.target === id));
+    }
+  });
+}, { threshold: 0.4 });
+
+sections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) sectionObserver.observe(el);
+});
+
+// ===== USE CARD STAGGER =====
+gsap.utils.toArray('.use-card').forEach((card, i) => {
+  gsap.fromTo(card, { opacity: 0, y: 60, scale: 0.9 }, {
+    opacity: 1, y: 0, scale: 1,
+    duration: 0.6,
+    ease: 'back.out(1.4)',
+    scrollTrigger: { trigger: card, start: 'top 90%' },
+    delay: (i % 5) * 0.08
+  });
+});
+
+// ===== TEAM CARDS =====
+gsap.utils.toArray('.team-card').forEach((card, i) => {
+  gsap.fromTo(card, { opacity: 0, y: 40, scale: 0.85 }, {
+    opacity: 1, y: 0, scale: 1,
+    duration: 0.7,
+    ease: 'back.out(1.6)',
+    scrollTrigger: { trigger: card, start: 'top 90%' },
+    delay: i * 0.12
+  });
+});
+
+// ===== FLIP CARD STAGGER =====
+gsap.utils.toArray('.flip-card').forEach((card, i) => {
+  gsap.fromTo(card, { opacity: 0, rotateY: -30 }, {
+    opacity: 1, rotateY: 0,
+    duration: 0.8,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: card, start: 'top 90%' },
+    delay: i * 0.15
+  });
+});
+
+// ===== CONCLUSION KEYWORD HIGHLIGHT =====
+gsap.utils.toArray('.highlight-word').forEach((word, i) => {
+  gsap.fromTo(word, { opacity: 0, y: 10 }, {
+    opacity: 1, y: 0,
+    duration: 0.5,
+    ease: 'power2.out',
+    scrollTrigger: { trigger: '#conclusion', start: 'top 70%' },
+    delay: i * 0.1
+  });
+});
+
+// ===== INSTRUCTOR CARD GLOW =====
+ScrollTrigger.create({
+  trigger: '#instructor',
+  start: 'top 70%',
+  onEnter: () => {
+    gsap.fromTo('.instructor-card', { opacity: 0, scale: 0.8, y: 40 }, {
+      opacity: 1, scale: 1, y: 0,
+      duration: 1.2,
+      ease: 'elastic.out(1, 0.6)'
+    });
+  }
+});
+
+// ===== FLOATING LEAVES =====
+function createParticles() {
+  const emojis = ['🌿', '🍃', '✨', '🌱'];
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      font-size: ${8 + Math.random() * 14}px;
+      animation-duration: ${12 + Math.random() * 18}s;
+      animation-delay: ${Math.random() * 10}s;
+      filter: blur(${Math.random() > 0.7 ? 1 : 0}px);
+    `;
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    document.body.appendChild(p);
+  }
+}
+createParticles();
+
+// ===== SCROLL SECTION ANIMATIONS BATCH =====
+ScrollTrigger.batch('.taxon-card', {
+  onEnter: batch => gsap.fromTo(batch, { opacity: 0, x: -40 }, {
+    opacity: 1, x: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out'
+  }),
+  start: 'top 85%'
+});
+
+ScrollTrigger.batch('.compound-group', {
+  onEnter: batch => gsap.fromTo(batch, { opacity: 0, y: 50, scale: 0.95 }, {
+    opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out'
+  }),
+  start: 'top 85%'
+});
+
+ScrollTrigger.batch('.accord-item', {
+  onEnter: batch => gsap.fromTo(batch, { opacity: 0, x: -30 }, {
+    opacity: 1, x: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out'
+  }),
+  start: 'top 88%'
+});
+
+// ===== SMOOTH HEADER LOGO PULSE =====
+setInterval(() => {
+  const logos = document.querySelectorAll('.header-logo');
+  logos.forEach(logo => {
+    logo.style.transform = 'scale(1.05)';
+    setTimeout(() => logo.style.transform = '', 300);
+    logo.style.transition = 'transform 0.3s';
+  });
+}, 5000);
+
+// ===== REFRESH SCROLLTRIGGER ON LOAD =====
+window.addEventListener('load', () => {
+  ScrollTrigger.refresh();
+});
+
+console.log('%c🌿 Ashwagandha Website Loaded | QCP Pattoki', 'color:#1e6b3a;font-size:16px;font-weight:bold;');
+console.log('%cDesigned by Horizon – Media Cell QCP', 'color:#c9a84c;font-size:12px;');
+</script>
+
+</body>
+</html>
