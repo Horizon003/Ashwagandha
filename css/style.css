@@ -1723,9 +1723,9 @@ body {
 .accord-item,
 .mis-card,
 .conclusion-stats {
-  background: linear-gradient(160deg, rgba(28,62,40,0.92), rgba(12,28,18,0.88));
-  border: 1px solid rgba(255,255,255,0.18);
-  box-shadow: 0 18px 50px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 0.5px rgba(123,196,127,0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.18);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -1794,32 +1794,29 @@ body {
 }
 
 .team-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  max-width: 620px;
-  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.team-card {\n  padding: 1.5rem 1.2rem;\n  border-radius: 24px;\n}
+.team-card {
+  padding: 1.5rem 1.2rem;
+  border-radius: 24px;
+}
 
 .team-avatar-wrap {
-  width: 140px;
-  height: 170px;
-  position: relative;
+  width: 154px;
+  height: 154px;
 }
 
 .team-avatar {
-  width: 132px;
-  height: 162px;
+  width: 146px;
+  height: 146px;
   object-position: center 14%;
-  border-radius: 16px;
-  border: 2px solid rgba(255,255,255,0.22);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,0.16);
 }
 
 .team-avatar-fallback {
-  border-radius: 16px;
+  border-radius: 28px;
 }
 
 .team-roll {
@@ -2197,15 +2194,14 @@ body {
 
 .hero-image-frame {
   min-height: unset;
-  height: auto;
-  aspect-ratio: 16 / 9;
+  height: clamp(340px, 66vh, 620px);
+  aspect-ratio: 4 / 5;
   align-items: center;
 }
 
 .hero-img {
   min-height: unset;
   height: 100%;
-  object-fit: cover;
   object-position: center center;
 }
 
@@ -2213,73 +2209,20 @@ body {
   cursor: pointer;
 }
 
-/* Flip is controlled only via JS click/tap — no hover trigger */
 .flip-card.is-flipped .flip-inner {
   transform: rotateY(180deg);
 }
 
-/* Group info tooltip */
-.group-info-popup {
-  position: fixed;
-  z-index: 600;
-  background: rgba(13,32,20,0.97);
-  border: 1px solid var(--gold);
-  border-radius: 14px;
-  padding: 1rem 1.25rem;
-  max-width: 280px;
-  font-size: 0.83rem;
-  color: var(--cream);
-  line-height: 1.6;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(-6px);
-  transition: opacity 0.22s, transform 0.22s;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 18px rgba(201,168,76,0.15);
-}
-.group-info-popup.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.group-info-title {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  color: var(--gold-light);
-  margin-bottom: 0.35rem;
-  font-size: 0.9rem;
-}
-.chem-group h3 {
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.chem-group h3::after {
-  content: 'ⓘ';
-  font-size: 0.65rem;
-  color: var(--gold);
-  opacity: 0.7;
-  vertical-align: super;
-  font-family: sans-serif;
+@media (hover: hover) and (pointer: fine) {
+  .flip-card:hover .flip-inner {
+    transform: rotateY(180deg);
+  }
 }
 
-/* Glitch animation */
-@keyframes glitch-shake {
-  0%   { transform: translateX(0) skewX(0); clip-path: none; }
-  15%  { transform: translateX(-4px) skewX(-3deg); }
-  30%  { transform: translateX(4px) skewX(3deg); color: #4dffaa; }
-  45%  { transform: translateX(-3px) skewX(-1deg); color: #ff4d4d; }
-  60%  { transform: translateX(3px); color: var(--gold-light); }
-  80%  { transform: translateX(-2px); }
-  100% { transform: translateX(0) skewX(0); }
-}
-.hero-title-glitch {
-  animation: glitch-shake 0.12s linear infinite;
-  text-shadow: 3px 0 #ff4d4d, -3px 0 #4dffaa, 0 0 20px rgba(201,168,76,0.8);
-}
-.hero-title-alt {
-  font-style: italic;
-  color: var(--gold-light) !important;
-  text-shadow: 0 0 30px rgba(201,168,76,0.6), 0 0 60px rgba(201,168,76,0.3);
+@media (hover: none) {
+  .flip-card:hover .flip-inner {
+    transform: none;
+  }
 }
 
 .dosage-img-wrap {
@@ -2303,10 +2246,10 @@ body {
 }
 
 .salman-avatar {
-  object-fit: cover;
-  object-position: center top;
-  padding: 0;
-  background: none;
+  object-fit: contain;
+  object-position: center center;
+  padding: 0.4rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(45,90,61,0.22));
 }
 
 @media (max-width: 1100px) {
@@ -2353,144 +2296,442 @@ body {
   }
 }
 
-/* ═══════════════ COMPREHENSIVE MOBILE FIX ═══════════════ */
 
-/* Hero image responsive for mobile */
-@media (max-width: 768px) {
-  .hero-image-frame {
-    aspect-ratio: 16 / 9;
-    height: auto;
-  }
-  .hero-img {
-    object-fit: cover;
-    object-position: center center;
-  }
-  .team-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    max-width: 100%;
-  }
-  .team-avatar-wrap {
-    width: 120px;
-    height: 145px;
-  }
-  .team-avatar {
-    width: 112px;
-    height: 137px;
+/* ═══════════════ FINAL UX FIXES — MOBILE / IMAGES / TILES ═══════════════ */
+:root {
+  --card-bg-strong: linear-gradient(180deg, rgba(27,58,39,0.92), rgba(12,24,17,0.92));
+  --card-border-strong: rgba(232,203,122,0.18);
+}
+
+.section-header {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 24px;
+  padding: 1.35rem 1rem 1.2rem;
+}
+
+.taxo-card,
+.tl-card,
+.chem-group,
+.med-card,
+.trad-front,
+.ref-item,
+.conclusion-card,
+.c-stat,
+.team-card,
+.instructor-card,
+.dosage-product-card,
+.viewer-container,
+.other-dosages,
+.accord-item,
+.flip-front,
+.flip-back {
+  background: var(--card-bg-strong) !important;
+  border-color: var(--card-border-strong) !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+.alt-bg {
+  background: linear-gradient(180deg, #102116 0%, #0b1610 100%);
+}
+
+.chem-group {
+  position: relative;
+}
+
+.chem-info-trigger {
+  width: 100%;
+  margin: 0 0 0.9rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--cream);
+  transition: transform .25s ease, border-color .25s ease, background .25s ease;
+}
+
+.chem-info-trigger:hover,
+.chem-group.detail-open .chem-info-trigger {
+  background: linear-gradient(135deg, rgba(74,140,96,0.28), rgba(201,168,76,0.18));
+  border-color: rgba(232,203,122,0.28);
+}
+
+.chem-info-trigger-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.chem-info-trigger-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-light);
+  background: rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.chem-group-detail {
+  max-height: 0;
+  overflow: hidden;
+  color: rgba(245,240,232,0.78);
+  font-size: 0.84rem;
+  line-height: 1.65;
+  margin-top: -0.25rem;
+  transition: max-height .35s ease, margin-bottom .35s ease, opacity .35s ease;
+  opacity: 0;
+}
+
+.chem-group.detail-open .chem-group-detail {
+  max-height: 180px;
+  opacity: 1;
+  margin-bottom: 1rem;
+}
+
+.chem-chip {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.13);
+}
+
+.hero-title.is-glitching {
+  animation: heroGlitch 0.65s ease;
+  text-shadow: 2px 0 rgba(74,140,96,0.8), -2px 0 rgba(201,168,76,0.85), 0 8px 24px rgba(0,0,0,0.4);
+}
+
+@keyframes heroGlitch {
+  0% { transform: translateX(0); filter: hue-rotate(0deg); letter-spacing: -0.03em; }
+  20% { transform: translateX(-2px); filter: hue-rotate(25deg); }
+  40% { transform: translateX(3px); filter: hue-rotate(-15deg); }
+  60% { transform: translateX(-1px); filter: hue-rotate(10deg); }
+  100% { transform: translateX(0); filter: hue-rotate(0deg); }
+}
+
+.hero-image-card {
+  width: min(100%, 560px);
+}
+
+.hero-image-frame {
+  aspect-ratio: 16 / 9;
+  height: auto !important;
+  min-height: unset !important;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, rgba(255,255,255,0.18), rgba(9,17,12,0.8));
+}
+
+.hero-img {
+  height: 100% !important;
+  min-height: unset !important;
+  object-fit: cover;
+  object-position: center center;
+  padding: 0;
+}
+
+.flip-card:hover .flip-inner {
+  transform: none !important;
+}
+
+.flip-card.is-flipped .flip-inner {
+  transform: rotateY(180deg) !important;
+}
+
+.team-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.35rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.team-card {
+  padding: 1rem;
+  border-radius: 26px;
+  gap: 0.95rem;
+  align-items: stretch;
+}
+
+.team-card:hover {
+  transform: translateY(-4px);
+}
+
+.team-avatar-wrap {
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 4 / 5;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 26px;
+  overflow: hidden;
+}
+
+.team-glow-ring {
+  inset: 0;
+  opacity: 1;
+  border-radius: 26px;
+  background: linear-gradient(145deg, rgba(201,168,76,0.55), rgba(74,140,96,0.48));
+  animation: none;
+}
+
+.team-avatar {
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  margin: 2px;
+  border-radius: 24px;
+  border: none;
+  object-fit: cover;
+  object-position: center 12%;
+  transform: none !important;
+}
+
+.team-avatar-fallback {
+  inset: 2px;
+  border-radius: 24px;
+}
+
+.team-card[data-member="zohaib"] .team-avatar {
+  object-position: center center;
+}
+
+.team-card[data-member="ali"] .team-avatar {
+  object-position: center 10%;
+}
+
+.team-card[data-member="salman"] .team-avatar,
+.salman-avatar {
+  object-fit: cover !important;
+  object-position: center 8% !important;
+  padding: 0 !important;
+  background: rgba(255,255,255,0.04) !important;
+}
+
+.team-info h3 {
+  font-size: 1.05rem;
+}
+
+.team-roll {
+  display: block;
+  min-height: 2.8em;
+}
+
+.viewer-stage {
+  min-height: 320px;
+}
+
+@media (max-width: 900px) {
+  #nav-dots {
+    display: none;
   }
 }
 
-@media (max-width: 520px) {
-  /* Force all card grids to single column except team */
-  .taxo-grid,
-  .chem-groups,
-  .med-grid,
-  .trad-grid,
-  .flip-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 768px) {
+  :root {
+    --header-h: 76px;
   }
 
-  /* Team stays 2 cols on mobile */
-  .team-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.85rem;
+  #site-header {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 0;
+    min-height: 68px;
+    height: auto;
   }
 
-  .team-avatar-wrap {
-    width: 108px;
-    height: 130px;
+  .header-inner {
+    padding: 0.7rem 0.8rem;
+    gap: 0.7rem;
   }
-  .team-avatar {
-    width: 100px;
-    height: 122px;
+
+  .header-logo {
+    width: 40px;
+    height: 40px;
     border-radius: 12px;
-  }
-  .team-avatar-fallback {
-    border-radius: 12px;
-  }
-  .team-card {
-    padding: 1rem 0.75rem;
-    border-radius: 18px;
-  }
-  .team-info h3 {
-    font-size: 0.88rem;
-  }
-  .team-roll {
-    font-size: 0.65rem;
-    padding: 0.3rem 0.55rem;
+    padding: 4px;
+    background: rgba(0,0,0,0.03);
   }
 
-  /* Section headers smaller on mobile */
-  .section-header {
-    padding: 0.85rem 0.85rem 1rem;
-    margin-bottom: 1.5rem;
-  }
-  .section-title {
-    font-size: clamp(1.4rem, 7vw, 2rem);
+  .header-text-main {
+    font-size: 0.63rem;
   }
 
-  /* Prevent overflow */
-  body {
-    overflow-x: hidden;
+  .header-text-sub {
+    font-size: 0.55rem;
+  }
+
+  .section {
+    min-height: auto;
+    padding: calc(var(--header-h) + 2rem) 0.95rem 3rem;
+  }
+
+  #sec-0 {
+    padding-top: calc(var(--header-h) + 1.4rem);
+    height: auto;
+    min-height: 100svh;
+  }
+
+  .hero-shell {
+    gap: 1.2rem;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+  }
+
+  .hero-badge {
+    font-size: 0.64rem;
+    padding: 0.45rem 0.9rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.3rem, 11vw, 3.6rem);
+    text-align: center;
+  }
+
+  .hero-subtitle,
+  .hero-tagline {
+    text-align: center;
+  }
+
+  .hero-divider,
+  .hero-highlights {
+    justify-content: center;
+  }
+
+  .hero-chip {
+    width: calc(50% - 0.45rem);
+    justify-content: center;
+    padding: 0.7rem 0.8rem;
   }
 
   .hero-image-card {
     width: 100%;
+    padding: 0.7rem;
+    border-radius: 24px;
   }
 
-  /* Trad cards smaller on mobile */
-  .trad-card {
-    height: 200px;
+  .hero-image-topbar {
+    padding-bottom: 0.75rem;
   }
 
-  /* Other dosage list single column */
-  .other-dosage-list {
+  .hero-image-frame {
+    aspect-ratio: 16 / 9;
+  }
+
+  .med-grid,
+  .trad-grid,
+  .chem-groups,
+  .taxo-grid {
     grid-template-columns: 1fr;
-    flex-direction: column;
   }
 
-  /* Conclusion stats 2x2 */
-  .conclusion-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
-
-  /* Instruction card mobile */
-  .instructor-card {
-    padding: 1.5rem 1rem;
+  .flip-grid {
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
-  .instructor-avatar-wrap {
-    width: 140px;
-    height: 140px;
-  }
-  .instructor-avatar {
-    width: 132px;
-    height: 132px;
+
+  .dosage-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  /* Reference items */
-  .ref-item {
-    flex-direction: column;
-    gap: 0.5rem;
+  .dosage-center {
+    order: -1;
+  }
+
+  .viewer-stage {
+    min-height: 260px;
+  }
+
+  .team-grid {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 520px) {
+  :root {
+    --header-h: 84px;
+  }
+
+  .header-center {
+    display: none;
+  }
+
+  .header-text-sub {
+    display: none;
+  }
+
+  .header-text-main {
+    font-size: 0.61rem;
+    line-height: 1.2;
+  }
+
+  .section-header {
+    padding: 1rem 0.85rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .hero-chip {
+    width: 100%;
+  }
+
+  .hero-image-topbar {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .chem-tooltip {
+    max-width: min(92vw, 280px);
+  }
+
+  .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  .team-card {
+    padding: 0.75rem;
+    border-radius: 20px;
+  }
+
+  .team-avatar-wrap {
+    border-radius: 18px;
+    max-width: none;
+  }
+
+  .team-glow-ring,
+  .team-avatar,
+  .team-avatar-fallback {
+    border-radius: 16px;
+  }
+
+  .team-info h3 {
+    font-size: 0.9rem;
+  }
+
+  .team-roll {
+    font-size: 0.68rem;
   }
 }
 
 @media (max-width: 380px) {
+  .header-brand-right .header-text {
+    display: none;
+  }
+
   .team-grid {
-    gap: 0.6rem;
+    grid-template-columns: 1fr 1fr;
   }
-  .team-avatar-wrap {
-    width: 92px;
-    height: 110px;
-  }
-  .team-avatar {
-    width: 84px;
-    height: 102px;
-    border-radius: 10px;
-  }
-  .hero-image-frame {
-    aspect-ratio: 16 / 9;
+
+  .hero-image-label,
+  .hero-image-pill {
+    font-size: 0.62rem;
   }
 }
