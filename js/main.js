@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initGSAPAnimations();
   initTimeline();
   initChemTooltips();
-  initChemGroupInfo();
   initMedProgressBars();
   initTradCards();
   initMisconceptionCards();
@@ -123,82 +122,44 @@ function initParticles() {
 }
 
 /* ────────────────────────────────────────────────
-   5. HERO TYPING EFFECT + GLITCH RETYPE
+   5. HERO TYPING EFFECT
 ──────────────────────────────────────────────── */
 function initHeroTyping() {
   const el = document.getElementById('hero-typing');
   if (!el) return;
-  const text = 'Ashwagandha';
-  let i = 0;
 
+  const text = 'Ashwagandha';
   const cursor = document.createElement('span');
   cursor.className = 'typing-cursor';
-  el.appendChild(cursor);
+  let cycle = 0;
 
-  const type = () => {
-    if (i <= text.length) {
-      el.textContent = text.slice(0, i);
-      el.appendChild(cursor);
-      i++;
-      setTimeout(type, 100);
-    } else {
-      // After 2.5s, start glitch cycle
-      setTimeout(startGlitch, 2500);
-    }
-  };
-
-  const glitchChars = '!@#$%Ω∑√∏αβγδΨ?<>[]';
-
-  function startGlitch() {
-    let glitchCount = 0;
-    const maxGlitches = 10;
-    el.classList.add('hero-title-glitch');
-
-    const glitchInterval = setInterval(() => {
-      if (glitchCount >= maxGlitches) {
-        clearInterval(glitchInterval);
-        el.classList.remove('hero-title-glitch');
-        el.textContent = text;
-        el.appendChild(cursor);
-        // Short pause then retype in gold italic
-        setTimeout(retypeAlt, 400);
-        return;
-      }
-      // Randomise characters
-      const glitched = text.split('').map(ch =>
-        Math.random() > 0.55
-          ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
-          : ch
-      ).join('');
-      el.textContent = glitched;
-      el.appendChild(cursor);
-      glitchCount++;
-    }, 90);
-  }
-
-  function retypeAlt() {
+  function typeText(speed = 90) {
+    let i = 0;
     el.textContent = '';
-    el.classList.add('hero-title-alt');
     el.appendChild(cursor);
-    let j = 0;
-    const retypeInterval = setInterval(() => {
-      el.textContent = text.slice(0, j);
-      el.appendChild(cursor);
-      j++;
-      if (j > text.length) {
-        clearInterval(retypeInterval);
-        // Keep gold italic for 2s, then reset to normal
+
+    const tick = () => {
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i);
+        el.appendChild(cursor);
+        i += 1;
+        setTimeout(tick, speed);
+      } else if (cycle === 0) {
+        cycle = 1;
         setTimeout(() => {
-          el.classList.remove('hero-title-alt');
-          el.textContent = text;
-          el.appendChild(cursor);
-        }, 2000);
+          el.classList.add('is-glitching');
+          setTimeout(() => {
+            el.classList.remove('is-glitching');
+            typeText(70);
+          }, 650);
+        }, 1800);
       }
-    }, 85);
+    };
+
+    tick();
   }
 
-  // Start after slight delay
-  setTimeout(type, 600);
+  setTimeout(() => typeText(95), 650);
 }
 
 /* ────────────────────────────────────────────────
@@ -329,28 +290,89 @@ function initTimeline() {
 function initChemTooltips() {
   const tooltip = document.getElementById('chem-tooltip');
   if (!tooltip) return;
+
+  const groupDefinitions = {
+    withanolides: 'Steroidal lactones found mainly in Ashwagandha. They are the core active compounds linked with anti-inflammatory, adaptogenic and neuroprotective effects.',
+    alkaloids: 'Nitrogen-containing natural compounds that can affect the nervous system. In Ashwagandha, they contribute to sedative, calming and neuroactive actions.',
+    glycosides: 'Compounds made of a sugar part plus an active non-sugar part. In Ashwagandha, they support anti-stress, adaptogenic and immunomodulatory activity.',
+    others: 'Flavonoids, sterols and polyphenols are supportive antioxidant compounds. They help protect cells from oxidative stress and support heart and metabolic health.'
+  };
+
+  document.querySelectorAll('.chem-group').forEach(group => {
+    const key = group.dataset.group;
+    const compounds = group.querySelector('.chem-compounds');
+    if (!compounds || !groupDefinitions[key] || group.querySelector('.chem-info-trigger')) return;
+
+    const label = group.querySelector('h3')?.textContent?.trim() || 'This group';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'chem-info-trigger';
+    button.setAttribute('aria-expanded', 'false');
+    button.innerHTML = `<span class="chem-info-trigger-label">What is ${label}?</span><span class="chem-info-trigger-icon"><i class="fa-solid fa-circle-info"></i></span>`;
+
+    const detail = document.createElement('div');
+    detail.className = 'chem-group-detail';
+    detail.textContent = groupDefinitions[key];
+
+    button.addEventListener('click', () => {
+      const isOpen = group.classList.toggle('detail-open');
+      button.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    group.insertBefore(button, compounds);
+    group.insertBefore(detail, compounds);
+  });
+
   const chips = document.querySelectorAll('.chem-chip[data-tooltip]');
 
+  const hideTooltip = () => tooltip.classList.remove('visible');
+
   chips.forEach(chip => {
+    chip.setAttribute('tabindex', '0');
+
     chip.addEventListener('mouseenter', e => {
       tooltip.textContent = chip.dataset.tooltip;
       positionTooltip(e);
       tooltip.classList.add('visible');
     });
+
     chip.addEventListener('mousemove', positionTooltip);
-    chip.addEventListener('mouseleave', () => {
-      tooltip.classList.remove('visible');
+    chip.addEventListener('mouseleave', hideTooltip);
+
+    chip.addEventListener('click', e => {
+      e.stopPropagation();
+      tooltip.textContent = chip.dataset.tooltip;
+      positionTooltip(e);
+      tooltip.classList.toggle('visible');
     });
+
+    chip.addEventListener('focus', e => {
+      tooltip.textContent = chip.dataset.tooltip;
+      positionTooltip(e);
+      tooltip.classList.add('visible');
+    });
+
+    chip.addEventListener('blur', hideTooltip);
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.chem-chip')) hideTooltip();
   });
 
   function positionTooltip(e) {
+    const rect = e.currentTarget?.getBoundingClientRect ? e.currentTarget.getBoundingClientRect() : null;
     const tw = tooltip.offsetWidth || 280;
     const th = tooltip.offsetHeight || 80;
-    let left = e.clientX + 14;
-    let top  = e.clientY - th / 2;
-    if (left + tw > window.innerWidth - 10) left = e.clientX - tw - 14;
+    let left = rect ? rect.left + (rect.width / 2) - (tw / 2) : e.clientX + 14;
+    let top  = rect ? rect.bottom + 12 : e.clientY - th / 2;
+
+    if (left < 10) left = 10;
+    if (left + tw > window.innerWidth - 10) left = window.innerWidth - tw - 10;
+    if (top + th > window.innerHeight - 10) {
+      top = (rect ? rect.top - th - 12 : e.clientY - th - 14);
+    }
     if (top < 10) top = 10;
-    if (top + th > window.innerHeight - 10) top = window.innerHeight - th - 10;
+
     tooltip.style.left = left + 'px';
     tooltip.style.top  = top + 'px';
   }
@@ -394,13 +416,12 @@ function initTradCards() {
 
 
 /* ────────────────────────────────────────────────
-   11B. MISCONCEPTION CARDS — tap/click ONLY (no hover)
+   11B. MISCONCEPTION CARDS (tap/click to flip repeatedly)
 ──────────────────────────────────────────────── */
 function initMisconceptionCards() {
   document.querySelectorAll('.flip-card').forEach(card => {
     card.setAttribute('tabindex', '0');
     card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', 'Tap to flip card');
 
     const toggle = (event) => {
       if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
@@ -410,9 +431,6 @@ function initMisconceptionCards() {
 
     card.addEventListener('click', toggle);
     card.addEventListener('keydown', toggle);
-
-    // Remove any CSS hover by preventing mouseenter from triggering visual change
-    card.addEventListener('mouseenter', (e) => e.stopPropagation());
   });
 }
 
@@ -617,50 +635,65 @@ function initSmoothScrollLinks() {
    16. IMAGE FALLBACKS (avoid inline onerror issues)
 ──────────────────────────────────────────────── */
 function initImageFallbacks() {
-  // Dosage product images
-  const capImg = document.getElementById('img-capsules');
-  if (capImg) {
-    capImg.addEventListener('error', () => {
-      const wrap = capImg.closest('.dosage-img-wrap');
-      if (wrap) {
-        wrap.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-capsules"></i></div>';
-      }
-    });
+  const rawBase = 'https://raw.githubusercontent.com/Horizon003/Ashwagandha/main/';
+
+  const fallbackMap = new Map([
+    ['assets/main/ashwagandha-main.webp', rawBase + 'assets/main/ashwagandha-main.webp'],
+    ['assets/products/ashwagandha-capsules.webp', rawBase + 'assets/products/ashwagandha-capsules.webp'],
+    ['assets/products/ashwagandha-powder.webp', rawBase + 'assets/products/ashwagandha-powder.webp'],
+    ['assets/team/haris-horizon.webp', rawBase + 'assets/team/haris-horizon.webp'],
+    ['assets/team/zohaib-tahir.webp', rawBase + 'assets/team/zohaib-tahir.webp'],
+    ['assets/team/ali-haider.webp', rawBase + 'assets/team/ali-haider.webp'],
+    ['assets/team/salman.webp', rawBase + 'assets/team/salman.webp'],
+    ['assets/team/dr-zeenat-aman.webp', rawBase + 'assets/team/dr-zeenat-aman.webp']
+  ]);
+
+  for (let i = 1; i <= 9; i += 1) {
+    fallbackMap.set(`assets/products/product-360/product-${i}.webp`, rawBase + `assets/products/product-360/product-${i}.webp`);
   }
+
+  const attachFallback = (img, hardFallback) => {
+    if (!img) return;
+    img.addEventListener('error', () => {
+      const currentSrc = img.getAttribute('src') || '';
+      const fallbackSrc = fallbackMap.get(currentSrc);
+      if (fallbackSrc && !img.dataset.rawTried) {
+        img.dataset.rawTried = '1';
+        img.src = fallbackSrc;
+        return;
+      }
+      hardFallback?.();
+    });
+  };
+
+  const capImg = document.getElementById('img-capsules');
+  attachFallback(capImg, () => {
+    const wrap = capImg?.closest('.dosage-img-wrap');
+    if (wrap) wrap.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-capsules"></i></div>';
+  });
 
   const powImg = document.getElementById('img-powder');
-  if (powImg) {
-    powImg.addEventListener('error', () => {
-      const wrap = powImg.closest('.dosage-img-wrap');
-      if (wrap) {
-        wrap.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-mortar-pestle"></i></div>';
-      }
-    });
-  }
+  attachFallback(powImg, () => {
+    const wrap = powImg?.closest('.dosage-img-wrap');
+    if (wrap) wrap.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-mortar-pestle"></i></div>';
+  });
 
-  // Hero image
   const heroImg = document.getElementById('hero-img');
-  if (heroImg) {
-    heroImg.addEventListener('error', () => {
-      const bg = heroImg.closest('.hero-image-card');
-      if (bg) bg.classList.add('hero-bg-fallback');
-    });
-  }
+  attachFallback(heroImg, () => {
+    const bg = heroImg?.closest('.hero-image-card');
+    if (bg) bg.classList.add('hero-bg-fallback');
+  });
 
-  // Team avatars
   document.querySelectorAll('.team-avatar').forEach(img => {
-    img.addEventListener('error', () => {
+    attachFallback(img, () => {
       img.style.opacity = '0';
     });
   });
 
-  // Instructor avatar
   const instructorAvatar = document.querySelector('.instructor-avatar');
-  if (instructorAvatar) {
-    instructorAvatar.addEventListener('error', () => {
-      instructorAvatar.style.opacity = '0';
-    });
-  }
+  attachFallback(instructorAvatar, () => {
+    if (instructorAvatar) instructorAvatar.style.opacity = '0';
+  });
 }
 
 /* ────────────────────────────────────────────────
@@ -677,82 +710,3 @@ function initImageFallbacks() {
     }
   }, { passive: true });
 })();
-
-/* ────────────────────────────────────────────────
-   9B. CHEMICAL GROUP NAME INFO POPUP (tap/hover)
-──────────────────────────────────────────────── */
-function initChemGroupInfo() {
-  const groupInfoData = {
-    'withanolides': {
-      title: 'Withanolides',
-      info: 'Steroidal lactones unique to the Withania genus. They are the primary bioactive compounds responsible for most of ashwagandha\'s adaptogenic, anti-cancer, and anti-inflammatory properties.'
-    },
-    'alkaloids': {
-      title: 'Alkaloids',
-      info: 'Nitrogen-containing organic compounds produced by plants. They are biologically active and exert potent effects on the nervous system — contributing to ashwagandha\'s sedative and neuro-modulating actions.'
-    },
-    'glycosides': {
-      title: 'Glycosides',
-      info: 'Compounds where a sugar molecule is bonded to a non-sugar (aglycone). In ashwagandha, withanosides and sitoindosides act on GABA receptors to produce anxiolytic and immunostimulant effects.'
-    },
-    'others': {
-      title: 'Flavonoids & Sterols',
-      info: 'Plant polyphenols and phytosterols with strong antioxidant, anti-inflammatory, and cardioprotective properties. They neutralize free radicals and support lipid metabolism.'
-    }
-  };
-
-  // Create popup element
-  const popup = document.createElement('div');
-  popup.className = 'group-info-popup';
-  popup.id = 'group-info-popup';
-  document.body.appendChild(popup);
-
-  let hideTimer = null;
-
-  function showPopup(groupKey, refEl) {
-    const data = groupInfoData[groupKey];
-    if (!data) return;
-    clearTimeout(hideTimer);
-    popup.innerHTML = `<div class="group-info-title">${data.title}</div><p>${data.info}</p>`;
-    popup.classList.add('visible');
-    positionPopup(refEl);
-  }
-
-  function hidePopup() {
-    hideTimer = setTimeout(() => popup.classList.remove('visible'), 200);
-  }
-
-  function positionPopup(refEl) {
-    const rect = refEl.getBoundingClientRect();
-    const pw = popup.offsetWidth || 280;
-    let left = rect.left;
-    let top = rect.bottom + 10;
-    if (left + pw > window.innerWidth - 12) left = window.innerWidth - pw - 12;
-    if (top + 140 > window.innerHeight - 12) top = rect.top - 145;
-    popup.style.left = left + 'px';
-    popup.style.top  = top + 'px';
-  }
-
-  document.querySelectorAll('.chem-group').forEach(group => {
-    const key = group.dataset.group;
-    const h3 = group.querySelector('h3');
-    if (!h3 || !key) return;
-
-    // Tap / click
-    h3.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (popup.classList.contains('visible')) {
-        popup.classList.remove('visible');
-      } else {
-        showPopup(key, h3);
-      }
-    });
-
-    // Hover (desktop)
-    h3.addEventListener('mouseenter', () => showPopup(key, h3));
-    h3.addEventListener('mouseleave', hidePopup);
-  });
-
-  // Close on outside click
-  document.addEventListener('click', () => popup.classList.remove('visible'));
-}
