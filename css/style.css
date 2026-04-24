@@ -2150,3 +2150,148 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ═══════════════ FIXES REQUESTED ═══════════════ */
+.section {
+  scroll-margin-top: calc(var(--header-h) + 1.5rem);
+}
+
+.section-header {
+  max-width: 760px;
+  margin: 0 auto 2.2rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 18px 42px rgba(0,0,0,0.16);
+  backdrop-filter: blur(14px);
+}
+
+#sec-0 {
+  min-height: 100svh;
+  height: auto;
+  padding: calc(var(--header-h) + 1.75rem) 1rem 4rem;
+}
+
+.hero-content {
+  min-height: calc(100svh - var(--header-h) - 5rem);
+  height: auto;
+}
+
+.hero-shell {
+  min-height: auto;
+}
+
+.hero-visual {
+  width: 100%;
+}
+
+.hero-image-card {
+  width: min(100%, 520px);
+  margin: 0 auto;
+}
+
+.hero-image-frame {
+  min-height: unset;
+  height: clamp(340px, 66vh, 620px);
+  aspect-ratio: 4 / 5;
+  align-items: center;
+}
+
+.hero-img {
+  min-height: unset;
+  height: 100%;
+  object-position: center center;
+}
+
+.flip-card {
+  cursor: pointer;
+}
+
+.flip-card.is-flipped .flip-inner {
+  transform: rotateY(180deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .flip-card:hover .flip-inner {
+    transform: rotateY(180deg);
+  }
+}
+
+@media (hover: none) {
+  .flip-card:hover .flip-inner {
+    transform: none;
+  }
+}
+
+.dosage-img-wrap {
+  aspect-ratio: 1 / 1;
+  padding: 1rem;
+  background: radial-gradient(circle at top, rgba(255,255,255,0.14), rgba(0,0,0,0.28));
+}
+
+.dosage-img {
+  object-fit: contain;
+  object-position: center;
+}
+
+.viewer-stage {
+  touch-action: pan-y;
+}
+
+.team-roll {
+  text-align: center;
+  line-height: 1.45;
+}
+
+.salman-avatar {
+  object-fit: contain;
+  object-position: center center;
+  padding: 0.4rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(45,90,61,0.22));
+}
+
+@media (max-width: 1100px) {
+  #sec-0 {
+    padding-bottom: 3.5rem;
+  }
+
+  .hero-shell {
+    gap: 1.4rem;
+  }
+
+  .hero-image-frame {
+    height: clamp(320px, 58vh, 520px);
+  }
+}
+
+@media (max-width: 768px) {
+  #sec-0 {
+    overflow: visible;
+    padding-top: calc(var(--header-h) + 2rem);
+  }
+
+  .section-header {
+    padding: 1rem 1rem 1.1rem;
+    border-radius: 20px;
+  }
+
+  .hero-content {
+    min-height: auto;
+  }
+
+  .hero-image-frame {
+    height: clamp(300px, 52vh, 420px);
+  }
+}
+
+@media (max-width: 520px) {
+  #sec-0 {
+    padding-top: calc(var(--header-h) + 2.2rem);
+  }
+
+  .hero-image-frame {
+    height: clamp(280px, 48vh, 360px);
+  }
+}
