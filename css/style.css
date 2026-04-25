@@ -2617,57 +2617,44 @@ img, video, iframe, canvas {
    360° PLANT VIDEO VIEWER SECTION
 ════════════════════════════════════════════ */
 .plant360-section {
-  padding: 5rem 0 6rem;
+  padding: 4rem 0 5rem;
 }
 
 .plant360-layout {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2.5rem;
+  gap: 2rem;
 }
 
-/* ── Phone Frame Stage ── */
+/* ── Big Open Frame (no phone shape) ── */
 .plant360-stage-wrap {
   position: relative;
+  width: 100%;
+  max-width: 540px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
 }
 
-.plant360-phone-frame {
+.plant360-frame {
   position: relative;
-  width: min(260px, 64vw);
+  width: 100%;
   aspect-ratio: 9 / 16;
-  background: linear-gradient(160deg, #1a2e20, #0d1c12);
-  border-radius: 36px;
-  border: 2px solid rgba(255,255,255,0.18);
-  box-shadow:
-    0 0 0 1px rgba(0,0,0,0.5),
-    0 32px 80px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.12);
-  overflow: visible;
-}
-
-.plant360-notch {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 8px;
-  background: rgba(0,0,0,0.7);
-  border-radius: 6px;
-  z-index: 5;
-}
-
-.plant360-screen {
-  position: absolute;
-  inset: 6px;
-  border-radius: 30px;
+  border-radius: 28px;
   overflow: hidden;
   background: #060f08;
+  border: 1.5px solid rgba(255,255,255,0.14);
+  box-shadow:
+    0 0 60px rgba(76,175,80,0.12),
+    0 24px 64px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+@media (min-width: 600px) {
+  .plant360-frame {
+    aspect-ratio: 4 / 3;
+  }
 }
 
 .plant360-video {
@@ -2675,8 +2662,8 @@ img, video, iframe, canvas {
   height: 100%;
   object-fit: cover;
   display: block;
-  user-select: none;
   pointer-events: none;
+  user-select: none;
 }
 
 /* Hint overlay */
@@ -2687,112 +2674,94 @@ img, video, iframe, canvas {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  background: rgba(6,15,8,0.55);
-  backdrop-filter: blur(2px);
-  color: rgba(255,255,255,0.9);
-  font-size: 0.9rem;
+  gap: 0.6rem;
+  background: rgba(6,15,8,0.5);
+  backdrop-filter: blur(3px);
+  color: rgba(255,255,255,0.92);
+  font-size: 0.95rem;
   font-weight: 500;
   pointer-events: none;
-  transition: opacity 0.4s;
+  transition: opacity 0.5s ease;
   z-index: 3;
 }
 .plant360-overlay-hint i {
-  font-size: 1.6rem;
-  color: var(--gold-light, #e8c97a);
-  animation: hint-pulse 1.4s ease-in-out infinite;
+  font-size: 2rem;
+  color: #e8c97a;
+  animation: hint-pulse 1.3s ease-in-out infinite;
 }
 @keyframes hint-pulse {
-  0%, 100% { transform: scaleX(1); opacity: 1; }
-  50% { transform: scaleX(1.25); opacity: 0.6; }
+  0%,100% { transform: scaleX(1); opacity:1; }
+  50%      { transform: scaleX(1.3); opacity:0.5; }
 }
 .plant360-overlay-hint.hidden {
   opacity: 0;
   pointer-events: none;
 }
 
-/* Glow effects */
+/* Glow effects on sides */
 .plant360-glow {
   position: absolute;
-  top: 20%;
-  width: 120px;
-  height: 200px;
+  top: 20%; width:100px; height:200px;
   border-radius: 50%;
   pointer-events: none;
-  filter: blur(40px);
-  opacity: 0.25;
-  z-index: -1;
+  filter: blur(50px);
+  opacity: 0.18;
+  z-index: 0;
 }
-.plant360-glow-l {
-  left: -60px;
-  background: radial-gradient(circle, #4CAF50, transparent 70%);
-}
-.plant360-glow-r {
-  right: -60px;
-  background: radial-gradient(circle, #C9A84C, transparent 70%);
-}
-
-/* Arc progress */
-.plant360-arc-wrap {
-  width: min(260px, 64vw);
-  padding: 0 4px;
-}
-.plant360-arc-svg {
-  width: 100%;
-  height: 20px;
-}
+.plant360-glow-l { left: -30px; background: radial-gradient(circle,#4CAF50,transparent 70%); }
+.plant360-glow-r { right:-30px; background: radial-gradient(circle,#C9A84C,transparent 70%); }
 
 /* ── Controls ── */
 .plant360-controls {
   width: 100%;
-  max-width: 480px;
+  max-width: 540px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.2rem;
 }
 
 .plant360-angle-display {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.15rem;
 }
 .plant360-angle-val {
-  font-size: 2.2rem;
+  font-size: 2.4rem;
   font-weight: 700;
-  font-family: var(--font-serif, serif);
-  background: linear-gradient(135deg, #4CAF50, #C9A84C);
+  font-family: var(--font-serif,serif);
+  background: linear-gradient(135deg,#4CAF50,#C9A84C);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   line-height: 1;
 }
 .plant360-angle-label {
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.38);
 }
 
-/* Slider track */
+/* Slider row */
 .plant360-slider-track {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1rem;
 }
 .plant360-icon-l,
 .plant360-icon-r {
-  color: rgba(255,255,255,0.3);
-  font-size: 0.85rem;
+  color: rgba(255,255,255,0.28);
+  font-size: 0.9rem;
   flex-shrink: 0;
 }
 
 .plant360-slider-wrap {
   position: relative;
   flex: 1;
-  height: 40px;
+  height: 44px;
   display: flex;
   align-items: center;
 }
@@ -2808,78 +2777,56 @@ img, video, iframe, canvas {
 .plant360-track-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #4CAF50, #C9A84C);
+  background: linear-gradient(90deg,#4CAF50,#C9A84C);
   border-radius: 6px;
-  transition: width 0.05s linear;
 }
 
 .plant360-slider {
   position: relative;
   z-index: 2;
   width: 100%;
-  height: 40px;
+  height: 44px;
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
-  cursor: pointer;
+  cursor: grab;
   touch-action: none;
 }
+.plant360-slider:active { cursor: grabbing; }
 .plant360-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 32px;
-  height: 32px;
+  width: 36px; height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4CAF50, #2d5a3d);
-  border: 3px solid rgba(255,255,255,0.85);
-  box-shadow: 0 0 16px rgba(76,175,80,0.6), 0 4px 12px rgba(0,0,0,0.4);
-  cursor: grab;
-  transition: box-shadow 0.2s, transform 0.2s;
+  background: linear-gradient(135deg,#5ac45e,#2d5a3d);
+  border: 3px solid rgba(255,255,255,0.9);
+  box-shadow: 0 0 18px rgba(76,175,80,0.65), 0 4px 14px rgba(0,0,0,0.45);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 .plant360-slider:active::-webkit-slider-thumb {
-  cursor: grabbing;
-  transform: scale(1.15);
-  box-shadow: 0 0 28px rgba(76,175,80,0.85), 0 4px 18px rgba(0,0,0,0.5);
+  transform: scale(1.18);
+  box-shadow: 0 0 30px rgba(76,175,80,0.9);
 }
 .plant360-slider::-moz-range-thumb {
-  width: 28px;
-  height: 28px;
+  width: 30px; height: 30px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4CAF50, #2d5a3d);
-  border: 3px solid rgba(255,255,255,0.85);
-  box-shadow: 0 0 16px rgba(76,175,80,0.6);
+  background: linear-gradient(135deg,#5ac45e,#2d5a3d);
+  border: 3px solid rgba(255,255,255,0.9);
   cursor: grab;
 }
-.plant360-slider::-webkit-slider-runnable-track {
-  background: transparent;
-  height: 6px;
-}
-.plant360-slider::-moz-range-track {
-  background: transparent;
-  height: 6px;
-}
+.plant360-slider::-webkit-slider-runnable-track { background: transparent; height: 6px; }
+.plant360-slider::-moz-range-track            { background: transparent; height: 6px; }
 
 .plant360-tip {
   font-size: 0.78rem;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.3);
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   text-align: center;
 }
-.plant360-tip i {
-  color: var(--gold-light, #e8c97a);
-  font-size: 0.75rem;
-}
+.plant360-tip i { color: #e8c97a; font-size: 0.72rem; }
 
-/* Mobile */
 @media (max-width: 480px) {
-  .plant360-phone-frame {
-    width: min(220px, 72vw);
-  }
-  .plant360-arc-wrap {
-    width: min(220px, 72vw);
-  }
-  .plant360-angle-val {
-    font-size: 1.8rem;
-  }
+  .plant360-frame { border-radius: 18px; }
+  .plant360-angle-val { font-size: 2rem; }
 }
