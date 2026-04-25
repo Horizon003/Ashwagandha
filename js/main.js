@@ -143,8 +143,8 @@ function initHeroTyping() {
       i++;
       setTimeout(type, 100);
     } else {
-      // After 2.5s, start glitch cycle
-      setTimeout(startGlitch, 2500);
+      // First glitch starts 3s after full type
+      setTimeout(startGlitch, 3000);
     }
   };
 
@@ -161,11 +161,9 @@ function initHeroTyping() {
         el.classList.remove('hero-title-glitch');
         el.textContent = text;
         el.appendChild(cursor);
-        // Short pause then retype in gold italic
-        setTimeout(retypeAlt, 400);
+        setTimeout(retypeAlt, 350);
         return;
       }
-      // Randomise characters
       const glitched = text.split('').map(ch =>
         Math.random() > 0.55
           ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
@@ -174,7 +172,7 @@ function initHeroTyping() {
       el.textContent = glitched;
       el.appendChild(cursor);
       glitchCount++;
-    }, 90);
+    }, 85);
   }
 
   function retypeAlt() {
@@ -188,17 +186,19 @@ function initHeroTyping() {
       j++;
       if (j > text.length) {
         clearInterval(retypeInterval);
-        // Keep gold italic for 2s, then reset to normal
+        // Show gold for 1.8s, reset normal, then wait 5s and loop again
         setTimeout(() => {
           el.classList.remove('hero-title-alt');
           el.textContent = text;
           el.appendChild(cursor);
-        }, 2000);
+          // ── LOOP: next cycle after 5s pause ──
+          setTimeout(startGlitch, 5000);
+        }, 1800);
       }
-    }, 85);
+    }, 80);
   }
 
-  // Start after slight delay
+  // Start typing after slight delay
   setTimeout(type, 600);
 }
 
@@ -773,35 +773,52 @@ function initChemGroupInfo() {
 }
 
 /* ─────────────────────────────────────────────────
-   360° PLANT VIDEO SCRUBBER
-   Slider controls video.currentTime — NO autoplay
+   360° PLANT VIDEO SCRUBBER — smooth lerp version
+   Slider 0-1000 → maps to video.currentTime
+   Uses requestAnimationFrame for buttery smooth seek
 ───────────────────────────────────────────────── */
 function initPlant360Video() {
-  const video   = document.getElementById('plant360-video');
-  const slider  = document.getElementById('plant360-slider');
-  const fill    = document.getElementById('plant360-track-fill');
-  const angle   = document.getElementById('plant360-angle');
-  const hint    = document.getElementById('plant360-hint');
-  const arcFill = document.getElementById('plant360-arc-fill');
+  const video  = document.getElementById('plant360-video');
+  const slider = document.getElementById('plant360-slider');
+  const fill   = document.getElementById('plant360-track-fill');
+  const angle  = document.getElementById('plant360-angle');
+  const hint   = document.getElementById('plant360-hint');
 
   if (!video || !slider) return;
 
-  const VIDEO_DURATION = 10; // seconds
-  let videoDuration = VIDEO_DURATION;
-  let hintHidden = false;
+  let videoDuration = 10;
+  let targetTime    = 0;   // where we WANT to be
+  let currentLerp   = 0;   // lerped current time
+  let rafId         = null;
+  let hintHidden    = false;
+  let isReady       = false;
 
-  // When metadata loads, grab real duration
+  // ── Preload & freeze at frame 0 ──
   video.addEventListener('loadedmetadata', () => {
-    videoDuration = video.duration || VIDEO_DURATION;
-    // Freeze at frame 0
+    videoDuration = video.duration || 10;
+    isReady = true;
     video.currentTime = 0;
     video.pause();
   });
+  video.addEventListener('play', () => video.pause());
+  video.load();
 
-  // Also freeze on any accidental play
-  video.addEventListener('play', () => {
-    video.pause();
-  });
+  // ── Smooth lerp loop ──
+  function rafLoop() {
+    if (!isReady) { rafId = requestAnimationFrame(rafLoop); return; }
+
+    const diff = targetTime - currentLerp;
+    if (Math.abs(diff) > 0.001) {
+      // Lerp speed: faster when diff is large, slower at destination
+      currentLerp += diff * 0.18;
+      video.currentTime = Math.min(Math.max(currentLerp, 0), videoDuration);
+    } else {
+      currentLerp = targetTime;
+      video.currentTime = targetTime;
+    }
+    rafId = requestAnimationFrame(rafLoop);
+  }
+  rafId = requestAnimationFrame(rafLoop);
 
   function hideHint() {
     if (!hintHidden && hint) {
@@ -810,44 +827,18 @@ function initPlant360Video() {
     }
   }
 
-  function scrubTo(val) {
-    // val is 0-10 from slider
-    const pct = val / 10;
-    const t = pct * videoDuration;
-    video.currentTime = Math.min(Math.max(t, 0), videoDuration);
-    video.pause();
+  function onSliderChange() {
+    const pct = parseInt(slider.value, 10) / 1000;  // 0 to 1
+    targetTime = pct * videoDuration;
 
-    // Update fill bar
-    const fillPct = pct * 100;
-    if (fill) fill.style.width = fillPct + '%';
-
-    // Update angle display (0° to 360°)
-    const deg = Math.round(pct * 360);
-    if (angle) angle.textContent = deg + '°';
-
-    // Update SVG arc line
-    if (arcFill) {
-      arcFill.setAttribute('x2', String(pct * 200));
-    }
+    // Fill bar
+    if (fill) fill.style.width = (pct * 100).toFixed(2) + '%';
+    // Angle display
+    if (angle) angle.textContent = Math.round(pct * 360) + '°';
 
     hideHint();
   }
 
-  // Slider input event (mouse drag + touch)
-  slider.addEventListener('input', () => {
-    scrubTo(parseFloat(slider.value));
-  });
-
-  // Touch events on slider for smooth mobile scrubbing
+  slider.addEventListener('input', onSliderChange);
   slider.addEventListener('touchstart', hideHint, { passive: true });
-  slider.addEventListener('touchmove', (e) => {
-    // Let range input handle it natively — just hide hint
-    hideHint();
-  }, { passive: true });
-
-  // Preload the video as soon as possible
-  video.load();
 }
-
-// Call it on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', initPlant360Video);
