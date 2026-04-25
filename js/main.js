@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStatCounters();
   initSmoothScrollLinks();
   initImageFallbacks();
+  initPlant360Video();
 });
 
 /* ────────────────────────────────────────────────
@@ -770,3 +771,83 @@ function initChemGroupInfo() {
   // Close on outside click
   document.addEventListener('click', () => popup.classList.remove('visible'));
 }
+
+/* ─────────────────────────────────────────────────
+   360° PLANT VIDEO SCRUBBER
+   Slider controls video.currentTime — NO autoplay
+───────────────────────────────────────────────── */
+function initPlant360Video() {
+  const video   = document.getElementById('plant360-video');
+  const slider  = document.getElementById('plant360-slider');
+  const fill    = document.getElementById('plant360-track-fill');
+  const angle   = document.getElementById('plant360-angle');
+  const hint    = document.getElementById('plant360-hint');
+  const arcFill = document.getElementById('plant360-arc-fill');
+
+  if (!video || !slider) return;
+
+  const VIDEO_DURATION = 10; // seconds
+  let videoDuration = VIDEO_DURATION;
+  let hintHidden = false;
+
+  // When metadata loads, grab real duration
+  video.addEventListener('loadedmetadata', () => {
+    videoDuration = video.duration || VIDEO_DURATION;
+    // Freeze at frame 0
+    video.currentTime = 0;
+    video.pause();
+  });
+
+  // Also freeze on any accidental play
+  video.addEventListener('play', () => {
+    video.pause();
+  });
+
+  function hideHint() {
+    if (!hintHidden && hint) {
+      hint.classList.add('hidden');
+      hintHidden = true;
+    }
+  }
+
+  function scrubTo(val) {
+    // val is 0-10 from slider
+    const pct = val / 10;
+    const t = pct * videoDuration;
+    video.currentTime = Math.min(Math.max(t, 0), videoDuration);
+    video.pause();
+
+    // Update fill bar
+    const fillPct = pct * 100;
+    if (fill) fill.style.width = fillPct + '%';
+
+    // Update angle display (0° to 360°)
+    const deg = Math.round(pct * 360);
+    if (angle) angle.textContent = deg + '°';
+
+    // Update SVG arc line
+    if (arcFill) {
+      arcFill.setAttribute('x2', String(pct * 200));
+    }
+
+    hideHint();
+  }
+
+  // Slider input event (mouse drag + touch)
+  slider.addEventListener('input', () => {
+    scrubTo(parseFloat(slider.value));
+  });
+
+  // Touch events on slider for smooth mobile scrubbing
+  slider.addEventListener('touchstart', hideHint, { passive: true });
+  slider.addEventListener('touchmove', (e) => {
+    // Let range input handle it natively — just hide hint
+    hideHint();
+  }, { passive: true });
+
+  // Preload the video as soon as possible
+  video.load();
+}
+
+// Call it on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', initPlant360Video);
