@@ -164,6 +164,77 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
+     SECTION 1B — 360° PLANT VIDEO VIEWER
+═══════════════════════════════════════════════════════════ -->
+<section id="sec-1b" class="section dark-section plant360-section" data-section="1b">
+  <div class="container">
+    <div class="section-header gsap-up">
+      <div class="section-badge"><i class="fa-solid fa-rotate"></i> Interactive</div>
+      <h2 class="section-title">360° Plant View</h2>
+      <p class="section-sub">Drag the slider below to rotate the Ashwagandha plant</p>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="plant360-layout">
+
+      <!-- VIDEO STAGE — big open frame, no phone shape -->
+      <div class="plant360-stage-wrap gsap-up">
+        <div class="plant360-frame">
+          <video
+            id="plant360-video"
+            class="plant360-video"
+            muted
+            playsinline
+            preload="auto"
+            webkit-playsinline
+          >
+            <source src="assets/360/ashwagandha-360.webm" type="video/webm"/>
+            <source src="assets/360/ashwagandha-360.mp4"  type="video/mp4"/>
+          </video>
+          <div class="plant360-overlay-hint" id="plant360-hint">
+            <i class="fa-solid fa-left-right"></i>
+            <span>Slide to Rotate</span>
+          </div>
+          <div class="plant360-glow plant360-glow-l"></div>
+          <div class="plant360-glow plant360-glow-r"></div>
+        </div>
+      </div>
+
+      <!-- SLIDER CONTROL -->
+      <div class="plant360-controls gsap-up" style="--delay:0.1s">
+
+        <div class="plant360-angle-display">
+          <span class="plant360-angle-val" id="plant360-angle">0°</span>
+          <span class="plant360-angle-label">Rotation</span>
+        </div>
+
+        <div class="plant360-slider-track">
+          <i class="fa-solid fa-arrow-left plant360-icon-l"></i>
+          <div class="plant360-slider-wrap">
+            <div class="plant360-track-bg">
+              <div class="plant360-track-fill" id="plant360-track-fill"></div>
+            </div>
+            <input
+              type="range"
+              id="plant360-slider"
+              class="plant360-slider"
+              min="0" max="1000" step="1" value="0"
+            />
+          </div>
+          <i class="fa-solid fa-arrow-right plant360-icon-r"></i>
+        </div>
+
+        <div class="plant360-tip">
+          <i class="fa-solid fa-hand-pointer"></i>
+          Drag slider slowly for a smooth 360° rotation
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
      SECTION 2 — HISTORICAL BACKGROUND
 ═══════════════════════════════════════════════════════════ -->
 <section id="sec-2" class="section dark-section alt-bg" data-section="2">
@@ -668,95 +739,6 @@
         <div class="other-dosage-item"><i class="fa-solid fa-jar"></i><span>Ashwagandharishta</span><small>Fermented syrup</small></div>
         <div class="other-dosage-item"><i class="fa-solid fa-hand-dots"></i><span>Medicated Oil</span><small>Topical application</small></div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 8B — 360° PLANT VIDEO VIEWER
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-8b" class="section dark-section plant360-section" data-section="8b">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge"><i class="fa-solid fa-rotate"></i> Interactive</div>
-      <h2 class="section-title">360° Plant View</h2>
-      <p class="section-sub">Drag the slider to rotate — explore every angle of the Ashwagandha plant</p>
-      <div class="section-rule"></div>
-    </div>
-
-    <div class="plant360-layout">
-
-      <!-- VIDEO STAGE -->
-      <div class="plant360-stage-wrap gsap-up">
-        <div class="plant360-phone-frame">
-          <div class="plant360-notch"></div>
-          <div class="plant360-screen">
-            <video
-              id="plant360-video"
-              class="plant360-video"
-              muted
-              playsinline
-              preload="auto"
-              webkit-playsinline
-            >
-              <source src="assets/360/ashwagandha-360.webm" type="video/webm"/>
-              <source src="assets/360/ashwagandha-360.mp4"  type="video/mp4"/>
-            </video>
-            <div class="plant360-overlay-hint" id="plant360-hint">
-              <i class="fa-solid fa-left-right"></i>
-              <span>Slide to Rotate</span>
-            </div>
-          </div>
-          <!-- Glow rings -->
-          <div class="plant360-glow plant360-glow-l"></div>
-          <div class="plant360-glow plant360-glow-r"></div>
-        </div>
-
-        <!-- Progress arc -->
-        <div class="plant360-arc-wrap">
-          <svg class="plant360-arc-svg" viewBox="0 0 200 20" preserveAspectRatio="none">
-            <line x1="0" y1="10" x2="200" y2="10" stroke="rgba(255,255,255,0.08)" stroke-width="2" stroke-linecap="round"/>
-            <line id="plant360-arc-fill" x1="0" y1="10" x2="0" y2="10" stroke="url(#arcGrad)" stroke-width="2" stroke-linecap="round"/>
-            <defs>
-              <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#4CAF50"/>
-                <stop offset="100%" stop-color="#C9A84C"/>
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-      </div>
-
-      <!-- SLIDER CONTROL -->
-      <div class="plant360-controls gsap-up" style="--delay:0.15s">
-        <div class="plant360-angle-display">
-          <span class="plant360-angle-val" id="plant360-angle">0°</span>
-          <span class="plant360-angle-label">Rotation</span>
-        </div>
-
-        <div class="plant360-slider-track">
-          <i class="fa-solid fa-arrow-left plant360-icon-l"></i>
-          <div class="plant360-slider-wrap">
-            <div class="plant360-track-bg">
-              <div class="plant360-track-fill" id="plant360-track-fill"></div>
-            </div>
-            <input
-              type="range"
-              id="plant360-slider"
-              class="plant360-slider"
-              min="0" max="10" step="0.05" value="0"
-            />
-            <div class="plant360-thumb-glow" id="plant360-thumb-glow"></div>
-          </div>
-          <i class="fa-solid fa-arrow-right plant360-icon-r"></i>
-        </div>
-
-        <div class="plant360-tip">
-          <i class="fa-solid fa-hand-pointer"></i>
-          Drag slider left or right to rotate the plant
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
