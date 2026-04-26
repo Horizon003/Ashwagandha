@@ -13,6 +13,7 @@
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
+<canvas id="bg-gradient-canvas" aria-hidden="true"></canvas>
 
 <!-- ═══════════════════════════════════════════════════════════
      SCROLL PROGRESS BAR
@@ -195,6 +196,51 @@
           <i class="fa-solid fa-arrow-right"></i>
         </div>
       </div>
+    </div>
+
+    <!-- Model Info Cards -->
+    <div class="p3d-info-grid gsap-up" style="--delay:0.12s">
+
+      <div class="p3d-info-card">
+        <div class="p3d-info-icon" style="--ic:#22c55e">
+          <i class="fa-solid fa-rotate-3d"></i>
+        </div>
+        <div>
+          <h4>Full 360° Rotation</h4>
+          <p>Drag in any direction — inspect stem, leaves, roots &amp; berries from every angle</p>
+        </div>
+      </div>
+
+      <div class="p3d-info-card">
+        <div class="p3d-info-icon" style="--ic:#f59e0b">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div>
+          <h4>High Detail Texture</h4>
+          <p>Meshy AI generated model with realistic bark, root system and berry textures</p>
+        </div>
+      </div>
+
+      <div class="p3d-info-card">
+        <div class="p3d-info-icon" style="--ic:#14b8a6">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <div>
+          <h4>Complete Morphology</h4>
+          <p>Aerial parts + root system visible — ideal for botanical study and identification</p>
+        </div>
+      </div>
+
+      <div class="p3d-info-card">
+        <div class="p3d-info-icon" style="--ic:#8b5cf6">
+          <i class="fa-solid fa-mobile-screen"></i>
+        </div>
+        <div>
+          <h4>Mobile Optimised</h4>
+          <p>Pinch to zoom, finger drag to rotate — works perfectly on any screen size</p>
+        </div>
+      </div>
+
     </div>
 
   </div>
