@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/style.css"/>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
 
@@ -168,7 +169,6 @@
 ═══════════════════════════════════════════════════════════ -->
 
 <!-- model-viewer CDN — loads only when needed -->
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 
 <section id="sec-1b" class="section dark-section plant360-section" data-section="1b">
   <div class="container">
@@ -204,19 +204,15 @@
             camera-controls
             touch-action="pan-y"
             auto-rotate
-            auto-rotate-delay="1000"
+            auto-rotate-delay="500"
             rotation-per-second="30deg"
             shadow-intensity="1.2"
             shadow-softness="0.8"
             exposure="1.1"
             environment-image="neutral"
-            loading="lazy"
-            reveal="interaction"
+            loading="eager"
             class="plant-model-viewer"
-          >
-            <!-- Custom loading slot -->
-            <div slot="progress-bar" style="display:none"></div>
-          </model-viewer>
+          ></model-viewer>
 
           <!-- Interaction hint -->
           <div class="plant360-overlay-hint" id="plant360-hint">
