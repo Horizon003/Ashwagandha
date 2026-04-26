@@ -774,7 +774,6 @@ function initChemGroupInfo() {
 
 /* ─────────────────────────────────────────────────
    360° 3D MODEL-VIEWER CONTROLLER
-   Auto-rotate toggle + loading progress + hint hide
 ───────────────────────────────────────────────── */
 function initPlant360Video() {
   const modelEl  = document.getElementById('plant-model');
@@ -788,29 +787,40 @@ function initPlant360Video() {
 
   if (!modelEl) return;
 
-  let autoOn = true;  // starts auto-rotating
+  let autoOn = true;
 
-  // ── Loading progress ──
+  // ── Progress tracking ──
   modelEl.addEventListener('progress', (e) => {
     const pct = Math.round((e.detail.totalProgress || 0) * 100);
     if (loadBar) loadBar.style.width = pct + '%';
     if (loadPct) loadPct.textContent = pct + '%';
   });
 
-  // ── Model loaded ──
+  // ── Model fully loaded ──
   modelEl.addEventListener('load', () => {
-    if (loadPct) loadPct.textContent = '100%';
     if (loadBar) loadBar.style.width = '100%';
+    if (loadPct) loadPct.textContent = '100%';
     setTimeout(() => {
       if (loadDiv) loadDiv.classList.add('hidden');
-      // Show hint briefly then hide
       setTimeout(() => {
         if (hint) hint.classList.add('hidden');
-      }, 2200);
-    }, 400);
+      }, 2500);
+    }, 500);
   });
 
-  // ── Hide hint on first interaction ──
+  // ── Error fallback ──
+  modelEl.addEventListener('error', () => {
+    if (loadPct) loadPct.textContent = 'Error';
+    if (loadDiv) {
+      loadDiv.querySelector('.p3d-spinner').style.display = 'none';
+      loadPct.style.fontSize = '0.85rem';
+      loadPct.textContent = '⚠ Model not found';
+      loadPct.style.webkitTextFillColor = '#ff6b6b';
+      loadPct.style.color = '#ff6b6b';
+    }
+  });
+
+  // ── Hide hint on drag ──
   modelEl.addEventListener('camera-change', () => {
     if (hint) hint.classList.add('hidden');
   });
@@ -829,9 +839,7 @@ function initPlant360Video() {
     }
   }
 
-  if (autoBtn) {
-    autoBtn.addEventListener('click', () => setAuto(!autoOn));
-  }
+  if (autoBtn) autoBtn.addEventListener('click', () => setAuto(!autoOn));
 
   // ── Reset camera ──
   if (resetBtn) {
