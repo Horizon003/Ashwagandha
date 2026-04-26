@@ -773,105 +773,71 @@ function initChemGroupInfo() {
 }
 
 /* ─────────────────────────────────────────────────
-   360° PLANT VIDEO SCRUBBER — ultra-smooth version
-   Uses fastSeek + frame-buffered seeking
-   Auto-rotate support included
+   360° 3D MODEL-VIEWER CONTROLLER
+   Auto-rotate toggle + loading progress + hint hide
 ───────────────────────────────────────────────── */
 function initPlant360Video() {
-  const video   = document.getElementById('plant360-video');
-  const slider  = document.getElementById('plant360-slider');
-  const fill    = document.getElementById('plant360-track-fill');
-  const angle   = document.getElementById('plant360-angle');
-  const hint    = document.getElementById('plant360-hint');
-  const autoBtn = document.getElementById('plant360-auto-btn');
-  const autoLbl = document.getElementById('plant360-auto-label');
+  const modelEl  = document.getElementById('plant-model');
+  const loadDiv  = document.getElementById('p3d-loading');
+  const loadBar  = document.getElementById('p3d-load-bar');
+  const loadPct  = document.getElementById('p3d-pct');
+  const hint     = document.getElementById('plant360-hint');
+  const autoBtn  = document.getElementById('p3d-auto-btn');
+  const autoLbl  = document.getElementById('p3d-auto-label');
+  const resetBtn = document.getElementById('p3d-reset-btn');
 
-  if (!video || !slider) return;
+  if (!modelEl) return;
 
-  let videoDuration = 10;
-  let isReady       = false;
-  let hintHidden    = false;
+  let autoOn = true;  // starts auto-rotating
 
-  // ── Auto-rotate state ──
-  let autoActive  = false;
-  let autoRafId   = null;
-  let autoPos     = 0;          // 0 to 1000 (matches slider range)
-  const AUTO_SPEED = 0.55;      // slider units per frame (~60fps → ~11s per cycle)
-
-  // ── Preload & freeze ──
-  video.addEventListener('loadedmetadata', () => {
-    videoDuration = video.duration || 10;
-    isReady = true;
-    seekTo(0);
+  // ── Loading progress ──
+  modelEl.addEventListener('progress', (e) => {
+    const pct = Math.round((e.detail.totalProgress || 0) * 100);
+    if (loadBar) loadBar.style.width = pct + '%';
+    if (loadPct) loadPct.textContent = pct + '%';
   });
-  video.addEventListener('play', () => video.pause());
 
-  // ── Core seek — uses fastSeek when available ──
-  let pendingSeeked = false;
-  function seekTo(sliderVal) {
-    if (!isReady) return;
-    const pct = sliderVal / 1000;
-    const t   = Math.min(Math.max(pct * videoDuration, 0), videoDuration);
+  // ── Model loaded ──
+  modelEl.addEventListener('load', () => {
+    if (loadPct) loadPct.textContent = '100%';
+    if (loadBar) loadBar.style.width = '100%';
+    setTimeout(() => {
+      if (loadDiv) loadDiv.classList.add('hidden');
+      // Show hint briefly then hide
+      setTimeout(() => {
+        if (hint) hint.classList.add('hidden');
+      }, 2200);
+    }, 400);
+  });
 
-    // fastSeek is faster (less precise) — ideal for scrubbing
-    if (video.fastSeek) {
-      video.fastSeek(t);
+  // ── Hide hint on first interaction ──
+  modelEl.addEventListener('camera-change', () => {
+    if (hint) hint.classList.add('hidden');
+  });
+
+  // ── Auto-rotate toggle ──
+  function setAuto(on) {
+    autoOn = on;
+    if (on) {
+      modelEl.setAttribute('auto-rotate', '');
+      if (autoBtn) autoBtn.classList.add('active');
+      if (autoLbl) autoLbl.textContent = 'Auto Rotating';
     } else {
-      if (!pendingSeeked) {
-        pendingSeeked = true;
-        video.currentTime = t;
-        video.addEventListener('seeked', () => { pendingSeeked = false; }, { once: true });
-      }
+      modelEl.removeAttribute('auto-rotate');
+      if (autoBtn) autoBtn.classList.remove('active');
+      if (autoLbl) autoLbl.textContent = 'Auto Rotate';
     }
-
-    // UI updates
-    if (fill)  fill.style.width  = (pct * 100).toFixed(1) + '%';
-    if (angle) angle.textContent = Math.round(pct * 360) + '°';
-  }
-
-  video.load();
-
-  // ── Slider input ──
-  function hideHint() {
-    if (!hintHidden && hint) { hint.classList.add('hidden'); hintHidden = true; }
-  }
-
-  slider.addEventListener('input', () => {
-    stopAutoRotate();
-    seekTo(parseInt(slider.value, 10));
-    hideHint();
-  });
-  slider.addEventListener('touchstart', () => { stopAutoRotate(); hideHint(); }, { passive: true });
-
-  // ── Auto-rotate ──
-  function autoRotateLoop() {
-    if (!autoActive) return;
-    autoPos += AUTO_SPEED;
-    if (autoPos >= 1000) autoPos = 0;
-
-    slider.value = String(Math.round(autoPos));
-    seekTo(autoPos);
-    hideHint();
-
-    autoRafId = requestAnimationFrame(autoRotateLoop);
-  }
-
-  function startAutoRotate() {
-    autoActive = true;
-    autoPos = parseInt(slider.value, 10) || 0;
-    if (autoBtn) { autoBtn.classList.add('active'); autoLbl.textContent = 'Stop Rotation'; }
-    autoRafId = requestAnimationFrame(autoRotateLoop);
-  }
-
-  function stopAutoRotate() {
-    autoActive = false;
-    cancelAnimationFrame(autoRafId);
-    if (autoBtn) { autoBtn.classList.remove('active'); autoLbl.textContent = 'Auto Rotate'; }
   }
 
   if (autoBtn) {
-    autoBtn.addEventListener('click', () => {
-      autoActive ? stopAutoRotate() : startAutoRotate();
+    autoBtn.addEventListener('click', () => setAuto(!autoOn));
+  }
+
+  // ── Reset camera ──
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      modelEl.resetTurntableRotation();
+      modelEl.jumpCameraToGoal();
     });
   }
 }
