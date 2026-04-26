@@ -908,3 +908,64 @@ function initPlant360Video() {
     });
   }
 }
+
+/* ─────────────────────────────────────────────────
+   ANIMATED GRADIENT BACKGROUND CANVAS
+   Smooth slow-moving blobs — green + teal + amber
+───────────────────────────────────────────────── */
+(function initBgGradient() {
+  const canvas = document.getElementById('bg-gradient-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // Base dark colour
+  const BASE = '#070f0a';
+
+  // Orbs definition
+  const orbs = [
+    { x: 0.15, y: 0.2,  r: 0.45, color: [18, 110, 55],  speed: 0.00012, phase: 0 },
+    { x: 0.82, y: 0.35, r: 0.40, color: [20, 184, 120],  speed: 0.00009, phase: 2.1 },
+    { x: 0.5,  y: 0.75, r: 0.50, color: [180, 120, 10],  speed: 0.00007, phase: 4.3 },
+    { x: 0.1,  y: 0.85, r: 0.35, color: [10, 100, 80],   speed: 0.00011, phase: 1.0 },
+    { x: 0.9,  y: 0.8,  r: 0.38, color: [60, 30, 120],   speed: 0.00008, phase: 3.5 },
+  ];
+
+  let W, H, t = 0;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  function draw(ts) {
+    t = ts;
+    ctx.clearRect(0, 0, W, H);
+
+    // Base fill
+    ctx.fillStyle = BASE;
+    ctx.fillRect(0, 0, W, H);
+
+    // Draw each orb
+    orbs.forEach(o => {
+      const drift = 0.06;
+      const ox = (o.x + Math.sin(t * o.speed + o.phase) * drift) * W;
+      const oy = (o.y + Math.cos(t * o.speed + o.phase * 1.3) * drift) * H;
+      const radius = o.r * Math.min(W, H);
+
+      const grad = ctx.createRadialGradient(ox, oy, 0, ox, oy, radius);
+      const [r, g, b] = o.color;
+      grad.addColorStop(0,   `rgba(${r},${g},${b},0.22)`);
+      grad.addColorStop(0.5, `rgba(${r},${g},${b},0.08)`);
+      grad.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
+})();
