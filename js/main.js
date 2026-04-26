@@ -773,59 +773,118 @@ function initChemGroupInfo() {
 }
 
 /* ─────────────────────────────────────────────────
-   360° 3D MODEL-VIEWER CONTROLLER
+   360° 3D MODAL — open/close, tutorial, controls
 ───────────────────────────────────────────────── */
 function initPlant360Video() {
-  const modelEl  = document.getElementById('plant-model');
-  const loadDiv  = document.getElementById('p3d-loading');
-  const loadBar  = document.getElementById('p3d-load-bar');
-  const loadPct  = document.getElementById('p3d-pct');
-  const hint     = document.getElementById('plant360-hint');
-  const autoBtn  = document.getElementById('p3d-auto-btn');
-  const autoLbl  = document.getElementById('p3d-auto-label');
-  const resetBtn = document.getElementById('p3d-reset-btn');
+  const openBtn   = document.getElementById('p3d-open-btn');
+  const modal     = document.getElementById('p3d-modal');
+  const closeBtn  = document.getElementById('p3d-close-btn');
+  const modelEl   = document.getElementById('plant-model');
+  const loadDiv   = document.getElementById('p3d-loading');
+  const loadBar   = document.getElementById('p3d-load-bar');
+  const loadPct   = document.getElementById('p3d-pct');
+  const tutorial  = document.getElementById('p3d-tutorial');
+  const skipBtn   = document.getElementById('p3d-skip-btn');
+  const nextBtn   = document.getElementById('p3d-tut-next');
+  const autoBtn   = document.getElementById('p3d-auto-btn');
+  const autoLbl   = document.getElementById('p3d-auto-label');
+  const resetBtn  = document.getElementById('p3d-reset-btn');
 
-  if (!modelEl) return;
+  if (!modal || !modelEl) return;
 
-  let autoOn = true;
+  let autoOn       = true;
+  let modelLoaded  = false;
+  let tutStep      = 0;
+  const TUT_STEPS  = 3;
 
-  // ── Progress tracking ──
+  // ── OPEN MODAL ──
+  function openModal() {
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    // Start loading GLB now (lazy → load triggered on open)
+    if (!modelLoaded) modelEl.dismissPoster && modelEl.dismissPoster();
+  }
+
+  // ── CLOSE MODAL ──
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (openBtn) openBtn.addEventListener('click', openModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // ── LOADING PROGRESS ──
   modelEl.addEventListener('progress', (e) => {
     const pct = Math.round((e.detail.totalProgress || 0) * 100);
     if (loadBar) loadBar.style.width = pct + '%';
     if (loadPct) loadPct.textContent = pct + '%';
   });
 
-  // ── Model fully loaded ──
   modelEl.addEventListener('load', () => {
+    modelLoaded = true;
     if (loadBar) loadBar.style.width = '100%';
     if (loadPct) loadPct.textContent = '100%';
     setTimeout(() => {
       if (loadDiv) loadDiv.classList.add('hidden');
-      setTimeout(() => {
-        if (hint) hint.classList.add('hidden');
-      }, 2500);
-    }, 500);
+    }, 400);
   });
 
-  // ── Error fallback ──
   modelEl.addEventListener('error', () => {
-    if (loadPct) loadPct.textContent = 'Error';
-    if (loadDiv) {
-      loadDiv.querySelector('.p3d-spinner').style.display = 'none';
-      loadPct.style.fontSize = '0.85rem';
-      loadPct.textContent = '⚠ Model not found';
-      loadPct.style.webkitTextFillColor = '#ff6b6b';
-      loadPct.style.color = '#ff6b6b';
+    if (loadPct) {
+      loadPct.style.cssText = 'font-size:0.85rem;color:#ef4444;-webkit-text-fill-color:#ef4444;';
+      loadPct.textContent = '⚠ Not found';
     }
   });
 
-  // ── Hide hint on drag ──
+  // ── TUTORIAL ──
+  function showStep(n) {
+    document.querySelectorAll('.p3d-tut-step').forEach((s, i) => {
+      s.classList.toggle('active', i === n);
+    });
+    document.querySelectorAll('.p3d-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === n);
+    });
+    // Last step → change Next button to "Got it"
+    if (nextBtn) nextBtn.innerHTML = n === TUT_STEPS - 1
+      ? 'Got it <i class="fa-solid fa-check"></i>'
+      : 'Next <i class="fa-solid fa-chevron-right"></i>';
+  }
+
+  function hideTutorial() {
+    if (tutorial) tutorial.classList.add('hidden');
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      tutStep++;
+      if (tutStep >= TUT_STEPS) { hideTutorial(); return; }
+      showStep(tutStep);
+    });
+  }
+
+  if (skipBtn) skipBtn.addEventListener('click', hideTutorial);
+
+  // Also hide tutorial on model interaction
   modelEl.addEventListener('camera-change', () => {
-    if (hint) hint.classList.add('hidden');
+    if (!tutorial.classList.contains('hidden')) hideTutorial();
   });
 
-  // ── Auto-rotate toggle ──
+  showStep(0);
+
+  // ── AUTO-ROTATE ──
   function setAuto(on) {
     autoOn = on;
     if (on) {
@@ -841,7 +900,7 @@ function initPlant360Video() {
 
   if (autoBtn) autoBtn.addEventListener('click', () => setAuto(!autoOn));
 
-  // ── Reset camera ──
+  // ── RESET ──
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
       modelEl.resetTurntableRotation();
