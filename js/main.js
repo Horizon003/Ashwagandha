@@ -112,7 +112,7 @@ function initParticles() {
     }
   }
 
-  for (let i = 0; i < 70; i++) particles.push(new Particle());
+  for (let i = 0; i < (window.innerWidth < 600 ? 0 : 18); i++) particles.push(new Particle());
 
   const animate = () => {
     ctx.clearRect(0, 0, W, H);
@@ -206,6 +206,7 @@ function initHeroTyping() {
    6. HERO PARALLAX (scroll-based zoom + move)
 ──────────────────────────────────────────────── */
 function initHeroParallax() {
+  if (window.innerWidth < 768) return; // skip on mobile
   const heroCard = document.getElementById('hero-bg');
   const heroImg = document.getElementById('hero-img');
   if (!heroCard || !heroImg) return;
@@ -229,6 +230,15 @@ function initHeroParallax() {
    7. GSAP ScrollTrigger ANIMATIONS
 ──────────────────────────────────────────────── */
 function initGSAPAnimations() {
+  // On mobile — skip all scroll animations, just make everything visible
+  if (window.innerWidth < 768) {
+    document.querySelectorAll('.gsap-fade,.gsap-up,.gsap-left,.gsap-right').forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
+    return;
+  }
+
   // Hero fade elements
   gsap.utils.toArray('.gsap-fade').forEach((el, i) => {
     gsap.to(el, {
@@ -242,16 +252,9 @@ function initGSAPAnimations() {
   gsap.utils.toArray('.gsap-up').forEach(el => {
     const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
     gsap.to(el, {
-      opacity: 1,
-      y: 0,
-      duration: 0.85,
-      ease: 'power3.out',
-      delay,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 88%',
-        once: true
-      }
+      opacity: 1, y: 0, duration: 0.7,
+      ease: 'power3.out', delay,
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true }
     });
   });
 
@@ -259,16 +262,9 @@ function initGSAPAnimations() {
   gsap.utils.toArray('.gsap-left').forEach(el => {
     const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
     gsap.to(el, {
-      opacity: 1,
-      x: 0,
-      duration: 0.85,
-      ease: 'power3.out',
-      delay,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 88%',
-        once: true
-      }
+      opacity: 1, x: 0, duration: 0.7,
+      ease: 'power3.out', delay,
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true }
     });
   });
 
@@ -276,16 +272,9 @@ function initGSAPAnimations() {
   gsap.utils.toArray('.gsap-right').forEach(el => {
     const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
     gsap.to(el, {
-      opacity: 1,
-      x: 0,
-      duration: 0.85,
-      ease: 'power3.out',
-      delay,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 88%',
-        once: true
-      }
+      opacity: 1, x: 0, duration: 0.7,
+      ease: 'power3.out', delay,
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true }
     });
   });
 }
@@ -908,64 +897,3 @@ function initPlant360Video() {
     });
   }
 }
-
-/* ─────────────────────────────────────────────────
-   ANIMATED GRADIENT BACKGROUND CANVAS
-   Smooth slow-moving blobs — green + teal + amber
-───────────────────────────────────────────────── */
-(function initBgGradient() {
-  const canvas = document.getElementById('bg-gradient-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  // Base dark colour
-  const BASE = '#070f0a';
-
-  // Orbs definition
-  const orbs = [
-    { x: 0.15, y: 0.2,  r: 0.45, color: [18, 110, 55],  speed: 0.00012, phase: 0 },
-    { x: 0.82, y: 0.35, r: 0.40, color: [20, 184, 120],  speed: 0.00009, phase: 2.1 },
-    { x: 0.5,  y: 0.75, r: 0.50, color: [180, 120, 10],  speed: 0.00007, phase: 4.3 },
-    { x: 0.1,  y: 0.85, r: 0.35, color: [10, 100, 80],   speed: 0.00011, phase: 1.0 },
-    { x: 0.9,  y: 0.8,  r: 0.38, color: [60, 30, 120],   speed: 0.00008, phase: 3.5 },
-  ];
-
-  let W, H, t = 0;
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize, { passive: true });
-
-  function draw(ts) {
-    t = ts;
-    ctx.clearRect(0, 0, W, H);
-
-    // Base fill
-    ctx.fillStyle = BASE;
-    ctx.fillRect(0, 0, W, H);
-
-    // Draw each orb
-    orbs.forEach(o => {
-      const drift = 0.06;
-      const ox = (o.x + Math.sin(t * o.speed + o.phase) * drift) * W;
-      const oy = (o.y + Math.cos(t * o.speed + o.phase * 1.3) * drift) * H;
-      const radius = o.r * Math.min(W, H);
-
-      const grad = ctx.createRadialGradient(ox, oy, 0, ox, oy, radius);
-      const [r, g, b] = o.color;
-      grad.addColorStop(0,   `rgba(${r},${g},${b},0.22)`);
-      grad.addColorStop(0.5, `rgba(${r},${g},${b},0.08)`);
-      grad.addColorStop(1,   `rgba(${r},${g},${b},0)`);
-
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
-    });
-
-    requestAnimationFrame(draw);
-  }
-
-  requestAnimationFrame(draw);
-})();
