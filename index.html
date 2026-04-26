@@ -165,87 +165,139 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     SECTION 1B — 360° 3D PLANT VIEWER
+     SECTION 1B — 360° 3D PLANT VIEWER (Modal Launch)
 ═══════════════════════════════════════════════════════════ -->
-
-<!-- model-viewer CDN — loads only when needed -->
 
 <section id="sec-1b" class="section dark-section plant360-section" data-section="1b">
   <div class="container">
     <div class="section-header gsap-up">
       <div class="section-badge"><i class="fa-solid fa-rotate"></i> Interactive 3D</div>
       <h2 class="section-title">360° Plant View</h2>
-      <p class="section-sub">Drag to rotate • Pinch to zoom • Real 3D model</p>
+      <p class="section-sub">Explore the real 3D model of Ashwagandha — rotate, zoom, inspect every detail</p>
       <div class="section-rule"></div>
     </div>
 
-    <div class="plant360-layout">
-
-      <!-- 3D MODEL FRAME -->
-      <div class="plant360-stage-wrap gsap-up">
-
-        <!-- Loading overlay -->
-        <div class="p3d-loading" id="p3d-loading">
-          <div class="p3d-spinner"></div>
-          <div class="p3d-load-text">
-            <span id="p3d-pct">0%</span>
-            <span class="p3d-load-label">Loading 3D Model…</span>
-          </div>
-          <div class="p3d-load-bar-wrap">
-            <div class="p3d-load-bar" id="p3d-load-bar"></div>
-          </div>
+    <!-- Launch Card -->
+    <div class="p3d-launch-wrap gsap-up">
+      <div class="p3d-launch-card" id="p3d-open-btn">
+        <div class="p3d-launch-glow"></div>
+        <div class="p3d-launch-icon">
+          <i class="fa-solid fa-cube"></i>
+          <div class="p3d-orbit-ring p3d-ring-1"></div>
+          <div class="p3d-orbit-ring p3d-ring-2"></div>
         </div>
-
-        <div class="plant360-frame">
-          <model-viewer
-            id="plant-model"
-            src="assets/3d/ashwagandha.glb"
-            alt="Ashwagandha 3D Plant Model"
-            camera-controls
-            touch-action="pan-y"
-            auto-rotate
-            auto-rotate-delay="500"
-            rotation-per-second="30deg"
-            shadow-intensity="1"
-            shadow-softness="0.6"
-            exposure="1.3"
-            environment-image="neutral"
-            loading="eager"
-            style="background:#ffffff; --poster-color:#ffffff;"
-            class="plant-model-viewer"
-          ></model-viewer>
-
-          <!-- Interaction hint -->
-          <div class="plant360-overlay-hint" id="plant360-hint">
-            <i class="fa-solid fa-hand-point-up"></i>
-            <span>Drag to Rotate</span>
-          </div>
-
-          <div class="plant360-glow plant360-glow-l"></div>
-          <div class="plant360-glow plant360-glow-r"></div>
+        <div class="p3d-launch-text">
+          <h3>Open 3D Model</h3>
+          <p>Withania somnifera — Full plant with roots</p>
         </div>
-
-        <!-- Controls row -->
-        <div class="p3d-controls">
-          <button id="p3d-auto-btn" class="plant360-auto-btn active">
-            <i class="fa-solid fa-rotate" id="p3d-auto-icon"></i>
-            <span id="p3d-auto-label">Auto Rotating</span>
-          </button>
-          <button id="p3d-reset-btn" class="p3d-reset-btn">
-            <i class="fa-solid fa-arrows-to-circle"></i>
-            Reset View
-          </button>
+        <div class="p3d-launch-cta">
+          <span>Explore Now</span>
+          <i class="fa-solid fa-arrow-right"></i>
         </div>
-
-        <div class="plant360-tip">
-          <i class="fa-solid fa-hand-pointer"></i>
-          Drag to rotate &nbsp;•&nbsp; Pinch / scroll to zoom
-        </div>
-
       </div>
     </div>
+
   </div>
 </section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     3D MODEL MODAL OVERLAY
+═══════════════════════════════════════════════════════════ -->
+<div class="p3d-modal-overlay" id="p3d-modal" aria-hidden="true">
+  <div class="p3d-modal-inner">
+
+    <!-- Modal header bar -->
+    <div class="p3d-modal-header">
+      <div class="p3d-modal-title">
+        <i class="fa-solid fa-seedling"></i>
+        <span>Ashwagandha 3D Model</span>
+      </div>
+      <button class="p3d-modal-close" id="p3d-close-btn" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- 9:16 Frame -->
+    <div class="p3d-modal-frame-wrap">
+
+      <!-- Loading screen -->
+      <div class="p3d-loading" id="p3d-loading">
+        <div class="p3d-spinner"></div>
+        <div class="p3d-load-text">
+          <span id="p3d-pct">0%</span>
+          <span class="p3d-load-label">Loading 3D Model…</span>
+        </div>
+        <div class="p3d-load-bar-wrap">
+          <div class="p3d-load-bar" id="p3d-load-bar"></div>
+        </div>
+      </div>
+
+      <!-- Tutorial overlay — 3 steps -->
+      <div class="p3d-tutorial" id="p3d-tutorial">
+        <button class="p3d-skip-btn" id="p3d-skip-btn">Skip <i class="fa-solid fa-forward"></i></button>
+        <div class="p3d-tut-steps">
+
+          <div class="p3d-tut-step active" data-step="0">
+            <div class="p3d-tut-icon"><i class="fa-solid fa-hand-pointer"></i></div>
+            <p class="p3d-tut-text">Drag finger to <strong>rotate</strong> the plant</p>
+            <div class="p3d-tut-anim drag-anim"></div>
+          </div>
+
+          <div class="p3d-tut-step" data-step="1">
+            <div class="p3d-tut-icon"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
+            <p class="p3d-tut-text">Pinch to <strong>zoom in/out</strong></p>
+            <div class="p3d-tut-anim zoom-anim"></div>
+          </div>
+
+          <div class="p3d-tut-step" data-step="2">
+            <div class="p3d-tut-icon"><i class="fa-solid fa-rotate"></i></div>
+            <p class="p3d-tut-text">Use <strong>Auto Rotate</strong> for hands-free view</p>
+          </div>
+
+        </div>
+        <!-- Step dots -->
+        <div class="p3d-tut-dots">
+          <span class="p3d-dot active" data-dot="0"></span>
+          <span class="p3d-dot" data-dot="1"></span>
+          <span class="p3d-dot" data-dot="2"></span>
+        </div>
+        <button class="p3d-tut-next" id="p3d-tut-next">Next <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+
+      <!-- model-viewer -->
+      <model-viewer
+        id="plant-model"
+        src="assets/3d/ashwagandha.glb"
+        alt="Ashwagandha 3D Plant Model"
+        camera-controls
+        touch-action="pan-y"
+        auto-rotate
+        auto-rotate-delay="500"
+        rotation-per-second="28deg"
+        shadow-intensity="1"
+        shadow-softness="0.6"
+        exposure="1.3"
+        environment-image="neutral"
+        loading="lazy"
+        style="background:#ffffff; --poster-color:#ffffff; width:100%; height:100%; display:block;"
+      ></model-viewer>
+
+    </div>
+
+    <!-- Bottom controls -->
+    <div class="p3d-modal-controls">
+      <button id="p3d-auto-btn" class="plant360-auto-btn active">
+        <i class="fa-solid fa-rotate"></i>
+        <span id="p3d-auto-label">Auto Rotating</span>
+      </button>
+      <button id="p3d-reset-btn" class="p3d-reset-btn">
+        <i class="fa-solid fa-arrows-to-circle"></i>
+        Reset
+      </button>
+    </div>
+
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════
      SECTION 2 — HISTORICAL BACKGROUND
