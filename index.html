@@ -164,75 +164,86 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     SECTION 1B — 360° PLANT VIDEO VIEWER
+     SECTION 1B — 360° 3D PLANT VIEWER
 ═══════════════════════════════════════════════════════════ -->
+
+<!-- model-viewer CDN — loads only when needed -->
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
 <section id="sec-1b" class="section dark-section plant360-section" data-section="1b">
   <div class="container">
     <div class="section-header gsap-up">
-      <div class="section-badge"><i class="fa-solid fa-rotate"></i> Interactive</div>
+      <div class="section-badge"><i class="fa-solid fa-rotate"></i> Interactive 3D</div>
       <h2 class="section-title">360° Plant View</h2>
-      <p class="section-sub">Drag the slider below to rotate the Ashwagandha plant</p>
+      <p class="section-sub">Drag to rotate • Pinch to zoom • Real 3D model</p>
       <div class="section-rule"></div>
     </div>
 
     <div class="plant360-layout">
 
-      <!-- VIDEO STAGE — big open frame, no phone shape -->
+      <!-- 3D MODEL FRAME -->
       <div class="plant360-stage-wrap gsap-up">
-        <div class="plant360-frame">
-          <video
-            id="plant360-video"
-            class="plant360-video"
-            muted
-            playsinline
-            preload="auto"
-            webkit-playsinline
-          >
-            <source src="assets/360/ashwagandha-360.webm" type="video/webm"/>
-            <source src="assets/360/ashwagandha-360.mp4"  type="video/mp4"/>
-          </video>
-          <div class="plant360-overlay-hint" id="plant360-hint">
-            <i class="fa-solid fa-left-right"></i>
-            <span>Slide to Rotate</span>
+
+        <!-- Loading overlay -->
+        <div class="p3d-loading" id="p3d-loading">
+          <div class="p3d-spinner"></div>
+          <div class="p3d-load-text">
+            <span id="p3d-pct">0%</span>
+            <span class="p3d-load-label">Loading 3D Model…</span>
           </div>
+          <div class="p3d-load-bar-wrap">
+            <div class="p3d-load-bar" id="p3d-load-bar"></div>
+          </div>
+        </div>
+
+        <div class="plant360-frame">
+          <model-viewer
+            id="plant-model"
+            src="assets/3d/ashwagandha.glb"
+            alt="Ashwagandha 3D Plant Model"
+            camera-controls
+            touch-action="pan-y"
+            auto-rotate
+            auto-rotate-delay="1000"
+            rotation-per-second="30deg"
+            shadow-intensity="1.2"
+            shadow-softness="0.8"
+            exposure="1.1"
+            environment-image="neutral"
+            loading="lazy"
+            reveal="interaction"
+            class="plant-model-viewer"
+          >
+            <!-- Custom loading slot -->
+            <div slot="progress-bar" style="display:none"></div>
+          </model-viewer>
+
+          <!-- Interaction hint -->
+          <div class="plant360-overlay-hint" id="plant360-hint">
+            <i class="fa-solid fa-hand-point-up"></i>
+            <span>Drag to Rotate</span>
+          </div>
+
           <div class="plant360-glow plant360-glow-l"></div>
           <div class="plant360-glow plant360-glow-r"></div>
         </div>
-      </div>
 
-      <!-- SLIDER CONTROL -->
-      <div class="plant360-controls gsap-up" style="--delay:0.1s">
-
-        <div class="plant360-angle-display">
-          <span class="plant360-angle-val" id="plant360-angle">0°</span>
-          <span class="plant360-angle-label">Rotation</span>
-        </div>
-
-        <div class="plant360-slider-track">
-          <i class="fa-solid fa-arrow-left plant360-icon-l"></i>
-          <div class="plant360-slider-wrap">
-            <div class="plant360-track-bg">
-              <div class="plant360-track-fill" id="plant360-track-fill"></div>
-            </div>
-            <input
-              type="range"
-              id="plant360-slider"
-              class="plant360-slider"
-              min="0" max="1000" step="1" value="0"
-            />
-          </div>
-          <i class="fa-solid fa-arrow-right plant360-icon-r"></i>
+        <!-- Controls row -->
+        <div class="p3d-controls">
+          <button id="p3d-auto-btn" class="plant360-auto-btn active">
+            <i class="fa-solid fa-rotate" id="p3d-auto-icon"></i>
+            <span id="p3d-auto-label">Auto Rotating</span>
+          </button>
+          <button id="p3d-reset-btn" class="p3d-reset-btn">
+            <i class="fa-solid fa-arrows-to-circle"></i>
+            Reset View
+          </button>
         </div>
 
         <div class="plant360-tip">
           <i class="fa-solid fa-hand-pointer"></i>
-          Drag slider slowly for a smooth 360° rotation
+          Drag to rotate &nbsp;•&nbsp; Pinch / scroll to zoom
         </div>
-
-        <button id="plant360-auto-btn" class="plant360-auto-btn">
-          <i class="fa-solid fa-rotate" id="plant360-auto-icon"></i>
-          <span id="plant360-auto-label">Auto Rotate</span>
-        </button>
 
       </div>
     </div>
