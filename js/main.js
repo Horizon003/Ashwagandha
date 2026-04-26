@@ -75,52 +75,7 @@ function initNavDots() {
 ──────────────────────────────────────────────── */
 function initParticles() {
   const canvas = document.getElementById('particle-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
-
-  const resize = () => {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  };
-  resize();
-  window.addEventListener('resize', resize, { passive: true });
-
-  class Particle {
-    constructor() { this.reset(true); }
-    reset(init = false) {
-      this.x = Math.random() * W;
-      this.y = init ? Math.random() * H : H + 10;
-      this.size = Math.random() * 3 + 1;
-      this.speedX = (Math.random() - 0.5) * 0.4;
-      this.speedY = -(Math.random() * 0.6 + 0.2);
-      this.alpha = Math.random() * 0.5 + 0.1;
-      this.color = Math.random() > 0.5 ? '#4a8c60' : '#c9a84c';
-    }
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      this.alpha -= 0.001;
-      if (this.y < -10 || this.alpha <= 0) this.reset();
-    }
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = this.color;
-      ctx.globalAlpha = Math.max(0, this.alpha);
-      ctx.fill();
-    }
-  }
-
-  for (let i = 0; i < (window.innerWidth < 600 ? 0 : 18); i++) particles.push(new Particle());
-
-  const animate = () => {
-    ctx.clearRect(0, 0, W, H);
-    ctx.globalAlpha = 1;
-    particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(animate);
-  };
-  animate();
+  if (canvas) canvas.style.display = 'none';
 }
 
 /* ────────────────────────────────────────────────
@@ -129,153 +84,23 @@ function initParticles() {
 function initHeroTyping() {
   const el = document.getElementById('hero-typing');
   if (!el) return;
-  const text = 'Ashwagandha';
-  let i = 0;
-
-  const cursor = document.createElement('span');
-  cursor.className = 'typing-cursor';
-  el.appendChild(cursor);
-
-  const type = () => {
-    if (i <= text.length) {
-      el.textContent = text.slice(0, i);
-      el.appendChild(cursor);
-      i++;
-      setTimeout(type, 100);
-    } else {
-      // First glitch starts 3s after full type
-      setTimeout(startGlitch, 3000);
-    }
-  };
-
-  const glitchChars = '!@#$%Ω∑√∏αβγδΨ?<>[]';
-
-  function startGlitch() {
-    let glitchCount = 0;
-    const maxGlitches = 10;
-    el.classList.add('hero-title-glitch');
-
-    const glitchInterval = setInterval(() => {
-      if (glitchCount >= maxGlitches) {
-        clearInterval(glitchInterval);
-        el.classList.remove('hero-title-glitch');
-        el.textContent = text;
-        el.appendChild(cursor);
-        setTimeout(retypeAlt, 350);
-        return;
-      }
-      const glitched = text.split('').map(ch =>
-        Math.random() > 0.55
-          ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
-          : ch
-      ).join('');
-      el.textContent = glitched;
-      el.appendChild(cursor);
-      glitchCount++;
-    }, 85);
-  }
-
-  function retypeAlt() {
-    el.textContent = '';
-    el.classList.add('hero-title-alt');
-    el.appendChild(cursor);
-    let j = 0;
-    const retypeInterval = setInterval(() => {
-      el.textContent = text.slice(0, j);
-      el.appendChild(cursor);
-      j++;
-      if (j > text.length) {
-        clearInterval(retypeInterval);
-        // Show gold for 1.8s, reset normal, then wait 5s and loop again
-        setTimeout(() => {
-          el.classList.remove('hero-title-alt');
-          el.textContent = text;
-          el.appendChild(cursor);
-          // ── LOOP: next cycle after 5s pause ──
-          setTimeout(startGlitch, 5000);
-        }, 1800);
-      }
-    }, 80);
-  }
-
-  // Start typing after slight delay
-  setTimeout(type, 600);
+  el.textContent = 'Ashwagandha';
 }
 
 /* ────────────────────────────────────────────────
    6. HERO PARALLAX (scroll-based zoom + move)
 ──────────────────────────────────────────────── */
 function initHeroParallax() {
-  if (window.innerWidth < 768) return; // skip on mobile
-  const heroCard = document.getElementById('hero-bg');
-  const heroImg = document.getElementById('hero-img');
-  if (!heroCard || !heroImg) return;
-
-  let ticking = false;
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const progress = Math.min(window.scrollY / window.innerHeight, 1);
-      heroCard.style.transform = `translateY(${progress * 24}px)`;
-      heroImg.style.transform = `scale(${1 + progress * 0.04}) translateY(${progress * 10}px)`;
-      ticking = false;
-    });
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
+  return;
 }
 
 /* ────────────────────────────────────────────────
    7. GSAP ScrollTrigger ANIMATIONS
 ──────────────────────────────────────────────── */
 function initGSAPAnimations() {
-  // On mobile — skip all scroll animations, just make everything visible
-  if (window.innerWidth < 768) {
-    document.querySelectorAll('.gsap-fade,.gsap-up,.gsap-left,.gsap-right').forEach(el => {
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-    });
-    return;
-  }
-
-  // Hero fade elements
-  gsap.utils.toArray('.gsap-fade').forEach((el, i) => {
-    gsap.to(el, {
-      opacity: 1, duration: 1,
-      delay: 0.5 + i * 0.18,
-      ease: 'power2.out'
-    });
-  });
-
-  // Slide up
-  gsap.utils.toArray('.gsap-up').forEach(el => {
-    const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
-    gsap.to(el, {
-      opacity: 1, y: 0, duration: 0.7,
-      ease: 'power3.out', delay,
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true }
-    });
-  });
-
-  // Slide from left
-  gsap.utils.toArray('.gsap-left').forEach(el => {
-    const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
-    gsap.to(el, {
-      opacity: 1, x: 0, duration: 0.7,
-      ease: 'power3.out', delay,
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true }
-    });
-  });
-
-  // Slide from right
-  gsap.utils.toArray('.gsap-right').forEach(el => {
-    const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
-    gsap.to(el, {
-      opacity: 1, x: 0, duration: 0.7,
-      ease: 'power3.out', delay,
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true }
-    });
+  document.querySelectorAll('.gsap-fade,.gsap-up,.gsap-left,.gsap-right,.gsap-timeline').forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
   });
 }
 
@@ -284,32 +109,10 @@ function initGSAPAnimations() {
 ──────────────────────────────────────────────── */
 function initTimeline() {
   const line = document.getElementById('timeline-line');
-  if (line) {
-    gsap.fromTo(line, { scaleY: 0 }, {
-      scaleY: 1,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#sec-2',
-        start: 'top 70%',
-        end: 'bottom 30%',
-        scrub: 1
-      }
-    });
-  }
-
-  gsap.utils.toArray('.gsap-timeline').forEach(el => {
-    const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
-    gsap.to(el, {
-      opacity: 1, y: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-      delay,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 85%',
-        once: true
-      }
-    });
+  if (line) line.style.transform = 'translateX(-50%) scaleY(1)';
+  document.querySelectorAll('.gsap-timeline').forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
   });
 }
 
@@ -574,31 +377,7 @@ function initViewer360() {
 function initStatCounters() {
   document.querySelectorAll('.c-stat-num[data-target]').forEach(el => {
     const target = parseInt(el.dataset.target, 10);
-    let animated = false;
-
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 90%',
-      once: true,
-      onEnter: () => {
-        if (animated) return;
-        animated = true;
-        const duration = 1800;
-        const start = performance.now();
-
-        const easeOut = t => 1 - Math.pow(1 - t, 3);
-
-        const update = (now) => {
-          const elapsed = now - start;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = easeOut(progress);
-          el.textContent = Math.round(eased * target).toLocaleString();
-          if (progress < 1) requestAnimationFrame(update);
-          else el.textContent = target.toLocaleString();
-        };
-        requestAnimationFrame(update);
-      }
-    });
+    if (!Number.isNaN(target)) el.textContent = target.toLocaleString();
   });
 }
 
@@ -675,9 +454,9 @@ function initImageFallbacks() {
   if (!header) return;
   window.addEventListener('scroll', () => {
     if (window.scrollY > 20) {
-      header.style.boxShadow = '0 24px 60px rgba(0,0,0,0.28)';
+      header.style.boxShadow = '0 18px 40px rgba(73, 87, 92, 0.12)';
     } else {
-      header.style.boxShadow = '0 22px 60px rgba(0,0,0,0.22)';
+      header.style.boxShadow = '0 12px 28px rgba(73, 87, 92, 0.08)';
     }
   }, { passive: true });
 })();
@@ -781,7 +560,7 @@ function initPlant360Video() {
 
   if (!modal || !modelEl) return;
 
-  let autoOn       = true;
+  let autoOn       = false;
   let modelLoaded  = false;
   let tutStep      = 0;
   const TUT_STEPS  = 3;
@@ -871,7 +650,7 @@ function initPlant360Video() {
     if (!tutorial.classList.contains('hidden')) hideTutorial();
   });
 
-  showStep(0);
+  if (tutorial) tutorial.classList.add('hidden');
 
   // ── AUTO-ROTATE ──
   function setAuto(on) {
@@ -896,4 +675,7 @@ function initPlant360Video() {
       modelEl.jumpCameraToGoal();
     });
   }
+
+  setAuto(false);
 }
+
