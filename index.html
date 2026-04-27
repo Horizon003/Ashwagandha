@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"/>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
@@ -25,7 +26,7 @@
   <div class="header-inner">
     <!-- LEFT -->
     <div class="header-brand">
-      <img src="assets/logos/qacp-logo.webp" alt="QACP Logo" class="header-logo" onerror="this.style.display='none'"/>
+      <img src="assets/logos/qacp.webp" alt="QACP Logo" class="header-logo" onerror="this.style.display='none'"/>
       <div class="header-text">
         <span class="header-text-main">Quaid-e-Azam</span>
         <span class="header-text-sub">College of Pharmacy</span>
@@ -41,7 +42,7 @@
         <span class="header-text-main">University of</span>
         <span class="header-text-sub">Sargodha</span>
       </div>
-      <img src="assets/logos/uos-logo.webp" alt="UoS Logo" class="header-logo" onerror="this.style.display='none'"/>
+      <img src="assets/logos/uos.webp" alt="UoS Logo" class="header-logo" onerror="this.style.display='none'"/>
     </div>
   </div>
 </header>
@@ -98,7 +99,7 @@
           <span class="hero-image-pill">Ashwagandha</span>
         </div>
         <div class="hero-image-frame">
-          <img src="assets/main/ashwagandha-main.webp" alt="Ashwagandha" id="hero-img" class="hero-img"/>
+          <img src="assets/hero/ashwagandha.webp" alt="Ashwagandha" id="hero-img" class="hero-img"/>
         </div>
       </div>
     </div>
@@ -164,80 +165,86 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     SECTION 1B — 360° PLANT VIDEO VIEWER
+     SECTION 1B — 3D GLB MODEL VIEWER (POPUP)
 ═══════════════════════════════════════════════════════════ -->
-<section id="sec-1b" class="section dark-section plant360-section" data-section="1b">
+<section id="sec-1b" class="section dark-section glb-section" data-section="1b">
   <div class="container">
     <div class="section-header gsap-up">
-      <div class="section-badge"><i class="fa-solid fa-rotate"></i> Interactive</div>
-      <h2 class="section-title">360° Plant View</h2>
-      <p class="section-sub">Drag the slider below to rotate the Ashwagandha plant</p>
+      <div class="section-badge"><i class="fa-solid fa-cube"></i> Interactive 3D</div>
+      <h2 class="section-title">Explore in 3D</h2>
+      <p class="section-sub">Click the button below to open an interactive 3D model of the Ashwagandha plant</p>
       <div class="section-rule"></div>
     </div>
 
-    <div class="plant360-layout">
-
-      <!-- VIDEO STAGE — big open frame, no phone shape -->
-      <div class="plant360-stage-wrap gsap-up">
-        <div class="plant360-frame">
-          <video
-            id="plant360-video"
-            class="plant360-video"
-            muted
-            playsinline
-            preload="auto"
-            webkit-playsinline
-          >
-            <source src="assets/360/ashwagandha-360.webm" type="video/webm"/>
-            <source src="assets/360/ashwagandha-360.mp4"  type="video/mp4"/>
-          </video>
-          <div class="plant360-overlay-hint" id="plant360-hint">
-            <i class="fa-solid fa-left-right"></i>
-            <span>Slide to Rotate</span>
-          </div>
-          <div class="plant360-glow plant360-glow-l"></div>
-          <div class="plant360-glow plant360-glow-r"></div>
+    <div class="glb-hero-card gsap-up">
+      <div class="glb-hero-visual">
+        <div class="glb-hero-orbit"></div>
+        <div class="glb-hero-orbit glb-hero-orbit-2"></div>
+        <div class="glb-hero-cube">
+          <i class="fa-solid fa-cube"></i>
         </div>
+        <div class="glb-hero-chip glb-chip-1"><i class="fa-solid fa-arrows-rotate"></i> 360° Rotate</div>
+        <div class="glb-hero-chip glb-chip-2"><i class="fa-solid fa-magnifying-glass-plus"></i> Zoom</div>
+        <div class="glb-hero-chip glb-chip-3"><i class="fa-solid fa-hand-pointer"></i> Drag</div>
       </div>
 
-      <!-- SLIDER CONTROL -->
-      <div class="plant360-controls gsap-up" style="--delay:0.1s">
-
-        <div class="plant360-angle-display">
-          <span class="plant360-angle-val" id="plant360-angle">0°</span>
-          <span class="plant360-angle-label">Rotation</span>
-        </div>
-
-        <div class="plant360-slider-track">
-          <i class="fa-solid fa-arrow-left plant360-icon-l"></i>
-          <div class="plant360-slider-wrap">
-            <div class="plant360-track-bg">
-              <div class="plant360-track-fill" id="plant360-track-fill"></div>
-            </div>
-            <input
-              type="range"
-              id="plant360-slider"
-              class="plant360-slider"
-              min="0" max="1000" step="1" value="0"
-            />
-          </div>
-          <i class="fa-solid fa-arrow-right plant360-icon-r"></i>
-        </div>
-
-        <div class="plant360-tip">
-          <i class="fa-solid fa-hand-pointer"></i>
-          Drag slider slowly for a smooth 360° rotation
-        </div>
-
-        <button id="plant360-auto-btn" class="plant360-auto-btn">
-          <i class="fa-solid fa-rotate" id="plant360-auto-icon"></i>
-          <span id="plant360-auto-label">Auto Rotate</span>
+      <div class="glb-hero-content">
+        <span class="glb-hero-label"><i class="fa-solid fa-star"></i> Premium Experience</span>
+        <h3 class="glb-hero-title">Real 3D Model of <em>Withania somnifera</em></h3>
+        <p class="glb-hero-text">Rotate, zoom and examine every detail of the Ashwagandha plant — leaves, stems and winter-cherry berries — in a fully interactive 3D scene.</p>
+        <ul class="glb-hero-features">
+          <li><i class="fa-solid fa-check"></i> High-detail botanical mesh</li>
+          <li><i class="fa-solid fa-check"></i> Full 360° orbit controls</li>
+          <li><i class="fa-solid fa-check"></i> On-demand loading (GPU friendly)</li>
+        </ul>
+        <button id="glb-open-btn" class="glb-open-btn" type="button">
+          <span class="glb-open-btn-bg"></span>
+          <i class="fa-solid fa-cube"></i>
+          <span>View 3D Model</span>
+          <i class="fa-solid fa-arrow-right glb-open-btn-arrow"></i>
         </button>
-
+        <small class="glb-hero-note"><i class="fa-solid fa-circle-info"></i> Model loads only when opened to save resources.</small>
       </div>
     </div>
   </div>
 </section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     3D GLB MODAL — loaded on demand, destroyed on close
+═══════════════════════════════════════════════════════════ -->
+<div id="glb-modal" class="glb-modal" aria-hidden="true" role="dialog" aria-label="3D Ashwagandha model viewer">
+  <div class="glb-modal-backdrop" data-glb-close></div>
+  <div class="glb-modal-dialog">
+    <div class="glb-modal-header">
+      <div class="glb-modal-title">
+        <div class="glb-modal-title-icon"><i class="fa-solid fa-cube"></i></div>
+        <div>
+          <h3>Ashwagandha — 3D Model</h3>
+          <span><em>Withania somnifera</em> · Interactive viewer</span>
+        </div>
+      </div>
+      <button id="glb-close-btn" class="glb-close-btn" type="button" aria-label="Close 3D viewer" data-glb-close>
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="glb-modal-stage" id="glb-modal-stage">
+      <div class="glb-loader" id="glb-loader">
+        <div class="glb-loader-spinner"></div>
+        <div class="glb-loader-text">Loading 3D model…</div>
+        <div class="glb-loader-bar"><div class="glb-loader-bar-fill" id="glb-loader-fill"></div></div>
+        <small class="glb-loader-sub">Please wait while we prepare the interactive plant</small>
+      </div>
+      <!-- model-viewer gets injected here by JS -->
+    </div>
+
+    <div class="glb-modal-footer">
+      <div class="glb-footer-tip"><i class="fa-solid fa-hand-pointer"></i> Drag to rotate</div>
+      <div class="glb-footer-tip"><i class="fa-solid fa-magnifying-glass-plus"></i> Scroll / pinch to zoom</div>
+      <div class="glb-footer-tip"><i class="fa-solid fa-right-left"></i> Right-click or two-finger to pan</div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════
      SECTION 2 — HISTORICAL BACKGROUND
@@ -670,7 +677,7 @@
       <div class="dosage-side gsap-left">
         <div class="dosage-product-card">
           <div class="dosage-img-wrap">
-            <img src="assets/products/ashwagandha-capsules.webp" alt="Ashwagandha Capsules" class="dosage-img" id="img-capsules"/>
+            <img src="assets/products/capsules/main.webp" alt="Ashwagandha Capsules" class="dosage-img" id="img-capsules"/>
           </div>
           <div class="dosage-info">
             <h3>Capsules / Tablets</h3>
@@ -691,7 +698,7 @@
             <i class="fa-solid fa-sliders"></i> Manual 360° Viewer
           </div>
           <div class="viewer-stage" id="viewer-stage">
-            <img id="viewer-img" src="assets/products/product-360/product-1.webp" alt="360 Product View" class="viewer-360-img" onerror="this.parentElement.classList.add('viewer-fallback')"/>
+            <img id="viewer-img" src="assets/products/capsules/360/1.webp" alt="360 Product View" class="viewer-360-img" onerror="this.parentElement.classList.add('viewer-fallback')"/>
             <div class="viewer-fallback-text" style="display:none">
               <i class="fa-solid fa-rotate fa-3x"></i>
               <p>360° Interactive View</p>
@@ -719,7 +726,7 @@
       <div class="dosage-side gsap-right">
         <div class="dosage-product-card">
           <div class="dosage-img-wrap">
-            <img src="assets/products/ashwagandha-powder.webp" alt="Ashwagandha Powder" class="dosage-img" id="img-powder"/>
+            <img src="assets/products/powder/main.webp" alt="Ashwagandha Powder" class="dosage-img" id="img-powder"/>
           </div>
           <div class="dosage-info">
             <h3>Churna (Powder)</h3>
@@ -799,7 +806,7 @@
       <div class="team-card gsap-up" style="--delay:0s">
         <div class="team-avatar-wrap">
           <div class="team-glow-ring"></div>
-          <img src="assets/team/haris-horizon.webp" alt="Haris" class="team-avatar" onerror="this.src=''; this.classList.add('avatar-fallback')"/>
+          <img src="assets/team/haris.webp" alt="Haris" class="team-avatar" onerror="this.src=''; this.classList.add('avatar-fallback')"/>
           <div class="team-avatar-fallback"><i class="fa-solid fa-user"></i></div>
         </div>
         <div class="team-info">
@@ -858,7 +865,7 @@
       <div class="instructor-card">
         <div class="instructor-glow-ring"></div>
         <div class="instructor-avatar-wrap">
-          <img src="assets/team/dr-zeenat-aman.webp" alt="Dr. Zeenat Aman" class="instructor-avatar" onerror="this.src=''; this.classList.add('avatar-fallback')"/>
+          <img src="assets/team/zeenat-aman.webp" alt="Dr. Zeenat Aman" class="instructor-avatar" onerror="this.src=''; this.classList.add('avatar-fallback')"/>
           <div class="instructor-avatar-fallback"><i class="fa-solid fa-user-tie"></i></div>
         </div>
         <div class="instructor-info">
