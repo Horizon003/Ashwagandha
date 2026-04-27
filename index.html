@@ -171,74 +171,74 @@
 
 <section id="sec-1b" class="section dark-section plant360-section" data-section="1b">
   <div class="container">
-
     <div class="section-header gsap-up">
       <div class="section-badge"><i class="fa-solid fa-rotate"></i> Interactive 3D</div>
-      <h2 class="section-title">360° Plant Model</h2>
-      <p class="section-sub">AI-generated 3D model of <em>Withania somnifera</em> — explore every botanical detail</p>
+      <h2 class="section-title">360° Plant View</h2>
+      <p class="section-sub">Explore the real 3D model of Ashwagandha — rotate, zoom, inspect every detail</p>
       <div class="section-rule"></div>
     </div>
 
-    <!-- Hero launch area -->
-    <div class="p3d-hero gsap-up">
-
-      <!-- Left: Visual preview card -->
-      <div class="p3d-preview-card" id="p3d-open-btn">
-        <div class="p3d-preview-bg">
-          <div class="p3d-preview-orb p3d-orb-1"></div>
-          <div class="p3d-preview-orb p3d-orb-2"></div>
-          <div class="p3d-preview-orb p3d-orb-3"></div>
-        </div>
-        <div class="p3d-preview-icon">
+    <!-- Launch Card -->
+    <div class="p3d-launch-wrap gsap-up">
+      <div class="p3d-launch-card" id="p3d-open-btn">
+        <div class="p3d-launch-glow"></div>
+        <div class="p3d-launch-icon">
           <i class="fa-solid fa-cube"></i>
+          <div class="p3d-orbit-ring p3d-ring-1"></div>
+          <div class="p3d-orbit-ring p3d-ring-2"></div>
         </div>
-        <div class="p3d-preview-label">
-          <span class="p3d-live-dot"></span>
-          3D Interactive
+        <div class="p3d-launch-text">
+          <h3>Open 3D Model</h3>
+          <p>Withania somnifera — Full plant with roots</p>
         </div>
-        <div class="p3d-preview-cta">
-          <i class="fa-solid fa-play"></i>
-          <span>Launch Viewer</span>
+        <div class="p3d-launch-cta">
+          <span>Explore Now</span>
+          <i class="fa-solid fa-arrow-right"></i>
         </div>
-        <div class="p3d-preview-shimmer"></div>
+      </div>
+    </div>
+
+    <!-- Model Info Cards -->
+    <div class="p3d-info-grid gsap-up" style="--delay:0.12s">
+
+      <div class="p3d-info-card">
+        <div class="p3d-info-icon" style="--ic:#22c55e">
+          <i class="fa-solid fa-rotate-3d"></i>
+        </div>
+        <div>
+          <h4>Full 360° Rotation</h4>
+          <p>Drag in any direction — inspect stem, leaves, roots &amp; berries from every angle</p>
+        </div>
       </div>
 
-      <!-- Right: Info -->
-      <div class="p3d-hero-info">
-        <div class="p3d-hero-title">
-          <h3>Withania somnifera</h3>
-          <p class="p3d-hero-latin">Full plant — stem, leaves, roots &amp; berries</p>
+      <div class="p3d-info-card">
+        <div class="p3d-info-icon" style="--ic:#f59e0b">
+          <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-
-        <div class="p3d-stat-row">
-          <div class="p3d-stat">
-            <span class="p3d-stat-val">360°</span>
-            <span class="p3d-stat-lbl">Rotation</span>
-          </div>
-          <div class="p3d-stat-div"></div>
-          <div class="p3d-stat">
-            <span class="p3d-stat-val">4K</span>
-            <span class="p3d-stat-lbl">Texture</span>
-          </div>
-          <div class="p3d-stat-div"></div>
-          <div class="p3d-stat">
-            <span class="p3d-stat-val">GLB</span>
-            <span class="p3d-stat-lbl">Format</span>
-          </div>
+        <div>
+          <h4>High Detail Texture</h4>
+          <p>Meshy AI generated model with realistic bark, root system and berry textures</p>
         </div>
+      </div>
 
-        <div class="p3d-feature-list">
-          <div class="p3d-feat"><i class="fa-solid fa-check"></i> Drag to rotate any direction</div>
-          <div class="p3d-feat"><i class="fa-solid fa-check"></i> Pinch to zoom in &amp; out</div>
-          <div class="p3d-feat"><i class="fa-solid fa-check"></i> Auto-rotate hands-free</div>
-          <div class="p3d-feat"><i class="fa-solid fa-check"></i> Full root system visible</div>
+      <div class="p3d-info-card">
+        <div class="p3d-info-icon" style="--ic:#14b8a6">
+          <i class="fa-solid fa-leaf"></i>
         </div>
+        <div>
+          <h4>Complete Morphology</h4>
+          <p>Aerial parts + root system visible — ideal for botanical study and identification</p>
+        </div>
+      </div>
 
-        <button class="p3d-open-btn-pill" id="p3d-open-btn-2">
-          <i class="fa-solid fa-cube"></i>
-          Open 3D Model
-          <i class="fa-solid fa-arrow-right p3d-arrow"></i>
-        </button>
+      <div class="p3d-info-card">
+        <div class="p3d-info-icon" style="--ic:#8b5cf6">
+          <i class="fa-solid fa-mobile-screen"></i>
+        </div>
+        <div>
+          <h4>Mobile Optimised</h4>
+          <p>Pinch to zoom, finger drag to rotate — works perfectly on any screen size</p>
+        </div>
       </div>
 
     </div>
