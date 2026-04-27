@@ -130,55 +130,24 @@ function initHeroParallax() {
   }, { passive: true });
 }
 
-/* ── 6. SCROLL ANIMATIONS — smooth, staggered, stable ── */
+/* ── 6. FADE ANIMATIONS — IntersectionObserver ── */
 function initFadeAnimations() {
-  // Mobile: instant reveal, no jank
   if (IS_MOBILE) {
     document.querySelectorAll('.gsap-up,.gsap-left,.gsap-right,.gsap-fade').forEach(el => {
-      el.style.cssText = 'opacity:1;transform:none;transition:none;';
+      el.style.cssText = 'opacity:1;transform:none;';
     });
     return;
   }
-
-  // Desktop: staggered IntersectionObserver — smooth fade+slide
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       const el = e.target;
-      // Get delay from --delay CSS var or style attr
-      const styleDelay = el.style.getPropertyValue('--delay');
-      const delay = styleDelay ? parseFloat(styleDelay) * 1000 : 0;
-      setTimeout(() => {
-        el.style.transition = 'opacity 0.55s cubic-bezier(0.2,0.8,0.3,1), transform 0.55s cubic-bezier(0.2,0.8,0.3,1)';
-        el.style.opacity    = '1';
-        el.style.transform  = 'none';
-      }, delay);
+      const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay') || '0') * 1000;
+      setTimeout(() => { el.style.transition = 'opacity 0.45s ease, transform 0.45s ease'; el.style.opacity = '1'; el.style.transform = 'none'; }, delay);
       obs.unobserve(el);
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-
-  // Stagger siblings automatically when inside same parent
-  document.querySelectorAll('.gsap-up,.gsap-left,.gsap-right,.gsap-fade').forEach((el, globalIdx) => {
-    // If element has no explicit delay, auto-stagger siblings
-    if (!el.style.getPropertyValue('--delay')) {
-      const siblings = Array.from(el.parentElement?.querySelectorAll('.gsap-up,.gsap-left,.gsap-right,.gsap-fade') || []);
-      const sibIdx = siblings.indexOf(el);
-      if (sibIdx > 0) {
-        el.style.setProperty('--delay', (sibIdx * 0.08).toString());
-      }
-    }
-    obs.observe(el);
-  });
-
-  // Hero section elements — fade in immediately on page load
-  const heroEls = document.querySelectorAll('#sec-0 .gsap-fade');
-  heroEls.forEach((el, i) => {
-    setTimeout(() => {
-      el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-    }, 300 + i * 150);
-  });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.gsap-up,.gsap-left,.gsap-right,.gsap-fade').forEach(el => obs.observe(el));
 }
 
 /* ── 7. TIMELINE ── */
@@ -316,151 +285,58 @@ function initImageFallbacks() {
   if (hi) hi.addEventListener('error', () => hi.closest('.hero-image-card')?.classList.add('hero-bg-fallback'));
 }
 
-/* ── 18. 3D MODEL MODAL — load on open, unload on close ── */
+/* ── 18. 3D MODEL MODAL ── */
 function initPlant360Video() {
-  const openBtn  = document.getElementById('p3d-open-btn');
-  const openBtn2 = document.getElementById('p3d-open-btn-2');
-  const modal    = document.getElementById('p3d-modal');
-  const closeBtn = document.getElementById('p3d-close-btn');
-  const frameWrap = document.getElementById('p3d-frame-wrap');
+  const openBtn = document.getElementById('p3d-open-btn'), openBtn2 = document.getElementById('p3d-open-btn-2'),
+    modal = document.getElementById('p3d-modal'), closeBtn = document.getElementById('p3d-close-btn'),
+    modelEl = document.getElementById('plant-model'), loadDiv = document.getElementById('p3d-loading'),
+    loadBar = document.getElementById('p3d-load-bar'), loadPct = document.getElementById('p3d-pct'),
+    tutorial = document.getElementById('p3d-tutorial'), skipBtn = document.getElementById('p3d-skip-btn'),
+    nextBtn = document.getElementById('p3d-tut-next'), autoBtn = document.getElementById('p3d-auto-btn'),
+    autoLbl = document.getElementById('p3d-auto-label'), resetBtn = document.getElementById('p3d-reset-btn');
+  if (!modal || !modelEl) return;
 
-  if (!modal) return;
+  let autoOn = true, tutStep = 0;
+  const open  = () => { modal.classList.add('open'); document.body.style.overflow = 'hidden'; };
+  const close = () => { modal.classList.remove('open'); document.body.style.overflow = ''; };
 
-  let isLoaded = false;
-  let tutStep  = 0;
+  [openBtn, openBtn2].forEach(b => b?.addEventListener('click', open));
+  closeBtn?.addEventListener('click', close);
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
-  // ── MODEL TEMPLATE (created fresh each open) ──
-  function buildModel() {
-    const mv = document.createElement('model-viewer');
-    mv.id = 'plant-model';
-    mv.setAttribute('src', 'assets/3d/ashwagandha.glb');
-    mv.setAttribute('alt', 'Ashwagandha 3D Plant Model');
-    mv.setAttribute('camera-controls', '');
-    mv.setAttribute('touch-action', 'pan-y');
-    mv.setAttribute('auto-rotate', '');
-    mv.setAttribute('auto-rotate-delay', '600');
-    mv.setAttribute('rotation-per-second', '28deg');
-    mv.setAttribute('shadow-intensity', '1');
-    mv.setAttribute('shadow-softness', '0.6');
-    mv.setAttribute('exposure', '1.3');
-    mv.setAttribute('environment-image', 'neutral');
-    mv.setAttribute('loading', 'eager');
-    mv.style.cssText = 'width:100%;height:100%;display:block;background:#fff;--poster-color:#fff;';
+  modelEl.addEventListener('progress', e => {
+    const p = Math.round((e.detail.totalProgress || 0) * 100);
+    if (loadBar) loadBar.style.width = p + '%';
+    if (loadPct) loadPct.textContent = p + '%';
+  });
+  modelEl.addEventListener('load', () => {
+    if (loadBar) loadBar.style.width = '100%';
+    if (loadPct) loadPct.textContent = '100%';
+    setTimeout(() => loadDiv?.classList.add('hidden'), 400);
+  });
+  modelEl.addEventListener('error', () => {
+    if (loadPct) { loadPct.style.cssText = 'font-size:.85rem;color:#ef4444;-webkit-text-fill-color:#ef4444;'; loadPct.textContent = '⚠ File not found'; }
+  });
 
-    // Progress
-    mv.addEventListener('progress', e => {
-      const p   = Math.round((e.detail.totalProgress || 0) * 100);
-      const bar = document.getElementById('p3d-load-bar');
-      const pct = document.getElementById('p3d-pct');
-      if (bar) bar.style.width = p + '%';
-      if (pct) pct.textContent = p + '%';
-    });
-
-    // Loaded
-    mv.addEventListener('load', () => {
-      isLoaded = true;
-      const bar  = document.getElementById('p3d-load-bar');
-      const pct  = document.getElementById('p3d-pct');
-      const load = document.getElementById('p3d-loading');
-      if (bar) bar.style.width = '100%';
-      if (pct) pct.textContent = '100%';
-      setTimeout(() => load?.classList.add('hidden'), 400);
-    });
-
-    // Error
-    mv.addEventListener('error', () => {
-      const pct = document.getElementById('p3d-pct');
-      if (pct) { pct.style.cssText = 'font-size:.85rem;color:#ef4444;-webkit-text-fill-color:#ef4444;'; pct.textContent = '⚠ File not found — check assets/3d/ashwagandha.glb'; }
-    });
-
-    // Hide tutorial on drag
-    mv.addEventListener('camera-change', () => hideTut());
-
-    return mv;
-  }
-
-  // ── OPEN ──
-  function openModal() {
-    // Reset loading UI
-    const load = document.getElementById('p3d-loading');
-    const bar  = document.getElementById('p3d-load-bar');
-    const pct  = document.getElementById('p3d-pct');
-    const tut  = document.getElementById('p3d-tutorial');
-    if (load) { load.classList.remove('hidden'); }
-    if (bar)  bar.style.width = '0%';
-    if (pct)  pct.textContent = '0%';
-    if (tut)  { tut.classList.remove('hidden'); tutStep = 0; showStep(0); }
-    isLoaded = false;
-
-    // Inject fresh model-viewer
-    if (frameWrap) {
-      const old = document.getElementById('plant-model');
-      if (old) old.remove();
-      frameWrap.appendChild(buildModel());
-    }
-
-    // Reconnect controls
-    bindControls();
-
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  // ── CLOSE — destroy model to free GPU/memory ──
-  function closeModal() {
-    modal.classList.remove('open');
-    document.body.style.overflow = '';
-    // Small delay so close animation plays, then destroy model
-    setTimeout(() => {
-      const mv = document.getElementById('plant-model');
-      if (mv) mv.remove();
-      isLoaded = false;
-    }, 320);
-  }
-
-  [openBtn, openBtn2].forEach(b => b?.addEventListener('click', openModal));
-  closeBtn?.addEventListener('click', closeModal);
-  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-  // ── TUTORIAL ──
-  function hideTut() { document.getElementById('p3d-tutorial')?.classList.add('hidden'); }
+  const hideTut = () => tutorial?.classList.add('hidden');
+  modelEl.addEventListener('camera-change', hideTut);
 
   function showStep(n) {
     document.querySelectorAll('.p3d-tut-step').forEach((s, i) => s.classList.toggle('active', i === n));
     document.querySelectorAll('.p3d-dot').forEach((d, i) => d.classList.toggle('active', i === n));
-    const nextBtn = document.getElementById('p3d-tut-next');
-    if (nextBtn) nextBtn.innerHTML = n === 2
-      ? 'Got it <i class="fa-solid fa-check"></i>'
-      : 'Next <i class="fa-solid fa-chevron-right"></i>';
+    if (nextBtn) nextBtn.innerHTML = n === 2 ? 'Got it <i class="fa-solid fa-check"></i>' : 'Next <i class="fa-solid fa-chevron-right"></i>';
   }
+  nextBtn?.addEventListener('click', () => { tutStep++; if (tutStep >= 3) hideTut(); else showStep(tutStep); });
+  skipBtn?.addEventListener('click', hideTut);
+  showStep(0);
 
-  // ── BIND CONTROLS (called after model injected) ──
-  function bindControls() {
-    const nextBtn  = document.getElementById('p3d-tut-next');
-    const skipBtn  = document.getElementById('p3d-skip-btn');
-    const autoBtn  = document.getElementById('p3d-auto-btn');
-    const autoLbl  = document.getElementById('p3d-auto-label');
-    const resetBtn = document.getElementById('p3d-reset-btn');
-    let autoOn = true;
-
-    nextBtn?.addEventListener('click', () => {
-      tutStep++; if (tutStep >= 3) hideTut(); else showStep(tutStep);
-    });
-    skipBtn?.addEventListener('click', hideTut);
-
-    const setAuto = on => {
-      autoOn = on;
-      const mv = document.getElementById('plant-model');
-      if (!mv) return;
-      on ? mv.setAttribute('auto-rotate', '') : mv.removeAttribute('auto-rotate');
-      autoBtn?.classList.toggle('active', on);
-      if (autoLbl) autoLbl.textContent = on ? 'Auto Rotating' : 'Auto Rotate';
-    };
-    autoBtn?.addEventListener('click', () => setAuto(!autoOn));
-    resetBtn?.addEventListener('click', () => {
-      const mv = document.getElementById('plant-model');
-      mv?.resetTurntableRotation?.(); mv?.jumpCameraToGoal?.();
-    });
-  }
+  const setAuto = on => {
+    autoOn = on;
+    on ? modelEl.setAttribute('auto-rotate', '') : modelEl.removeAttribute('auto-rotate');
+    autoBtn?.classList.toggle('active', on);
+    if (autoLbl) autoLbl.textContent = on ? 'Auto Rotating' : 'Auto Rotate';
+  };
+  autoBtn?.addEventListener('click', () => setAuto(!autoOn));
+  resetBtn?.addEventListener('click', () => { modelEl.resetTurntableRotation?.(); modelEl.jumpCameraToGoal?.(); });
 }
