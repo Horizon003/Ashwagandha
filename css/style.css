@@ -618,3 +618,203 @@ h1,h2,h3,h4 { font-family: var(--font-serif); color: var(--t-h); line-height: 1.
   .team-card:active, .taxo-card:active, .med-card:active { transform: scale(0.97); }
   .flip-card:active .flip-front { transform: scale(0.98); }
 }
+
+/* ═══════════ COMPREHENSIVE FIX PATCH ═══════════ */
+
+/* ── 1. Header: hide center text on mobile, fix font sizes ── */
+@media (max-width: 640px) {
+  .header-center { display: none; }
+  .header-text-main {
+    font-size: 0.85rem !important;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+  }
+  .header-text-sub { display: block !important; font-size: 0.6rem; }
+}
+
+/* ── 2. Hero image: 16:9 ratio ── */
+.hero-image-frame {
+  aspect-ratio: 16 / 9 !important;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #1a3020;
+}
+.hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+
+/* ── 3. Chips: readable on dark hero bg ── */
+.hero-highlights { display: flex; gap: 0.55rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.hero-chip {
+  background: rgba(255,255,255,0.12) !important;
+  border: 1px solid rgba(255,255,255,0.22) !important;
+  color: rgba(255,255,255,0.92) !important;
+  font-size: 0.76rem; font-weight: 500;
+  padding: 0.42rem 0.95rem; border-radius: 50px;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.hero-chip i { color: #84c49a !important; font-size: 0.72rem; }
+
+/* ── 4. Team avatar: rectangle with rounded corners, proper frame ── */
+.team-avatar-wrap {
+  width: 120px !important;
+  height: 140px !important;
+  margin: 0 auto 1rem;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #e4f3eb;
+  border: 2px solid #c0ddc8;
+  box-shadow: 0 4px 16px rgba(12,30,20,0.10);
+}
+.team-glow-ring { display: none; }
+.team-avatar {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  border-radius: 0 !important;
+  border: none !important;
+  display: block;
+}
+.team-avatar-fallback {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #ddf0e4; border-radius: 0;
+  font-size: 2.5rem; color: #5aaa78;
+}
+
+/* ── 5. Instructor: proper circular crop ── */
+.instructor-avatar-wrap {
+  width: 140px !important;
+  height: 140px !important;
+  border-radius: 50% !important;
+  overflow: hidden;
+  background: #e4f3eb;
+  border: 3px solid #c0ddc8 !important;
+  box-shadow: 0 6px 20px rgba(12,30,20,0.12);
+  flex-shrink: 0;
+}
+.instructor-avatar-wrap::before { display: none !important; }
+.instructor-avatar {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  border-radius: 50% !important;
+  border: none !important;
+}
+.instructor-avatar-fallback {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #ddf0e4; border-radius: 50%;
+  font-size: 3rem; color: #5aaa78;
+}
+
+/* ── 6. Instructor card centered on mobile ── */
+@media (max-width: 640px) {
+  .instructor-card { text-align: center; flex-direction: column; align-items: center; gap: 1.2rem; }
+  .instructor-dept { justify-content: center; text-align: center; }
+}
+
+/* ── 7. Timeline: colored icons + elegant cards ── */
+.tl-dot {
+  width: 18px !important; height: 18px !important;
+  background: var(--g600) !important;
+  border: 3px solid white !important;
+  box-shadow: 0 0 0 2px var(--g300), 0 2px 8px rgba(12,30,20,0.15) !important;
+}
+.tl-card {
+  border-left: 3px solid var(--g300) !important;
+  border-radius: 0 var(--r-lg) var(--r-lg) 0 !important;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.tl-card:hover { border-left-color: var(--g600) !important; }
+.tl-year { color: var(--g600) !important; font-weight: 800; }
+.tl-card h4 { font-size: 1.02rem; color: var(--t-h) !important; margin-bottom: 0.4rem; }
+.tl-card p { font-size: 0.84rem; color: var(--t-mute) !important; line-height: 1.6; }
+
+/* ── 8. Taxo cards: unique icon colors per card ── */
+.taxo-card:nth-child(1) .taxo-icon { background: #e8f5ee; color: #2d6a44; }
+.taxo-card:nth-child(2) .taxo-icon { background: #fef0e6; color: #c8701a; }
+.taxo-card:nth-child(3) .taxo-icon { background: #eff6ff; color: #2563eb; }
+.taxo-card:nth-child(4) .taxo-icon { background: #fdf4ff; color: #9333ea; }
+.taxo-card:nth-child(5) .taxo-icon { background: #fefce8; color: #b45309; }
+.taxo-card:nth-child(6) .taxo-icon { background: #fff0f0; color: #dc2626; }
+.taxo-label { color: var(--gold) !important; }
+.taxo-value { color: var(--t-h) !important; }
+
+/* ── 9. Med cards: unique icon colors ── */
+.med-card:nth-child(1) .med-icon-wrap i { background: #e8f5ee; color: #1e4a32; }
+.med-card:nth-child(2) .med-icon-wrap i { background: #eef2ff; color: #4338ca; }
+.med-card:nth-child(3) .med-icon-wrap i { background: #fefce8; color: #b45309; }
+.med-card:nth-child(4) .med-icon-wrap i { background: #fff0f0; color: #dc2626; }
+.med-card:nth-child(5) .med-icon-wrap i { background: #fdf4ff; color: #9333ea; }
+.med-card:nth-child(6) .med-icon-wrap i { background: #fff7ed; color: #c8701a; }
+.med-card:nth-child(1) .med-ring { border-color: #bbf7d0; }
+.med-card:nth-child(2) .med-ring { border-color: #c7d2fe; }
+.med-card:nth-child(3) .med-ring { border-color: #fef08a; }
+.med-card:nth-child(4) .med-ring { border-color: #fecaca; }
+.med-card:nth-child(5) .med-ring { border-color: #e9d5ff; }
+.med-card:nth-child(6) .med-ring { border-color: #fed7aa; }
+.med-card h3 { color: var(--t-h) !important; font-size: 1.02rem; }
+.med-card p { color: var(--t-mute) !important; }
+.med-percent { font-size: 0.72rem; font-weight: 700; }
+.med-card:nth-child(1) .med-percent { color: #1e4a32; }
+.med-card:nth-child(2) .med-percent { color: #4338ca; }
+.med-card:nth-child(3) .med-percent { color: #b45309; }
+.med-card:nth-child(4) .med-percent { color: #dc2626; }
+.med-card:nth-child(5) .med-percent { color: #9333ea; }
+.med-card:nth-child(6) .med-percent { color: #c8701a; }
+
+/* Med progress bars with unique colors */
+.med-card:nth-child(1) .med-bar { background: linear-gradient(90deg, #2d6a44, #5aaa78); }
+.med-card:nth-child(2) .med-bar { background: linear-gradient(90deg, #4338ca, #818cf8); }
+.med-card:nth-child(3) .med-bar { background: linear-gradient(90deg, #b45309, #fbbf24); }
+.med-card:nth-child(4) .med-bar { background: linear-gradient(90deg, #dc2626, #f87171); }
+.med-card:nth-child(5) .med-bar { background: linear-gradient(90deg, #9333ea, #c084fc); }
+.med-card:nth-child(6) .med-bar { background: linear-gradient(90deg, #c8701a, #fb923c); }
+
+/* ── 10. Chem group icon colors ── */
+.chem-group:nth-child(1) .chem-group-icon { background: #e8f5ee; color: #1e4a32; border: 1px solid #bbf7d0; }
+.chem-group:nth-child(2) .chem-group-icon { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+.chem-group:nth-child(3) .chem-group-icon { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.chem-group:nth-child(4) .chem-group-icon { background: #fdf4ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+.chem-chip { font-size: 0.75rem !important; padding: 0.35rem 0.8rem !important; }
+
+/* ── 11. Flip card back — white text on green, clear contrast ── */
+.flip-back { background: linear-gradient(145deg, #1e4a32, #2d6a44) !important; }
+.flip-back h3 { color: #ffffff !important; font-size: 0.95rem; margin-bottom: 0.4rem; }
+.flip-back p { color: rgba(255,255,255,0.92) !important; font-size: 0.82rem; line-height: 1.55; }
+.flip-check-icon { background: rgba(255,255,255,0.15) !important; border-color: rgba(255,255,255,0.3) !important; }
+.flip-check-icon i { color: #84c49a !important; font-size: 1.3rem; }
+
+/* ── 12. Trad card icon colors unique per card ── */
+.trad-card:nth-child(1) .trad-icon { background: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
+.trad-card:nth-child(2) .trad-icon { background: #fff0f0; color: #dc2626; border-color: #fecaca; }
+.trad-card:nth-child(3) .trad-icon { background: #fefce8; color: #b45309; border-color: #fef08a; }
+.trad-card:nth-child(4) .trad-icon { background: #fdf4ff; color: #9333ea; border-color: #e9d5ff; }
+.trad-card:nth-child(5) .trad-icon { background: #fff7ed; color: #c8701a; border-color: #fed7aa; }
+.trad-card:nth-child(6) .trad-icon { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+
+/* ── 13. Accordion icons unique colors ── */
+.accord-item:nth-child(1) .accord-icon-wrap { background: #e8f5ee; color: #1e4a32; border-color: #bbf7d0; }
+.accord-item:nth-child(2) .accord-icon-wrap { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+.accord-item:nth-child(3) .accord-icon-wrap { background: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
+.accord-item:nth-child(4) .accord-icon-wrap { background: #fff0f0; color: #dc2626; border-color: #fecaca; }
+.accord-item:nth-child(5) .accord-icon-wrap { background: #fdf4ff; color: #9333ea; border-color: #e9d5ff; }
+
+/* ── 14. Progress bar animated (JS triggers .animated class) ── */
+.med-bar { width: 0 !important; transition: width 1.3s cubic-bezier(0.16,1,0.3,1) !important; }
+.med-bar.animated { width: var(--w) !important; }
+
+/* ── 15. Loading animation for gsap-up (ensure visible) ── */
+.gsap-up { opacity: 0; transform: translateY(28px); }
+.gsap-left { opacity: 0; transform: translateX(-22px); }
+.gsap-right { opacity: 0; transform: translateX(22px); }
+.gsap-fade { opacity: 0; }
+
+/* Make sure revealed state is explicit */
+.anim-revealed {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: opacity 0.55s cubic-bezier(0.16,1,0.3,1), transform 0.55s cubic-bezier(0.16,1,0.3,1);
+}
