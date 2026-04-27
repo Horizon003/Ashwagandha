@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStatCounters();
   initSmoothScrollLinks();
   initImageFallbacks();
-  initPlant360Video();
+  initGLBModal();
 });
 
 /* ────────────────────────────────────────────────
@@ -472,7 +472,7 @@ function initViewer360() {
 
   const TOTAL_FRAMES = 9;
   const DRAG_SENSITIVITY = 18;
-  const frameSources = Array.from({ length: TOTAL_FRAMES }, (_, i) => `assets/products/product-360/product-${i + 1}.webp`);
+  const frameSources = Array.from({ length: TOTAL_FRAMES }, (_, i) => `assets/products/capsules/360/${i + 1}.webp`);
 
   let currentFrame = 0;
   let dragStartX = 0;
@@ -773,11 +773,112 @@ function initChemGroupInfo() {
 }
 
 /* ─────────────────────────────────────────────────
-   360° PLANT VIDEO SCRUBBER — ultra-smooth version
-   Uses fastSeek + frame-buffered seeking
-   Auto-rotate support included
+   3D GLB MODEL MODAL — lazy-loaded on open, destroyed on close
+   Saves GPU/memory — model only lives while the window is open.
 ───────────────────────────────────────────────── */
-function initPlant360Video() {
+function initGLBModal() {
+  const openBtn  = document.getElementById('glb-open-btn');
+  const modal    = document.getElementById('glb-modal');
+  const stage    = document.getElementById('glb-modal-stage');
+  const loader   = document.getElementById('glb-loader');
+  const loadFill = document.getElementById('glb-loader-fill');
+  if (!openBtn || !modal || !stage) return;
+
+  const MODEL_SRC = 'assets/3d/ashwagandha.glb';
+  let mv = null; // model-viewer instance
+
+  function openModal() {
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    // Show loader
+    if (loader) loader.style.display = 'flex';
+    if (loadFill) loadFill.style.width = '5%';
+
+    // Small delay so the popup animates in before the heavy GLB begins loading
+    setTimeout(() => {
+      // Build fresh <model-viewer> every time — ensures no leftover GPU context
+      mv = document.createElement('model-viewer');
+      mv.setAttribute('src', MODEL_SRC);
+      mv.setAttribute('alt', '3D Ashwagandha plant');
+      mv.setAttribute('camera-controls', '');
+      mv.setAttribute('touch-action', 'pan-y');
+      mv.setAttribute('auto-rotate', '');
+      mv.setAttribute('auto-rotate-delay', '800');
+      mv.setAttribute('rotation-per-second', '18deg');
+      mv.setAttribute('shadow-intensity', '1.1');
+      mv.setAttribute('exposure', '1.05');
+      mv.setAttribute('environment-image', 'neutral');
+      mv.setAttribute('interaction-prompt', 'auto');
+      mv.setAttribute('loading', 'eager');
+      mv.className = 'glb-viewer';
+
+      mv.addEventListener('progress', (ev) => {
+        const pct = Math.max(0.05, (ev.detail.totalProgress || 0));
+        if (loadFill) loadFill.style.width = (pct * 100).toFixed(0) + '%';
+      });
+
+      mv.addEventListener('load', () => {
+        if (loader) loader.style.display = 'none';
+      });
+
+      mv.addEventListener('error', () => {
+        if (loader) {
+          loader.innerHTML = `
+            <div class="glb-loader-error">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <div class="glb-loader-text">Could not load 3D model</div>
+              <small class="glb-loader-sub">Ensure <code>assets/3d/ashwagandha.glb</code> exists</small>
+            </div>`;
+        }
+      });
+
+      stage.appendChild(mv);
+    }, 260);
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+
+    // Destroy model-viewer so WebGL context is freed
+    if (mv && mv.parentNode) {
+      try {
+        if (typeof mv.dismissPoster === 'function') mv.dismissPoster();
+        mv.removeAttribute('src');
+        mv.parentNode.removeChild(mv);
+      } catch (e) { /* no-op */ }
+    }
+    mv = null;
+
+    // Reset loader for next time
+    if (loader) {
+      loader.style.display = 'flex';
+      loader.innerHTML = `
+        <div class="glb-loader-spinner"></div>
+        <div class="glb-loader-text">Loading 3D model…</div>
+        <div class="glb-loader-bar"><div class="glb-loader-bar-fill" id="glb-loader-fill"></div></div>
+        <small class="glb-loader-sub">Please wait while we prepare the interactive plant</small>`;
+    }
+  }
+
+  openBtn.addEventListener('click', openModal);
+
+  modal.querySelectorAll('[data-glb-close]').forEach(el => {
+    el.addEventListener('click', closeModal);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+  });
+}
+
+/* ─────────────────────────────────────────────────
+   (Deprecated) 360° PLANT VIDEO SCRUBBER
+───────────────────────────────────────────────── */
+function initPlant360Video_DEPRECATED() {
   const video   = document.getElementById('plant360-video');
   const slider  = document.getElementById('plant360-slider');
   const fill    = document.getElementById('plant360-track-fill');
