@@ -3816,3 +3816,124 @@ body::before {
 /* Team fallback background for broken images */
 .team-avatar[src=""] { opacity: 0; }
 
+/* ═══════════════════════════════════════════════════════════
+   🔥 HEAT-OPTIMIZATION OVERRIDES
+   Applied on mobile + low-end devices (class added by JS)
+   Reduces GPU load: blur, animations, conic-gradients, filters
+═══════════════════════════════════════════════════════════ */
+
+/* ─── 1. MOBILE OVERRIDES ─── */
+@media (max-width: 900px) {
+  /* Hide heavy hero particle canvas completely */
+  #particle-canvas {
+    display: none !important;
+  }
+
+  /* Reduce backdrop-filter blur (mobile GPU killer) */
+  *,
+  *::before,
+  *::after {
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+  }
+
+  /* Disable infinite spinning conic gradient on GLB hero card */
+  .glb-hero-card::before {
+    animation: none !important;
+    opacity: 0.18 !important;
+    filter: blur(6px) !important;
+  }
+
+  /* Disable orbit infinite rotation */
+  .glb-hero-orbit,
+  .glb-hero-orbit-2 {
+    animation: none !important;
+  }
+
+  /* Disable cube floating + chip floating animations */
+  .glb-hero-cube,
+  .glb-hero-chip {
+    animation: none !important;
+  }
+
+  /* Disable spin-slow on auto-rotate button */
+  .plant360-auto-btn.active i {
+    animation: none !important;
+  }
+
+  /* Reduce 360° viewer slider glow blur */
+  .plant360-glow {
+    display: none !important;
+  }
+
+  /* Lighten heavy box-shadows */
+  .hero-image-card,
+  .glb-hero-card,
+  .conclusion-card,
+  .team-card,
+  .instructor-card,
+  .dosage-product-card {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35) !important;
+  }
+
+  /* Disable will-change on cards (saves memory) */
+  .flip-inner {
+    will-change: auto !important;
+  }
+
+  /* Float keyframe in scroll-indicator — slow it down */
+  .scroll-indicator i {
+    animation-duration: 4s !important;
+  }
+}
+
+/* ─── 2. LOW-END / REDUCED-MOTION DEVICES ─── */
+.is-low-end .glb-hero-card::before,
+.is-reduced-motion .glb-hero-card::before {
+  animation: none !important;
+  opacity: 0.1 !important;
+}
+
+.is-low-end .glb-hero-orbit,
+.is-low-end .glb-hero-orbit-2,
+.is-low-end .glb-hero-cube,
+.is-low-end .glb-hero-chip,
+.is-reduced-motion .glb-hero-orbit,
+.is-reduced-motion .glb-hero-orbit-2,
+.is-reduced-motion .glb-hero-cube,
+.is-reduced-motion .glb-hero-chip {
+  animation: none !important;
+}
+
+.is-low-end .hero-title-glitch,
+.is-low-end .hero-title-alt {
+  animation: none !important;
+}
+
+/* Disable cursor blink on low-end (saves rendering) */
+.is-low-end .typing-cursor {
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+/* ─── 3. RESPECT prefers-reduced-motion (system setting) ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  #particle-canvas { display: none !important; }
+  .glb-hero-card::before { display: none !important; }
+}
+
+/* ─── 4. SAVE-DATA mode (user has data saver on) ─── */
+@media (prefers-reduced-data: reduce) {
+  #particle-canvas { display: none !important; }
+  .glb-hero-card::before { animation: none !important; }
+}
+
