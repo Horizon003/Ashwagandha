@@ -3,15 +3,16 @@
 ═══════════════════════════════════════════════════════════ */
 'use strict';
 
-const IS_MOBILE = window.innerWidth < 768;
+// Only skip heavy effects on very small/low-end, not all mobile
+const IS_LOW_END = window.innerWidth < 380 || navigator.hardwareConcurrency <= 2;
 
 document.addEventListener('DOMContentLoaded', () => {
   initScrollProgress();
   initNavDots();
-  if (!IS_MOBILE) initParticles();
+  initParticles();
   initHeroTyping();
-  if (!IS_MOBILE) initHeroParallax();
-  initFadeAnimations();
+  initHeroParallax();
+  initScrollAnimations();
   initTimeline();
   initChemTooltips();
   initChemGroupInfo();
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStatCounters();
   initSmoothScrollLinks();
   initImageFallbacks();
+  initCardTilt();
   initPlant360Video();
 });
 
@@ -56,7 +58,7 @@ function initNavDots() {
   }));
 }
 
-/* ── 3. PARTICLES (desktop only, 14 max) ── */
+/* ── 3. PARTICLES — few on mobile, more on desktop ── */
 function initParticles() {
   const canvas = document.getElementById('particle-canvas');
   if (!canvas) return;
@@ -69,14 +71,18 @@ function initParticles() {
     constructor() { this.reset(true); }
     reset(init = false) {
       this.x = Math.random() * W; this.y = init ? Math.random() * H : H + 10;
-      this.size = Math.random() * 2.5 + 0.8; this.speedX = (Math.random() - 0.5) * 0.35;
-      this.speedY = -(Math.random() * 0.5 + 0.15); this.alpha = Math.random() * 0.4 + 0.08;
-      this.color = Math.random() > 0.5 ? '#c8a852' : '#4a8a5c';
+      this.size = Math.random() * 2 + 0.5;
+      this.speedX = (Math.random() - 0.5) * 0.3;
+      this.speedY = -(Math.random() * 0.4 + 0.12);
+      this.alpha = Math.random() * 0.35 + 0.08;
+      this.color = Math.random() > 0.5 ? '#3a8a5c' : '#b8882a';
     }
-    update() { this.x += this.speedX; this.y += this.speedY; this.alpha -= 0.0008; if (this.y < -10 || this.alpha <= 0) this.reset(); }
+    update() { this.x += this.speedX; this.y += this.speedY; this.alpha -= 0.0006; if (this.y < -10 || this.alpha <= 0) this.reset(); }
     draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.globalAlpha = Math.max(0, this.alpha); ctx.fill(); }
   }
-  for (let i = 0; i < 14; i++) particles.push(new Particle());
+  const count = IS_LOW_END ? 0 : (window.innerWidth < 768 ? 8 : 18);
+  for (let i = 0; i < count; i++) particles.push(new Particle());
+  if (!count) return;
   const animate = () => { ctx.clearRect(0, 0, W, H); ctx.globalAlpha = 1; particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); };
   animate();
 }
@@ -114,8 +120,9 @@ function initHeroTyping() {
   setTimeout(type, 600);
 }
 
-/* ── 5. HERO PARALLAX (desktop) ── */
+/* ── 5. HERO PARALLAX ── */
 function initHeroParallax() {
+  if (IS_LOW_END) return;
   const heroCard = document.getElementById('hero-bg'), heroImg = document.getElementById('hero-img');
   if (!heroCard || !heroImg) return;
   let ticking = false;
@@ -123,69 +130,84 @@ function initHeroParallax() {
     if (ticking) return; ticking = true;
     requestAnimationFrame(() => {
       const p = Math.min(window.scrollY / window.innerHeight, 1);
-      heroCard.style.transform = `translateY(${p * 20}px)`;
-      heroImg.style.transform  = `scale(${1 + p * 0.03}) translateY(${p * 8}px)`;
+      heroImg.style.transform = `scale(${1 + p * 0.04}) translateY(${p * 12}px)`;
       ticking = false;
     });
   }, { passive: true });
 }
 
-/* ── 6. SCROLL ANIMATIONS — smooth, staggered, stable ── */
-function initFadeAnimations() {
-  // Mobile: instant reveal, no jank
-  if (IS_MOBILE) {
-    document.querySelectorAll('.gsap-up,.gsap-left,.gsap-right,.gsap-fade').forEach(el => {
-      el.style.cssText = 'opacity:1;transform:none;transition:none;';
-    });
+/* ── 6. SCROLL ANIMATIONS — works on ALL screen sizes ── */
+function initScrollAnimations() {
+  const els = document.querySelectorAll('.gsap-up, .gsap-left, .gsap-right, .gsap-fade');
+  if (!els.length) return;
+
+  if (IS_LOW_END) {
+    els.forEach(el => el.style.cssText = 'opacity:1;transform:none;');
     return;
   }
 
-  // Desktop: staggered IntersectionObserver — smooth fade+slide
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       const el = e.target;
-      // Get delay from --delay CSS var or style attr
-      const styleDelay = el.style.getPropertyValue('--delay');
-      const delay = styleDelay ? parseFloat(styleDelay) * 1000 : 0;
+      const rawDelay = el.style.getPropertyValue('--delay') || el.getAttribute('data-delay') || '0';
+      const delay = parseFloat(rawDelay) * 1000;
       setTimeout(() => {
-        el.style.transition = 'opacity 0.55s cubic-bezier(0.2,0.8,0.3,1), transform 0.55s cubic-bezier(0.2,0.8,0.3,1)';
+        el.style.transition = 'opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1)';
         el.style.opacity    = '1';
         el.style.transform  = 'none';
       }, delay);
       obs.unobserve(el);
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
 
-  // Stagger siblings automatically when inside same parent
-  document.querySelectorAll('.gsap-up,.gsap-left,.gsap-right,.gsap-fade').forEach((el, globalIdx) => {
-    // If element has no explicit delay, auto-stagger siblings
-    if (!el.style.getPropertyValue('--delay')) {
-      const siblings = Array.from(el.parentElement?.querySelectorAll('.gsap-up,.gsap-left,.gsap-right,.gsap-fade') || []);
-      const sibIdx = siblings.indexOf(el);
-      if (sibIdx > 0) {
-        el.style.setProperty('--delay', (sibIdx * 0.08).toString());
-      }
-    }
-    obs.observe(el);
-  });
+  els.forEach(el => obs.observe(el));
 
-  // Hero section elements — fade in immediately on page load
-  const heroEls = document.querySelectorAll('#sec-0 .gsap-fade');
-  heroEls.forEach((el, i) => {
+  // Hero els — trigger immediately
+  document.querySelectorAll('#sec-0 .gsap-fade, #sec-0 .gsap-up').forEach((el, i) => {
     setTimeout(() => {
       el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
       el.style.opacity = '1';
       el.style.transform = 'none';
-    }, 300 + i * 150);
+    }, 250 + i * 130);
   });
 }
 
-/* ── 7. TIMELINE ── */
+/* ── 6b. CARD TILT on hover (desktop only) ── */
+function initCardTilt() {
+  if (window.innerWidth < 768 || IS_LOW_END) return;
+  document.querySelectorAll('.taxo-card, .med-card, .chem-group, .team-card, .tl-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const rx = ((e.clientY - cy) / rect.height) * 8;
+      const ry = ((e.clientX - cx) / rect.width) * -8;
+      card.style.transform = `translateY(-5px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      card.style.boxShadow = '0 20px 56px rgba(15,35,24,0.18), 0 0 0 1px rgba(58,138,92,0.12)';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.boxShadow = '';
+      card.style.transition = 'transform 0.4s ease, box-shadow 0.4s ease';
+    });
+    card.style.transformStyle = 'preserve-3d';
+    card.style.willChange = 'transform';
+  });
+}
+
+/* ── 7. TIMELINE — staggered reveal on all screens ── */
 function initTimeline() {
   const items = document.querySelectorAll('.tl-item');
-  if (IS_MOBILE) { items.forEach(el => el.classList.add('tl-visible')); return; }
-  const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('tl-visible'); obs.unobserve(e.target); } }); }, { threshold: 0.2 });
+  if (!items.length) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('tl-visible'), i * 120);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
   items.forEach(el => obs.observe(el));
 }
 
