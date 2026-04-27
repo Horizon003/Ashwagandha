@@ -1,20 +1,53 @@
 /* ═══════════════════════════════════════════════════════════
-   ASHWAGANDHA — MAIN JAVASCRIPT
+   ASHWAGANDHA — MAIN JAVASCRIPT (HEAT-OPTIMIZED)
    GSAP + ScrollTrigger + All Interactions
+   ✅ Mobile heat fixes: particles off, throttled scroll,
+      lazy 3D, page-visibility pause, reduced motion respect
 ═══════════════════════════════════════════════════════════ */
 
 'use strict';
 
 /* ────────────────────────────────────────────────
+   0. DEVICE / PERFORMANCE DETECTION
+──────────────────────────────────────────────── */
+const PERF = (() => {
+  const ua = navigator.userAgent || '';
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua)
+                   || window.matchMedia('(max-width: 900px)').matches
+                   || (navigator.maxTouchPoints > 1 && window.innerWidth < 1100);
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lowMemory = (navigator.deviceMemory && navigator.deviceMemory <= 4);
+  const lowCPU = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const saveData = (navigator.connection && navigator.connection.saveData) || false;
+  const lowEnd = isMobile || lowMemory || lowCPU || saveData;
+
+  // Add classes to <html> so CSS can also adapt
+  const html = document.documentElement;
+  if (isMobile) html.classList.add('is-mobile');
+  if (lowEnd)   html.classList.add('is-low-end');
+  if (reducedMotion) html.classList.add('is-reduced-motion');
+
+  return { isMobile, reducedMotion, lowMemory, lowCPU, saveData, lowEnd };
+})();
+
+/* ────────────────────────────────────────────────
+   PAGE VISIBILITY — global pause flag
+──────────────────────────────────────────────── */
+let pageVisible = !document.hidden;
+document.addEventListener('visibilitychange', () => {
+  pageVisible = !document.hidden;
+});
+
+/* ────────────────────────────────────────────────
    1. INIT — wait for DOM
 ──────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  gsap.registerPlugin(ScrollTrigger);
+  if (window.gsap) gsap.registerPlugin(ScrollTrigger);
   initScrollProgress();
   initNavDots();
-  initParticles();
+  initParticles();          // skipped on mobile/low-end
   initHeroTyping();
-  initHeroParallax();
+  initHeroParallax();       // skipped on mobile
   initGSAPAnimations();
   initTimeline();
   initChemTooltips();
@@ -27,20 +60,28 @@ document.addEventListener('DOMContentLoaded', () => {
   initStatCounters();
   initSmoothScrollLinks();
   initImageFallbacks();
-  initGLBModal();
+  initGLBModal();           // model-viewer is lazy-loaded inside
 });
 
 /* ────────────────────────────────────────────────
-   2. SCROLL PROGRESS BAR
+   2. SCROLL PROGRESS BAR (throttled with rAF)
 ──────────────────────────────────────────────── */
 function initScrollProgress() {
   const bar = document.getElementById('scroll-progress');
+  if (!bar) return;
+  let ticking = false;
   const update = () => {
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     bar.style.width = (scrollTop / docHeight * 100).toFixed(2) + '%';
+    ticking = false;
   };
-  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }, { passive: true });
 }
 
 /* ────────────────────────────────────────────────
@@ -49,6 +90,7 @@ function initScrollProgress() {
 function initNavDots() {
   const buttons = document.querySelectorAll('#nav-dots button');
   const sections = document.querySelectorAll('.section[data-section]');
+  if (!buttons.length || !sections.length) return;
 
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -72,12 +114,24 @@ function initNavDots() {
 
 /* ────────────────────────────────────────────────
    4. HERO PARTICLES (canvas)
+   ✅ DISABLED on mobile / low-end / reduced-motion
+   ✅ PAUSES when hero scrolled out of view
+   ✅ PAUSES when tab hidden
 ──────────────────────────────────────────────── */
 function initParticles() {
   const canvas = document.getElementById('particle-canvas');
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+
+  // ❌ Don't run on mobile or low-end devices — biggest heat saver
+  if (PERF.lowEnd || PERF.reducedMotion) {
+    canvas.style.display = 'none';
+    return;
+  }
+
+  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
   let W, H, particles = [];
+  let rafId = null;
+  let heroVisible = true;
 
   const resize = () => {
     W = canvas.width  = window.innerWidth;
@@ -85,6 +139,9 @@ function initParticles() {
   };
   resize();
   window.addEventListener('resize', resize, { passive: true });
+
+  // Reduced count: 70 → 35 (still looks great, half the work)
+  const COUNT = 35;
 
   class Particle {
     constructor() { this.reset(true); }
@@ -112,19 +169,44 @@ function initParticles() {
     }
   }
 
-  for (let i = 0; i < 70; i++) particles.push(new Particle());
+  for (let i = 0; i < COUNT; i++) particles.push(new Particle());
 
   const animate = () => {
+    if (!pageVisible || !heroVisible) {
+      rafId = null;
+      return;
+    }
     ctx.clearRect(0, 0, W, H);
     ctx.globalAlpha = 1;
     particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(animate);
+    rafId = requestAnimationFrame(animate);
   };
-  animate();
+
+  const start = () => { if (!rafId) rafId = requestAnimationFrame(animate); };
+  const stop  = () => { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } ctx.clearRect(0, 0, W, H); };
+
+  // Pause when hero scrolls out of view
+  const heroSection = document.getElementById('sec-1') || canvas.parentElement;
+  if (heroSection && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(([entry]) => {
+      heroVisible = entry.isIntersecting;
+      if (heroVisible && pageVisible) start();
+      else stop();
+    }, { threshold: 0.05 });
+    io.observe(heroSection);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && heroVisible) start();
+    else stop();
+  });
+
+  start();
 }
 
 /* ────────────────────────────────────────────────
    5. HERO TYPING EFFECT + GLITCH RETYPE
+   ✅ Mobile: only ONE glitch cycle, then static (no infinite loop)
 ──────────────────────────────────────────────── */
 function initHeroTyping() {
   const el = document.getElementById('hero-typing');
@@ -143,7 +225,8 @@ function initHeroTyping() {
       i++;
       setTimeout(type, 100);
     } else {
-      // First glitch starts 3s after full type
+      // On reduced motion or low-end devices → no glitch loop, just static
+      if (PERF.reducedMotion) return;
       setTimeout(startGlitch, 3000);
     }
   };
@@ -151,6 +234,11 @@ function initHeroTyping() {
   const glitchChars = '!@#$%Ω∑√∏αβγδΨ?<>[]';
 
   function startGlitch() {
+    if (!pageVisible) {
+      // Retry when page becomes visible
+      setTimeout(startGlitch, 3000);
+      return;
+    }
     let glitchCount = 0;
     const maxGlitches = 10;
     el.classList.add('hero-title-glitch');
@@ -186,26 +274,28 @@ function initHeroTyping() {
       j++;
       if (j > text.length) {
         clearInterval(retypeInterval);
-        // Show gold for 1.8s, reset normal, then wait 5s and loop again
         setTimeout(() => {
           el.classList.remove('hero-title-alt');
           el.textContent = text;
           el.appendChild(cursor);
-          // ── LOOP: next cycle after 5s pause ──
+          // ✅ On mobile/low-end: STOP loop after one cycle
+          if (PERF.lowEnd) return;
           setTimeout(startGlitch, 5000);
         }, 1800);
       }
     }, 80);
   }
 
-  // Start typing after slight delay
   setTimeout(type, 600);
 }
 
 /* ────────────────────────────────────────────────
-   6. HERO PARALLAX (scroll-based zoom + move)
+   6. HERO PARALLAX
+   ✅ DISABLED on mobile (heaviest scroll work)
 ──────────────────────────────────────────────── */
 function initHeroParallax() {
+  if (PERF.isMobile || PERF.reducedMotion) return; // skip entirely
+
   const heroCard = document.getElementById('hero-bg');
   const heroImg = document.getElementById('hero-img');
   if (!heroCard || !heroImg) return;
@@ -229,7 +319,8 @@ function initHeroParallax() {
    7. GSAP ScrollTrigger ANIMATIONS
 ──────────────────────────────────────────────── */
 function initGSAPAnimations() {
-  // Hero fade elements
+  if (!window.gsap) return;
+
   gsap.utils.toArray('.gsap-fade').forEach((el, i) => {
     gsap.to(el, {
       opacity: 1, duration: 1,
@@ -238,54 +329,27 @@ function initGSAPAnimations() {
     });
   });
 
-  // Slide up
   gsap.utils.toArray('.gsap-up').forEach(el => {
     const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
     gsap.to(el, {
-      opacity: 1,
-      y: 0,
-      duration: 0.85,
-      ease: 'power3.out',
-      delay,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 88%',
-        once: true
-      }
+      opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', delay,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
     });
   });
 
-  // Slide from left
   gsap.utils.toArray('.gsap-left').forEach(el => {
     const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
     gsap.to(el, {
-      opacity: 1,
-      x: 0,
-      duration: 0.85,
-      ease: 'power3.out',
-      delay,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 88%',
-        once: true
-      }
+      opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', delay,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
     });
   });
 
-  // Slide from right
   gsap.utils.toArray('.gsap-right').forEach(el => {
     const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
     gsap.to(el, {
-      opacity: 1,
-      x: 0,
-      duration: 0.85,
-      ease: 'power3.out',
-      delay,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 88%',
-        once: true
-      }
+      opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', delay,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
     });
   });
 }
@@ -294,32 +358,20 @@ function initGSAPAnimations() {
    8. TIMELINE SCROLL ANIMATION
 ──────────────────────────────────────────────── */
 function initTimeline() {
+  if (!window.gsap) return;
   const line = document.getElementById('timeline-line');
   if (line) {
     gsap.fromTo(line, { scaleY: 0 }, {
-      scaleY: 1,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#sec-2',
-        start: 'top 70%',
-        end: 'bottom 30%',
-        scrub: 1
-      }
+      scaleY: 1, ease: 'none',
+      scrollTrigger: { trigger: '#sec-2', start: 'top 70%', end: 'bottom 30%', scrub: 1 }
     });
   }
 
   gsap.utils.toArray('.gsap-timeline').forEach(el => {
     const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay')) || 0;
     gsap.to(el, {
-      opacity: 1, y: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-      delay,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 85%',
-        once: true
-      }
+      opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay,
+      scrollTrigger: { trigger: el, start: 'top 85%', once: true }
     });
   });
 }
@@ -339,9 +391,7 @@ function initChemTooltips() {
       tooltip.classList.add('visible');
     });
     chip.addEventListener('mousemove', positionTooltip);
-    chip.addEventListener('mouseleave', () => {
-      tooltip.classList.remove('visible');
-    });
+    chip.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
   });
 
   function positionTooltip(e) {
@@ -358,31 +408,24 @@ function initChemTooltips() {
 }
 
 /* ────────────────────────────────────────────────
-   10. MEDICINAL USE PROGRESS BARS (animate on scroll)
+   10. MEDICINAL USE PROGRESS BARS
 ──────────────────────────────────────────────── */
 function initMedProgressBars() {
-  const bars = document.querySelectorAll('.med-bar');
-  bars.forEach(bar => {
+  if (!window.ScrollTrigger) return;
+  document.querySelectorAll('.med-bar').forEach(bar => {
     ScrollTrigger.create({
-      trigger: bar,
-      start: 'top 90%',
-      once: true,
-      onEnter: () => {
-        setTimeout(() => bar.classList.add('animated'), 100);
-      }
+      trigger: bar, start: 'top 90%', once: true,
+      onEnter: () => setTimeout(() => bar.classList.add('animated'), 100)
     });
   });
 }
 
 /* ────────────────────────────────────────────────
-   11. TRADITIONAL USE CARDS (click to flip)
+   11. TRADITIONAL USE CARDS
 ──────────────────────────────────────────────── */
 function initTradCards() {
   document.querySelectorAll('.trad-card').forEach(card => {
-    card.addEventListener('click', () => {
-      card.classList.toggle('flipped');
-    });
-    // Keyboard accessible
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
     card.setAttribute('tabindex', '0');
     card.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -393,15 +436,11 @@ function initTradCards() {
   });
 }
 
-
 /* ────────────────────────────────────────────────
-   11B. MISCONCEPTION CARDS — ONE card at a time
-   Tap = flip open. Tap same card = flip back. Tap another = close old, open new.
+   11B. MISCONCEPTION CARDS
 ──────────────────────────────────────────────── */
 function initMisconceptionCards() {
   const cards = document.querySelectorAll('.flip-card');
-  let activeCard = null;
-
   cards.forEach(card => {
     card.setAttribute('tabindex', '0');
     card.setAttribute('role', 'button');
@@ -410,20 +449,9 @@ function initMisconceptionCards() {
     const toggle = (event) => {
       if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
       if (event.type === 'keydown') event.preventDefault();
-
       const alreadyFlipped = card.classList.contains('is-flipped');
-
-      // Close any open card first
       cards.forEach(c => c.classList.remove('is-flipped'));
-
-      if (!alreadyFlipped) {
-        // Open tapped card
-        card.classList.add('is-flipped');
-        activeCard = card;
-      } else {
-        // Was open — now closed (already removed above)
-        activeCard = null;
-      }
+      if (!alreadyFlipped) card.classList.add('is-flipped');
     };
 
     card.addEventListener('click', toggle);
@@ -441,13 +469,11 @@ function initAccordion() {
       const body = item.querySelector('.accord-body');
       const isOpen = item.classList.contains('open');
 
-      // Close all
       document.querySelectorAll('.accord-item.open').forEach(openItem => {
         openItem.classList.remove('open');
         openItem.querySelector('.accord-body').style.maxHeight = '0';
       });
 
-      // Toggle clicked
       if (!isOpen) {
         item.classList.add('open');
         body.style.maxHeight = body.scrollHeight + 'px';
@@ -458,9 +484,6 @@ function initAccordion() {
 
 /* ────────────────────────────────────────────────
    13. 360° PRODUCT VIEWER
-   — Drag (mouse + touch) + Slider control
-   — Auto-rotate toggle
-   — NO scroll interaction (as required)
 ──────────────────────────────────────────────── */
 function initViewer360() {
   const stage = document.getElementById('viewer-stage');
@@ -480,19 +503,29 @@ function initViewer360() {
   let isDragging = false;
   let activePointerId = null;
 
-  frameSources.forEach(src => {
-    const preload = new Image();
-    preload.src = src;
-  });
+  // ✅ Lazy preload — only when stage scrolls into view (saves bandwidth + memory)
+  let preloaded = false;
+  const preloadFrames = () => {
+    if (preloaded) return;
+    preloaded = true;
+    frameSources.forEach(src => { const i = new Image(); i.src = src; });
+  };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { preloadFrames(); io.disconnect(); }
+    }, { rootMargin: '200px' });
+    io.observe(stage);
+  } else {
+    preloadFrames();
+  }
 
   function setFrame(n) {
     currentFrame = ((n % TOTAL_FRAMES) + TOTAL_FRAMES) % TOTAL_FRAMES;
-    const nextSrc = frameSources[currentFrame];
     img.style.display = 'block';
     const fallback = stage.querySelector('.viewer-fallback-text');
     if (fallback) fallback.style.display = 'none';
     stage.classList.remove('viewer-fallback');
-    img.src = nextSrc;
+    img.src = frameSources[currentFrame];
     if (slider) slider.value = String(currentFrame);
     if (frameNum) frameNum.textContent = String(currentFrame + 1);
   }
@@ -530,44 +563,24 @@ function initViewer360() {
       beginDrag(event.clientX, event.pointerId);
       if (stage.setPointerCapture) stage.setPointerCapture(event.pointerId);
     });
-
     stage.addEventListener('pointermove', event => {
       if (!isDragging) return;
       if (activePointerId !== null && event.pointerId !== activePointerId) return;
       updateDrag(event.clientX);
     });
-
     ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => {
       stage.addEventListener(type, event => endDrag(event.pointerId));
     });
   } else {
-    stage.addEventListener('mousedown', event => {
-      event.preventDefault();
-      beginDrag(event.clientX);
-    });
-
-    window.addEventListener('mousemove', event => {
-      if (!isDragging) return;
-      updateDrag(event.clientX);
-    });
-
+    stage.addEventListener('mousedown', event => { event.preventDefault(); beginDrag(event.clientX); });
+    window.addEventListener('mousemove', event => { if (isDragging) updateDrag(event.clientX); });
     window.addEventListener('mouseup', () => endDrag());
-
-    stage.addEventListener('touchstart', event => {
-      beginDrag(event.touches[0].clientX);
-    }, { passive: true });
-
-    stage.addEventListener('touchmove', event => {
-      if (!isDragging) return;
-      updateDrag(event.touches[0].clientX);
-    }, { passive: true });
-
+    stage.addEventListener('touchstart', event => beginDrag(event.touches[0].clientX), { passive: true });
+    stage.addEventListener('touchmove', event => { if (isDragging) updateDrag(event.touches[0].clientX); }, { passive: true });
     stage.addEventListener('touchend', () => endDrag(), { passive: true });
   }
 
-  if (resetBtn) {
-    resetBtn.addEventListener('click', () => setFrame(0));
-  }
+  if (resetBtn) resetBtn.addEventListener('click', () => setFrame(0));
 
   img.addEventListener('error', () => {
     const fallback = stage.querySelector('.viewer-fallback-text');
@@ -580,25 +593,22 @@ function initViewer360() {
 }
 
 /* ────────────────────────────────────────────────
-   14. STAT COUNTERS (conclusion section)
+   14. STAT COUNTERS
 ──────────────────────────────────────────────── */
 function initStatCounters() {
+  if (!window.ScrollTrigger) return;
   document.querySelectorAll('.c-stat-num[data-target]').forEach(el => {
     const target = parseInt(el.dataset.target, 10);
     let animated = false;
 
     ScrollTrigger.create({
-      trigger: el,
-      start: 'top 90%',
-      once: true,
+      trigger: el, start: 'top 90%', once: true,
       onEnter: () => {
         if (animated) return;
         animated = true;
         const duration = 1800;
         const start = performance.now();
-
         const easeOut = t => 1 - Math.pow(1 - t, 3);
-
         const update = (now) => {
           const elapsed = now - start;
           const progress = Math.min(elapsed / duration, 1);
@@ -614,7 +624,7 @@ function initStatCounters() {
 }
 
 /* ────────────────────────────────────────────────
-   15. SMOOTH SCROLL for any in-page anchor
+   15. SMOOTH SCROLL
 ──────────────────────────────────────────────── */
 function initSmoothScrollLinks() {
   document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -629,31 +639,23 @@ function initSmoothScrollLinks() {
 }
 
 /* ────────────────────────────────────────────────
-   16. IMAGE FALLBACKS (avoid inline onerror issues)
+   16. IMAGE FALLBACKS
 ──────────────────────────────────────────────── */
 function initImageFallbacks() {
-  // Dosage product images
   const capImg = document.getElementById('img-capsules');
   if (capImg) {
     capImg.addEventListener('error', () => {
       const wrap = capImg.closest('.dosage-img-wrap');
-      if (wrap) {
-        wrap.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-capsules"></i></div>';
-      }
+      if (wrap) wrap.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-capsules"></i></div>';
     });
   }
-
   const powImg = document.getElementById('img-powder');
   if (powImg) {
     powImg.addEventListener('error', () => {
       const wrap = powImg.closest('.dosage-img-wrap');
-      if (wrap) {
-        wrap.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-mortar-pestle"></i></div>';
-      }
+      if (wrap) wrap.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-mortar-pestle"></i></div>';
     });
   }
-
-  // Hero image
   const heroImg = document.getElementById('hero-img');
   if (heroImg) {
     heroImg.addEventListener('error', () => {
@@ -661,40 +663,35 @@ function initImageFallbacks() {
       if (bg) bg.classList.add('hero-bg-fallback');
     });
   }
-
-  // Team avatars
   document.querySelectorAll('.team-avatar').forEach(img => {
-    img.addEventListener('error', () => {
-      img.style.opacity = '0';
-    });
+    img.addEventListener('error', () => { img.style.opacity = '0'; });
   });
-
-  // Instructor avatar
   const instructorAvatar = document.querySelector('.instructor-avatar');
   if (instructorAvatar) {
-    instructorAvatar.addEventListener('error', () => {
-      instructorAvatar.style.opacity = '0';
-    });
+    instructorAvatar.addEventListener('error', () => { instructorAvatar.style.opacity = '0'; });
   }
 }
 
 /* ────────────────────────────────────────────────
-   17. HEADER — Scroll shadow enhancement
+   17. HEADER — Scroll shadow (throttled)
 ──────────────────────────────────────────────── */
 (function() {
   const header = document.getElementById('site-header');
   if (!header) return;
+  let last = 0;
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      header.style.boxShadow = '0 24px 60px rgba(0,0,0,0.28)';
-    } else {
-      header.style.boxShadow = '0 22px 60px rgba(0,0,0,0.22)';
+    const big = window.scrollY > 20;
+    if (big !== last) {
+      header.style.boxShadow = big
+        ? '0 24px 60px rgba(0,0,0,0.28)'
+        : '0 22px 60px rgba(0,0,0,0.22)';
+      last = big;
     }
   }, { passive: true });
 })();
 
 /* ────────────────────────────────────────────────
-   9B. CHEMICAL GROUP NAME INFO POPUP (tap/hover)
+   18. CHEMICAL GROUP NAME INFO POPUP
 ──────────────────────────────────────────────── */
 function initChemGroupInfo() {
   const groupInfoData = {
@@ -716,7 +713,6 @@ function initChemGroupInfo() {
     }
   };
 
-  // Create popup element
   const popup = document.createElement('div');
   popup.className = 'group-info-popup';
   popup.id = 'group-info-popup';
@@ -732,11 +728,9 @@ function initChemGroupInfo() {
     popup.classList.add('visible');
     positionPopup(refEl);
   }
-
   function hidePopup() {
     hideTimer = setTimeout(() => popup.classList.remove('visible'), 200);
   }
-
   function positionPopup(refEl) {
     const rect = refEl.getBoundingClientRect();
     const pw = popup.offsetWidth || 280;
@@ -753,89 +747,148 @@ function initChemGroupInfo() {
     const h3 = group.querySelector('h3');
     if (!h3 || !key) return;
 
-    // Tap / click
     h3.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (popup.classList.contains('visible')) {
-        popup.classList.remove('visible');
-      } else {
-        showPopup(key, h3);
-      }
+      if (popup.classList.contains('visible')) popup.classList.remove('visible');
+      else showPopup(key, h3);
     });
-
-    // Hover (desktop)
     h3.addEventListener('mouseenter', () => showPopup(key, h3));
     h3.addEventListener('mouseleave', hidePopup);
   });
 
-  // Close on outside click
   document.addEventListener('click', () => popup.classList.remove('visible'));
 }
 
 /* ─────────────────────────────────────────────────
-   3D GLB MODEL MODAL — lazy-loaded on open, destroyed on close
-   Saves GPU/memory — model only lives while the window is open.
+   19. 3D GLB MODEL MODAL
+   ✅ model-viewer library is LAZY LOADED on first open
+   ✅ Mobile: lower quality settings (less GPU heat)
+   ✅ Battery API: warns if battery low
+   ✅ Auto-rotate stops when not visible
 ───────────────────────────────────────────────── */
 function initGLBModal() {
   const openBtn  = document.getElementById('glb-open-btn');
   const modal    = document.getElementById('glb-modal');
   const stage    = document.getElementById('glb-modal-stage');
   const loader   = document.getElementById('glb-loader');
-  const loadFill = document.getElementById('glb-loader-fill');
   if (!openBtn || !modal || !stage) return;
 
   const MODEL_SRC = 'assets/3d/ashwagandha.glb';
-  let mv = null; // model-viewer instance
+  const MV_SCRIPT_SRC = 'https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js';
 
-  function openModal() {
+  let mv = null;
+  let mvScriptLoaded = false;
+  let mvScriptLoading = null;
+
+  // ──────── Lazy-load <model-viewer> library ────────
+  function loadMVScript() {
+    if (mvScriptLoaded) return Promise.resolve();
+    if (mvScriptLoading) return mvScriptLoading;
+    mvScriptLoading = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.type = 'module';
+      s.src = MV_SCRIPT_SRC;
+      s.onload = () => { mvScriptLoaded = true; resolve(); };
+      s.onerror = () => reject(new Error('Failed to load model-viewer'));
+      document.head.appendChild(s);
+    });
+    return mvScriptLoading;
+  }
+
+  // ──────── Battery warning ────────
+  async function checkBattery() {
+    try {
+      if (!navigator.getBattery) return true;
+      const b = await navigator.getBattery();
+      if (b.level < 0.20 && !b.charging) {
+        return confirm('⚠️ Your battery is low (' + Math.round(b.level * 100) + '%).\n\nThe 3D model uses extra power and may heat your device.\n\nContinue anyway?');
+      }
+      return true;
+    } catch (e) { return true; }
+  }
+
+  async function openModal() {
+    const proceed = await checkBattery();
+    if (!proceed) return;
+
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    // Show loader
-    if (loader) loader.style.display = 'flex';
-    if (loadFill) loadFill.style.width = '5%';
+    if (loader) {
+      loader.style.display = 'flex';
+      const fillEl = document.getElementById('glb-loader-fill');
+      if (fillEl) fillEl.style.width = '5%';
+    }
 
-    // Small delay so the popup animates in before the heavy GLB begins loading
-    setTimeout(() => {
-      // Build fresh <model-viewer> every time — ensures no leftover GPU context
-      mv = document.createElement('model-viewer');
-      mv.setAttribute('src', MODEL_SRC);
-      mv.setAttribute('alt', '3D Ashwagandha plant');
-      mv.setAttribute('camera-controls', '');
-      mv.setAttribute('touch-action', 'pan-y');
-      mv.setAttribute('auto-rotate', '');
-      mv.setAttribute('auto-rotate-delay', '800');
-      mv.setAttribute('rotation-per-second', '18deg');
+    try {
+      await loadMVScript();
+      // Wait one frame so the popup animation finishes
+      await new Promise(r => setTimeout(r, 200));
+      buildViewer();
+    } catch (err) {
+      if (loader) {
+        loader.innerHTML = `
+          <div class="glb-loader-error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div class="glb-loader-text">Could not load 3D engine</div>
+            <small class="glb-loader-sub">Check your internet connection</small>
+          </div>`;
+      }
+    }
+  }
+
+  function buildViewer() {
+    mv = document.createElement('model-viewer');
+    mv.setAttribute('src', MODEL_SRC);
+    mv.setAttribute('alt', '3D Ashwagandha plant');
+    mv.setAttribute('camera-controls', '');
+    mv.setAttribute('touch-action', 'pan-y');
+    mv.setAttribute('interaction-prompt', 'auto');
+    mv.setAttribute('loading', 'eager');
+
+    // ✅ MOBILE = LOW QUALITY settings (saves GPU + heat)
+    if (PERF.lowEnd) {
+      mv.setAttribute('shadow-intensity', '0');           // no shadows
+      mv.setAttribute('exposure', '1');
+      mv.setAttribute('environment-image', 'neutral');
+      mv.setAttribute('disable-tap', '');
+      mv.setAttribute('min-field-of-view', '25deg');
+      mv.setAttribute('max-field-of-view', '45deg');
+      // No auto-rotate on low-end devices (constant GPU work)
+    } else {
       mv.setAttribute('shadow-intensity', '1.1');
       mv.setAttribute('exposure', '1.05');
       mv.setAttribute('environment-image', 'neutral');
-      mv.setAttribute('interaction-prompt', 'auto');
-      mv.setAttribute('loading', 'eager');
-      mv.className = 'glb-viewer';
+      mv.setAttribute('auto-rotate', '');
+      mv.setAttribute('auto-rotate-delay', '800');
+      mv.setAttribute('rotation-per-second', '18deg');
+    }
 
-      mv.addEventListener('progress', (ev) => {
-        const pct = Math.max(0.05, (ev.detail.totalProgress || 0));
-        if (loadFill) loadFill.style.width = (pct * 100).toFixed(0) + '%';
-      });
+    mv.className = 'glb-viewer';
 
-      mv.addEventListener('load', () => {
-        if (loader) loader.style.display = 'none';
-      });
+    mv.addEventListener('progress', (ev) => {
+      const fillEl = document.getElementById('glb-loader-fill');
+      const pct = Math.max(0.05, (ev.detail.totalProgress || 0));
+      if (fillEl) fillEl.style.width = (pct * 100).toFixed(0) + '%';
+    });
 
-      mv.addEventListener('error', () => {
-        if (loader) {
-          loader.innerHTML = `
-            <div class="glb-loader-error">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-              <div class="glb-loader-text">Could not load 3D model</div>
-              <small class="glb-loader-sub">Ensure <code>assets/3d/ashwagandha.glb</code> exists</small>
-            </div>`;
-        }
-      });
+    mv.addEventListener('load', () => {
+      if (loader) loader.style.display = 'none';
+    });
 
-      stage.appendChild(mv);
-    }, 260);
+    mv.addEventListener('error', () => {
+      if (loader) {
+        loader.innerHTML = `
+          <div class="glb-loader-error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div class="glb-loader-text">Could not load 3D model</div>
+            <small class="glb-loader-sub">Ensure <code>assets/3d/ashwagandha.glb</code> exists</small>
+          </div>`;
+      }
+    });
+
+    stage.appendChild(mv);
   }
 
   function closeModal() {
@@ -843,7 +896,7 @@ function initGLBModal() {
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
 
-    // Destroy model-viewer so WebGL context is freed
+    // ✅ Destroy model-viewer to FREE WebGL context (very important for heat!)
     if (mv && mv.parentNode) {
       try {
         if (typeof mv.dismissPoster === 'function') mv.dismissPoster();
@@ -853,7 +906,6 @@ function initGLBModal() {
     }
     mv = null;
 
-    // Reset loader for next time
     if (loader) {
       loader.style.display = 'flex';
       loader.innerHTML = `
@@ -865,114 +917,15 @@ function initGLBModal() {
   }
 
   openBtn.addEventListener('click', openModal);
-
-  modal.querySelectorAll('[data-glb-close]').forEach(el => {
-    el.addEventListener('click', closeModal);
-  });
-
+  modal.querySelectorAll('[data-glb-close]').forEach(el => el.addEventListener('click', closeModal));
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
   });
-}
 
-/* ─────────────────────────────────────────────────
-   (Deprecated) 360° PLANT VIDEO SCRUBBER
-───────────────────────────────────────────────── */
-function initPlant360Video_DEPRECATED() {
-  const video   = document.getElementById('plant360-video');
-  const slider  = document.getElementById('plant360-slider');
-  const fill    = document.getElementById('plant360-track-fill');
-  const angle   = document.getElementById('plant360-angle');
-  const hint    = document.getElementById('plant360-hint');
-  const autoBtn = document.getElementById('plant360-auto-btn');
-  const autoLbl = document.getElementById('plant360-auto-label');
-
-  if (!video || !slider) return;
-
-  let videoDuration = 10;
-  let isReady       = false;
-  let hintHidden    = false;
-
-  // ── Auto-rotate state ──
-  let autoActive  = false;
-  let autoRafId   = null;
-  let autoPos     = 0;          // 0 to 1000 (matches slider range)
-  const AUTO_SPEED = 0.55;      // slider units per frame (~60fps → ~11s per cycle)
-
-  // ── Preload & freeze ──
-  video.addEventListener('loadedmetadata', () => {
-    videoDuration = video.duration || 10;
-    isReady = true;
-    seekTo(0);
+  // ✅ If user switches tabs, pause auto-rotate (saves battery)
+  document.addEventListener('visibilitychange', () => {
+    if (!mv) return;
+    if (document.hidden) mv.removeAttribute('auto-rotate');
+    else if (!PERF.lowEnd) mv.setAttribute('auto-rotate', '');
   });
-  video.addEventListener('play', () => video.pause());
-
-  // ── Core seek — uses fastSeek when available ──
-  let pendingSeeked = false;
-  function seekTo(sliderVal) {
-    if (!isReady) return;
-    const pct = sliderVal / 1000;
-    const t   = Math.min(Math.max(pct * videoDuration, 0), videoDuration);
-
-    // fastSeek is faster (less precise) — ideal for scrubbing
-    if (video.fastSeek) {
-      video.fastSeek(t);
-    } else {
-      if (!pendingSeeked) {
-        pendingSeeked = true;
-        video.currentTime = t;
-        video.addEventListener('seeked', () => { pendingSeeked = false; }, { once: true });
-      }
-    }
-
-    // UI updates
-    if (fill)  fill.style.width  = (pct * 100).toFixed(1) + '%';
-    if (angle) angle.textContent = Math.round(pct * 360) + '°';
-  }
-
-  video.load();
-
-  // ── Slider input ──
-  function hideHint() {
-    if (!hintHidden && hint) { hint.classList.add('hidden'); hintHidden = true; }
-  }
-
-  slider.addEventListener('input', () => {
-    stopAutoRotate();
-    seekTo(parseInt(slider.value, 10));
-    hideHint();
-  });
-  slider.addEventListener('touchstart', () => { stopAutoRotate(); hideHint(); }, { passive: true });
-
-  // ── Auto-rotate ──
-  function autoRotateLoop() {
-    if (!autoActive) return;
-    autoPos += AUTO_SPEED;
-    if (autoPos >= 1000) autoPos = 0;
-
-    slider.value = String(Math.round(autoPos));
-    seekTo(autoPos);
-    hideHint();
-
-    autoRafId = requestAnimationFrame(autoRotateLoop);
-  }
-
-  function startAutoRotate() {
-    autoActive = true;
-    autoPos = parseInt(slider.value, 10) || 0;
-    if (autoBtn) { autoBtn.classList.add('active'); autoLbl.textContent = 'Stop Rotation'; }
-    autoRafId = requestAnimationFrame(autoRotateLoop);
-  }
-
-  function stopAutoRotate() {
-    autoActive = false;
-    cancelAnimationFrame(autoRafId);
-    if (autoBtn) { autoBtn.classList.remove('active'); autoLbl.textContent = 'Auto Rotate'; }
-  }
-
-  if (autoBtn) {
-    autoBtn.addEventListener('click', () => {
-      autoActive ? stopAutoRotate() : startAutoRotate();
-    });
-  }
 }
