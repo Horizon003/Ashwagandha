@@ -7,6 +7,7 @@
 const IS_LOW_END = window.innerWidth < 380 || navigator.hardwareConcurrency <= 2;
 
 document.addEventListener('DOMContentLoaded', () => {
+  initPageLoader();
   initScrollProgress();
   initNavDots();
   initParticles();
@@ -27,6 +28,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initCardTilt();
   initPlant360Video();
 });
+
+/* ── 0. PAGE LOADER ── */
+function initPageLoader() {
+  const loader = document.getElementById('page-loader');
+  if (!loader) return;
+  const hide = () => loader.classList.add('hidden');
+  if (document.readyState === 'complete') {
+    setTimeout(hide, 420);
+  } else {
+    window.addEventListener('load', () => setTimeout(hide, 420), { once: true });
+    setTimeout(hide, 2200);
+  }
+}
 
 /* ── 1. SCROLL PROGRESS ── */
 function initScrollProgress() {
@@ -195,12 +209,13 @@ function initCardTilt() {
 
 /* ── 7. TIMELINE — staggered reveal on all screens ── */
 function initTimeline() {
-  const items = document.querySelectorAll('.tl-item');
+  const items = document.querySelectorAll('.timeline-item');
   if (!items.length) return;
   const obs = new IntersectionObserver(entries => {
-    entries.forEach((e, i) => {
+    entries.forEach(e => {
       if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('tl-visible'), i * 120);
+        const index = Array.from(items).indexOf(e.target);
+        setTimeout(() => e.target.classList.add('tl-visible'), Math.max(index, 0) * 120);
         obs.unobserve(e.target);
       }
     });
@@ -297,16 +312,61 @@ function initAccordion() {
 
 /* ── 14. 360° PRODUCT VIEWER ── */
 function initViewer360() {
-  const stage = document.getElementById('viewer-stage'), img = document.getElementById('viewer-img'), slider = document.getElementById('viewer-slider');
+  const stage = document.getElementById('viewer-stage');
+  const img = document.getElementById('viewer-img');
+  const slider = document.getElementById('viewer-slider');
+  const resetBtn = document.getElementById('viewer-reset');
+  const frameNum = document.getElementById('viewer-frame-num');
+  const fallbackText = stage?.querySelector('.viewer-fallback-text');
   if (!stage || !img) return;
-  const TOTAL = 9, frames = Array.from({ length: TOTAL }, (_, i) => `assets/products/product-360/product-${i + 1}.webp`);
-  let current = 0, dragStartX = 0, dragStartFrame = 0, isDragging = false;
+
+  const TOTAL = 9;
+  const frames = Array.from({ length: TOTAL }, (_, i) => `assets/products/product-360/product-${i + 1}.webp`);
+  let current = 0;
+  let dragStartX = 0;
+  let dragStartFrame = 0;
+  let isDragging = false;
+
   frames.forEach(src => { const p = new Image(); p.src = src; });
-  function setFrame(n) { current = ((n % TOTAL) + TOTAL) % TOTAL; img.src = frames[current]; if (slider) slider.value = String(current); }
-  stage.addEventListener('pointerdown', e => { isDragging = true; dragStartX = e.clientX; dragStartFrame = current; stage.setPointerCapture(e.pointerId); });
-  stage.addEventListener('pointermove', e => { if (!isDragging) return; setFrame(dragStartFrame - Math.round((e.clientX - dragStartX) / 18)); });
-  stage.addEventListener('pointerup', () => { isDragging = false; });
-  if (slider) slider.addEventListener('input', () => setFrame(parseInt(slider.value)));
+
+  function setFrame(n) {
+    current = ((n % TOTAL) + TOTAL) % TOTAL;
+    img.src = frames[current];
+    if (slider) slider.value = String(current);
+    if (frameNum) frameNum.textContent = String(current + 1);
+    stage.classList.remove('viewer-fallback');
+    if (fallbackText) fallbackText.style.display = 'none';
+    img.style.display = 'block';
+  }
+
+  function stopDrag() {
+    isDragging = false;
+  }
+
+  stage.addEventListener('pointerdown', e => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragStartFrame = current;
+    try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+
+  stage.addEventListener('pointermove', e => {
+    if (!isDragging) return;
+    const delta = Math.round((e.clientX - dragStartX) / 20);
+    setFrame(dragStartFrame - delta);
+  });
+
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(evt => stage.addEventListener(evt, stopDrag));
+
+  if (slider) slider.addEventListener('input', () => setFrame(parseInt(slider.value, 10)));
+  resetBtn?.addEventListener('click', () => setFrame(0));
+
+  img.addEventListener('error', () => {
+    stage.classList.add('viewer-fallback');
+    img.style.display = 'none';
+    if (fallbackText) fallbackText.style.display = 'block';
+  });
+
   setFrame(0);
 }
 
@@ -333,11 +393,38 @@ function initSmoothScrollLinks() {
 
 /* ── 17. IMAGE FALLBACKS ── */
 function initImageFallbacks() {
-  document.querySelectorAll('.team-avatar').forEach(img => img.addEventListener('error', () => { img.style.opacity = '0'; }));
+  document.querySelectorAll('.team-avatar').forEach(img => {
+    img.addEventListener('load', () => {
+      const fallback = img.parentElement?.querySelector('.team-avatar-fallback');
+      if (fallback) fallback.style.opacity = '0';
+    });
+    img.addEventListener('error', () => {
+      img.style.opacity = '0';
+      const fallback = img.parentElement?.querySelector('.team-avatar-fallback');
+      if (fallback) fallback.style.opacity = '1';
+    });
+  });
+
+  document.querySelectorAll('.instructor-avatar').forEach(img => {
+    img.addEventListener('load', () => {
+      const fallback = img.parentElement?.querySelector('.instructor-avatar-fallback');
+      if (fallback) fallback.style.opacity = '0';
+    });
+    img.addEventListener('error', () => {
+      img.style.opacity = '0';
+      const fallback = img.parentElement?.querySelector('.instructor-avatar-fallback');
+      if (fallback) fallback.style.opacity = '1';
+    });
+  });
+
   ['img-capsules', 'img-powder'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.addEventListener('error', () => { const w = el.closest('.dosage-img-wrap'); if (w) w.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-capsules"></i></div>'; });
+    if (el) el.addEventListener('error', () => {
+      const wrap = el.closest('.dosage-img-wrap');
+      if (wrap) wrap.innerHTML = '<div class="dosage-fallback"><i class="fa-solid fa-capsules"></i></div>';
+    });
   });
+
   const hi = document.getElementById('hero-img');
   if (hi) hi.addEventListener('error', () => hi.closest('.hero-image-card')?.classList.add('hero-bg-fallback'));
 }
