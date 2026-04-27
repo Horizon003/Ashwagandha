@@ -143,8 +143,8 @@ function initHeroTyping() {
       i++;
       setTimeout(type, 100);
     } else {
-      // After 2.5s, start glitch cycle
-      setTimeout(startGlitch, 2500);
+      // First glitch starts 3s after full type
+      setTimeout(startGlitch, 3000);
     }
   };
 
@@ -161,11 +161,9 @@ function initHeroTyping() {
         el.classList.remove('hero-title-glitch');
         el.textContent = text;
         el.appendChild(cursor);
-        // Short pause then retype in gold italic
-        setTimeout(retypeAlt, 400);
+        setTimeout(retypeAlt, 350);
         return;
       }
-      // Randomise characters
       const glitched = text.split('').map(ch =>
         Math.random() > 0.55
           ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
@@ -174,7 +172,7 @@ function initHeroTyping() {
       el.textContent = glitched;
       el.appendChild(cursor);
       glitchCount++;
-    }, 90);
+    }, 85);
   }
 
   function retypeAlt() {
@@ -188,17 +186,19 @@ function initHeroTyping() {
       j++;
       if (j > text.length) {
         clearInterval(retypeInterval);
-        // Keep gold italic for 2s, then reset to normal
+        // Show gold for 1.8s, reset normal, then wait 5s and loop again
         setTimeout(() => {
           el.classList.remove('hero-title-alt');
           el.textContent = text;
           el.appendChild(cursor);
-        }, 2000);
+          // ── LOOP: next cycle after 5s pause ──
+          setTimeout(startGlitch, 5000);
+        }, 1800);
       }
-    }, 85);
+    }, 80);
   }
 
-  // Start after slight delay
+  // Start typing after slight delay
   setTimeout(type, 600);
 }
 
@@ -773,8 +773,9 @@ function initChemGroupInfo() {
 }
 
 /* ─────────────────────────────────────────────────
-   360° PLANT VIDEO SCRUBBER
-   Slider controls video.currentTime — NO autoplay
+   360° PLANT VIDEO SCRUBBER — ultra-smooth version
+   Uses fastSeek + frame-buffered seeking
+   Auto-rotate support included
 ───────────────────────────────────────────────── */
 function initPlant360Video() {
   const video   = document.getElementById('plant360-video');
@@ -782,72 +783,95 @@ function initPlant360Video() {
   const fill    = document.getElementById('plant360-track-fill');
   const angle   = document.getElementById('plant360-angle');
   const hint    = document.getElementById('plant360-hint');
-  const arcFill = document.getElementById('plant360-arc-fill');
+  const autoBtn = document.getElementById('plant360-auto-btn');
+  const autoLbl = document.getElementById('plant360-auto-label');
 
   if (!video || !slider) return;
 
-  const VIDEO_DURATION = 10; // seconds
-  let videoDuration = VIDEO_DURATION;
-  let hintHidden = false;
+  let videoDuration = 10;
+  let isReady       = false;
+  let hintHidden    = false;
 
-  // When metadata loads, grab real duration
+  // ── Auto-rotate state ──
+  let autoActive  = false;
+  let autoRafId   = null;
+  let autoPos     = 0;          // 0 to 1000 (matches slider range)
+  const AUTO_SPEED = 0.55;      // slider units per frame (~60fps → ~11s per cycle)
+
+  // ── Preload & freeze ──
   video.addEventListener('loadedmetadata', () => {
-    videoDuration = video.duration || VIDEO_DURATION;
-    // Freeze at frame 0
-    video.currentTime = 0;
-    video.pause();
+    videoDuration = video.duration || 10;
+    isReady = true;
+    seekTo(0);
   });
+  video.addEventListener('play', () => video.pause());
 
-  // Also freeze on any accidental play
-  video.addEventListener('play', () => {
-    video.pause();
-  });
+  // ── Core seek — uses fastSeek when available ──
+  let pendingSeeked = false;
+  function seekTo(sliderVal) {
+    if (!isReady) return;
+    const pct = sliderVal / 1000;
+    const t   = Math.min(Math.max(pct * videoDuration, 0), videoDuration);
 
-  function hideHint() {
-    if (!hintHidden && hint) {
-      hint.classList.add('hidden');
-      hintHidden = true;
-    }
-  }
-
-  function scrubTo(val) {
-    // val is 0-10 from slider
-    const pct = val / 10;
-    const t = pct * videoDuration;
-    video.currentTime = Math.min(Math.max(t, 0), videoDuration);
-    video.pause();
-
-    // Update fill bar
-    const fillPct = pct * 100;
-    if (fill) fill.style.width = fillPct + '%';
-
-    // Update angle display (0° to 360°)
-    const deg = Math.round(pct * 360);
-    if (angle) angle.textContent = deg + '°';
-
-    // Update SVG arc line
-    if (arcFill) {
-      arcFill.setAttribute('x2', String(pct * 200));
+    // fastSeek is faster (less precise) — ideal for scrubbing
+    if (video.fastSeek) {
+      video.fastSeek(t);
+    } else {
+      if (!pendingSeeked) {
+        pendingSeeked = true;
+        video.currentTime = t;
+        video.addEventListener('seeked', () => { pendingSeeked = false; }, { once: true });
+      }
     }
 
-    hideHint();
+    // UI updates
+    if (fill)  fill.style.width  = (pct * 100).toFixed(1) + '%';
+    if (angle) angle.textContent = Math.round(pct * 360) + '°';
   }
 
-  // Slider input event (mouse drag + touch)
-  slider.addEventListener('input', () => {
-    scrubTo(parseFloat(slider.value));
-  });
-
-  // Touch events on slider for smooth mobile scrubbing
-  slider.addEventListener('touchstart', hideHint, { passive: true });
-  slider.addEventListener('touchmove', (e) => {
-    // Let range input handle it natively — just hide hint
-    hideHint();
-  }, { passive: true });
-
-  // Preload the video as soon as possible
   video.load();
-}
 
-// Call it on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', initPlant360Video);
+  // ── Slider input ──
+  function hideHint() {
+    if (!hintHidden && hint) { hint.classList.add('hidden'); hintHidden = true; }
+  }
+
+  slider.addEventListener('input', () => {
+    stopAutoRotate();
+    seekTo(parseInt(slider.value, 10));
+    hideHint();
+  });
+  slider.addEventListener('touchstart', () => { stopAutoRotate(); hideHint(); }, { passive: true });
+
+  // ── Auto-rotate ──
+  function autoRotateLoop() {
+    if (!autoActive) return;
+    autoPos += AUTO_SPEED;
+    if (autoPos >= 1000) autoPos = 0;
+
+    slider.value = String(Math.round(autoPos));
+    seekTo(autoPos);
+    hideHint();
+
+    autoRafId = requestAnimationFrame(autoRotateLoop);
+  }
+
+  function startAutoRotate() {
+    autoActive = true;
+    autoPos = parseInt(slider.value, 10) || 0;
+    if (autoBtn) { autoBtn.classList.add('active'); autoLbl.textContent = 'Stop Rotation'; }
+    autoRafId = requestAnimationFrame(autoRotateLoop);
+  }
+
+  function stopAutoRotate() {
+    autoActive = false;
+    cancelAnimationFrame(autoRafId);
+    if (autoBtn) { autoBtn.classList.remove('active'); autoLbl.textContent = 'Auto Rotate'; }
+  }
+
+  if (autoBtn) {
+    autoBtn.addEventListener('click', () => {
+      autoActive ? stopAutoRotate() : startAutoRotate();
+    });
+  }
+}
