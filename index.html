@@ -89,16 +89,24 @@ html, body {
 }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .brand .logo {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: linear-gradient(135deg,#fff,#f3eed7);
+  width: 48px; height: 48px; border-radius: 50%;
+  background: #fff;
   display:flex; align-items:center; justify-content:center;
-  box-shadow: 0 0 0 2px var(--gold), 0 4px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 0 0 2px var(--gold), 0 4px 10px rgba(0,0,0,0.10);
   flex-shrink: 0;
   font-family: 'Fraunces', 'Playfair Display', serif;
   font-weight: 800; color: var(--maroon); font-size: 14px;
   overflow: hidden;
+  padding: 0;
 }
-.brand .logo img { width: 100%; height: 100%; object-fit: contain; padding: 3px; background: #fff; }
+.brand .logo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  padding: 0;
+  background: #fff;
+  display: block;
+}
 .brand-text { line-height: 1.05; min-width: 0; }
 .brand-text .title { font-family: 'Fraunces', 'Playfair Display', serif; font-weight: 700; color: var(--maroon); font-size: 14px; letter-spacing: -0.1px; white-space: nowrap; }
 .brand-text .sub   { font-size: 9.5px; color: var(--muted); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; }
@@ -108,15 +116,23 @@ html, body {
 .uni-text .l1 { font-size: 8.5px; color: var(--muted); letter-spacing: 1.4px; font-weight: 600; }
 .uni-text .l2 { font-size: 11px; color: var(--maroon); font-weight: 800; letter-spacing: .6px; }
 .uni .logo {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: linear-gradient(135deg,#fff,#e9f3eb);
+  width: 48px; height: 48px; border-radius: 50%;
+  background: #fff;
   display:flex; align-items:center; justify-content:center;
-  box-shadow: 0 0 0 2px var(--green), 0 4px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 0 0 2px var(--green), 0 4px 10px rgba(0,0,0,0.10);
   font-family: 'Fraunces', 'Playfair Display', serif; font-weight: 800; color: var(--green-deep); font-size: 13px;
   overflow: hidden;
   flex-shrink: 0;
+  padding: 0;
 }
-.uni .logo img { width: 100%; height: 100%; object-fit: contain; padding: 3px; background: #fff; }
+.uni .logo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  padding: 0;
+  background: #fff;
+  display: block;
+}
 
 /* ===================== HERO BANNER (Pharmacognostic) ===================== */
 .hero {
@@ -433,77 +449,182 @@ html, body {
 .zig-body em { font-style: italic; }
 .zig-body strong { color: var(--text); }
 
-/* ===================== CHEMICAL CONSTITUENTS — single column ===================== */
-.chem-stack { display: flex; flex-direction: column; gap: 14px; }
+/* ===================== CHEMICAL CONSTITUENTS — 16:9 PRO FLIP TILES ===================== */
+.chem-stack { display: flex; flex-direction: column; gap: 16px; }
 .chem-tile {
-  background:
-    radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.10), transparent 55%),
-    linear-gradient(135deg, #0F4C2A 0%, #1F6E3D 55%, #2E8B4A 100%);
-  border-radius: 18px; padding: 18px 20px;
-  border: 1px solid rgba(255,255,255,0.08);
-  position: relative; overflow: hidden;
-  box-shadow:
-    0 8px 22px rgba(15,76,42,0.32),
-    inset 0 1px 0 rgba(255,255,255,0.10);
-  opacity: 0; transform: translateY(14px);
-  transition: opacity 0.45s ease, transform 0.45s ease, box-shadow .25s, border-color .25s;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 20px;
+  perspective: 1600px;
+  cursor: pointer;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
 }
 .chem-tile.in-view { opacity: 1; transform: none; }
-.chem-tile:hover { box-shadow: 0 12px 28px rgba(15,76,42,0.42), inset 0 1px 0 rgba(255,255,255,0.14); border-color: rgba(255,214,107,0.35); }
-.chem-tile::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
-}
-.chem-tile.ct-1::before { background: linear-gradient(to bottom, #FFD66B, #C9952A); }
-.chem-tile.ct-2::before { background: linear-gradient(to bottom, #FFE9A8, #B07A1A); }
-.chem-tile.ct-3::before { background: linear-gradient(to bottom, #7BFFB3, #2EE875); }
-.chem-tile.ct-4::before { background: linear-gradient(to bottom, #FFCDB2, #FF6B5A); }
+.chem-tile:nth-child(2) { transition-delay: 0.08s; }
+.chem-tile:nth-child(3) { transition-delay: 0.16s; }
+.chem-tile:nth-child(4) { transition-delay: 0.24s; }
 
-/* subtle glow orb top-right */
-.chem-tile::after {
-  content: ""; position: absolute; top: -40%; right: -15%;
-  width: 200px; height: 200px; border-radius: 50%; opacity: 0.10;
-  background: radial-gradient(circle, #fff 0%, transparent 70%);
+.chem-inner {
+  position: relative; width: 100%; height: 100%;
+  transition: transform 0.85s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform-style: preserve-3d;
+  border-radius: 20px;
+}
+.chem-inner.flipped { transform: rotateY(180deg); }
+
+.chem-face {
+  position: absolute; inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  display: flex; flex-direction: column;
+  padding: 20px 22px;
+  box-shadow:
+    0 10px 26px rgba(15,76,42,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.10);
+  will-change: transform;
+}
+
+/* FRONT */
+.chem-face.front {
+  transform: rotateY(0deg) translateZ(1px);
+  background:
+    radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.14), transparent 55%),
+    linear-gradient(135deg, #0F4C2A 0%, #1F6E3D 55%, #2E8B4A 100%);
+  color: #fff;
+  justify-content: space-between;
+}
+/* per-tile subtle hue variation on FRONT */
+.chem-tile.ct-1 .chem-face.front { background: radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, #0F4C2A 0%, #1B6936 55%, #2E8B4A 100%); }
+.chem-tile.ct-2 .chem-face.front { background: radial-gradient(140% 100% at 100% 0%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, #103A26 0%, #195C30 50%, #2E7D32 100%); }
+.chem-tile.ct-3 .chem-face.front { background: radial-gradient(140% 100% at 0% 100%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, #0E3F2A 0%, #16793F 55%, #2EA055 100%); }
+.chem-tile.ct-4 .chem-face.front { background: radial-gradient(140% 100% at 100% 100%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, #103823 0%, #1F6E3D 50%, #3D9C5A 100%); }
+
+.chem-face.front::before {
+  content: ""; position: absolute;
+  top: -45%; right: -12%;
+  width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.chem-face.front::after {
+  content: ""; position: absolute;
+  bottom: -35%; left: -12%;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,214,107,0.10) 0%, transparent 70%);
   pointer-events: none;
 }
 
-.chem-tile-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; position: relative; z-index: 2; }
+.chem-tile-head { display: flex; align-items: center; gap: 12px; position: relative; z-index: 2; }
 .chem-ic {
-  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  width: 50px; height: 50px; border-radius: 14px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  background: rgba(255,255,255,0.15);
+  font-size: 20px; color: #FFE9A8;
+  background: rgba(255,255,255,0.14);
   backdrop-filter: blur(6px);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.20), 0 4px 10px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,214,107,0.35);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 4px 12px rgba(0,0,0,0.20);
 }
-.chem-tile.ct-1 .chem-ic { color: #FFE9A8; }
-.chem-tile.ct-2 .chem-ic { color: #FFF4C2; }
-.chem-tile.ct-3 .chem-ic { color: #B8FFD4; }
-.chem-tile.ct-4 .chem-ic { color: #FFCDB2; }
-.chem-term { font-family: 'Fraunces', 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #FFFFFF; flex: 1; letter-spacing: -0.2px; text-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+.chem-term {
+  font-family: 'Fraunces', 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700; color: #fff; flex: 1;
+  letter-spacing: -0.3px; line-height: 1.15;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.28);
+}
 .chem-badge {
   font-size: 8.5px; font-weight: 800; letter-spacing: 1.2px;
-  padding: 4px 10px; border-radius: 999px; text-transform: uppercase; color: #1B3A1C;
+  padding: 5px 11px; border-radius: 999px; text-transform: uppercase;
+  color: #1B3A1C;
   background: linear-gradient(135deg, #FFD66B, #E6B23A);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+  white-space: nowrap;
 }
-.chem-tile.ct-2 .chem-badge { background: linear-gradient(135deg, #FFF4C2, #FFD66B); }
-.chem-tile.ct-3 .chem-badge { background: linear-gradient(135deg, #B8FFD4, #5BFF8A); color: #0E3F2A; }
-.chem-tile.ct-4 .chem-badge { background: linear-gradient(135deg, #FFCDB2, #FF8A6E); color: #5A1414; }
-.info-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.18); cursor: pointer; padding: 4px 8px; border-radius: 999px; color: #FFE9A8; font-size: 13px; line-height: 1; transition: transform .15s, background .15s; }
-.info-btn:hover { background: rgba(255,255,255,0.22); }
+.info-btn {
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.22);
+  cursor: pointer;
+  padding: 5px 9px; border-radius: 999px;
+  color: #FFE9A8; font-size: 13px; line-height: 1;
+  transition: transform .15s, background .15s;
+  position: relative; z-index: 5;
+}
+.info-btn:hover { background: rgba(255,255,255,0.24); }
 .info-btn:active { transform: scale(0.9); }
-.chem-compounds { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; position: relative; z-index: 2; }
+
+.chem-front-body {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  flex: 1; gap: 8px;
+}
+.chem-compounds {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
 .chem-tag {
   font-size: 11px; font-weight: 600; padding: 5px 11px; border-radius: 999px;
   background: rgba(255,255,255,0.14);
-  border: 1px solid rgba(255,255,255,0.22);
+  border: 1px solid rgba(255,255,255,0.24);
   color: #F8FBEF;
   backdrop-filter: blur(6px);
 }
-.chem-action { font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.55; border-top: 1px dashed rgba(255,255,255,0.18); padding-top: 10px; position: relative; z-index: 2; font-weight: 500; }
-.chem-action strong { color: #FFE9A8; font-weight: 700; }
-.chem-footnote { margin-top: 14px; font-size: 11.5px; color: var(--text); background: linear-gradient(135deg, #FBF6EC 0%, #F4E9D6 100%); padding: 12px 14px; border-radius: 12px; border-left: 3px solid var(--green); }
+.chem-tap-hint {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10.5px; color: rgba(255,233,168,0.95);
+  font-weight: 600; letter-spacing: .4px;
+}
+.chem-tap-hint i { font-size: 9px; color: #FFD66B; }
+
+/* BACK */
+.chem-face.back {
+  transform: rotateY(180deg) translateZ(1px);
+  background:
+    radial-gradient(140% 100% at 100% 0%, rgba(255,255,255,0.10), transparent 55%),
+    linear-gradient(135deg, #FFFFFF 0%, #F4F9F5 100%);
+  color: var(--text);
+  border: 2px solid var(--green-soft);
+  justify-content: center;
+  gap: 10px;
+}
+.chem-back-tag {
+  align-self: flex-start;
+  font-size: 9px; font-weight: 800; letter-spacing: 1.4px;
+  padding: 4px 11px; border-radius: 999px; color: #fff;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-deep) 100%);
+}
+.chem-back-title {
+  font-family: 'Fraunces', 'Playfair Display', serif;
+  font-size: 17px; font-weight: 700; color: var(--green-deep);
+  letter-spacing: -0.2px; line-height: 1.2;
+}
+.chem-back-text {
+  font-size: 12.5px; color: var(--text); line-height: 1.55; font-weight: 500;
+}
+.chem-back-text strong { color: var(--green-deep); font-weight: 700; }
+.chem-back-hint {
+  margin-top: auto;
+  font-size: 10px; color: var(--muted);
+  font-style: italic; display: flex; align-items: center; gap: 5px;
+}
+.chem-back-hint i { color: var(--green); font-size: 9px; }
+
+.chem-footnote {
+  margin-top: 18px; font-size: 11.5px; color: var(--text);
+  background: linear-gradient(135deg, #FBF6EC 0%, #F4E9D6 100%);
+  padding: 12px 14px; border-radius: 12px;
+  border-left: 3px solid var(--green);
+}
 .chem-footnote i { color: var(--gold); margin-right: 4px; }
+
+@media (max-width: 480px) {
+  .chem-term { font-size: 18px; }
+  .chem-ic { width: 44px; height: 44px; font-size: 18px; }
+  .chem-tile { aspect-ratio: 16 / 10; }
+}
 
 /* ===================== INFO MODAL ===================== */
 .info-modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center; }
@@ -569,10 +690,15 @@ html, body {
 .pharm-front, .pharm-back {
   position: absolute; inset: 0;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   border-radius: 18px;
   display: flex; align-items: center;
   padding: 18px 22px; gap: 18px;
+  overflow: hidden;
+  will-change: transform;
 }
+.pharm-front { transform: rotateY(0deg) translateZ(1px); }
 
 /* Premium classical green gradient — different angles to keep variety */
 .pharm-front {
@@ -625,7 +751,7 @@ html, body {
 
 /* BACK */
 .pharm-back {
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(1px);
   background: linear-gradient(135deg, #FFFFFF 0%, #F4F9F5 100%);
   flex-direction: column; align-items: flex-start; justify-content: center;
   padding: 16px 22px;
@@ -661,10 +787,15 @@ html, body {
 .flip-front, .flip-back {
   position: absolute; inset: 0; border-radius: 16px;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   display: flex; align-items: center; gap: 16px;
   padding: 16px 20px; box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  will-change: transform;
 }
-.flip-back { transform: rotateY(180deg); }
+.flip-front { transform: rotateY(0deg) translateZ(1px); }
+.flip-back { transform: rotateY(180deg) translateZ(1px); }
 .flip-front {
   background:
     radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.10), transparent 55%),
@@ -699,16 +830,19 @@ html, body {
 .flip-back-text { font-size: 12.5px; color: #fff; line-height: 1.55; font-weight: 500; }
 .flip-back-hint { font-size: 10px; color: rgba(255,255,255,0.75); margin-top: 8px; font-style: italic; }
 
-.flip-card.tu-1 .flip-icon { background: linear-gradient(135deg, #1E40AF, #0369A1); }
-.flip-card.tu-1 .flip-back { background: linear-gradient(135deg, #1E40AF, #0369A1); }
-.flip-card.tu-2 .flip-icon { background: linear-gradient(135deg, #DC2626, #991B1B); }
-.flip-card.tu-2 .flip-back { background: linear-gradient(135deg, #DC2626, #991B1B); }
-.flip-card.tu-3 .flip-icon { background: linear-gradient(135deg, #D97706, #B45309); }
-.flip-card.tu-3 .flip-back { background: linear-gradient(135deg, #D97706, #B45309); }
-.flip-card.tu-4 .flip-icon { background: linear-gradient(135deg, #BE185D, #831843); }
-.flip-card.tu-4 .flip-back { background: linear-gradient(135deg, #BE185D, #831843); }
-.flip-card.tu-5 .flip-icon { background: linear-gradient(135deg, var(--green), var(--green-deep)); }
-.flip-card.tu-5 .flip-back { background: linear-gradient(135deg, var(--green), var(--green-deep)); }
+/* Unified theme-matching icon styling — classical green + gold accent */
+.flip-card .flip-icon {
+  background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+  border: 1px solid rgba(255,214,107,0.40);
+  color: #FFE9A8;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 4px 12px rgba(0,0,0,0.20);
+}
+.flip-card .flip-back {
+  background:
+    radial-gradient(140% 100% at 100% 0%, rgba(255,255,255,0.10), transparent 55%),
+    linear-gradient(135deg, #0F4C2A 0%, #1F6E3D 55%, #2E8B4A 100%);
+  border: 1px solid rgba(255,214,107,0.18);
+}
 
 /* ===================== MISCONCEPTIONS — Myth/Reality with image icons ===================== */
 .misc-section { margin: 22px 16px; }
@@ -741,27 +875,40 @@ html, body {
 .myth-front, .myth-back {
   position: absolute; inset: 0;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   border-radius: 18px; padding: 18px 20px;
   display: flex; align-items: center; gap: 16px;
   box-shadow: var(--shadow);
   min-height: 160px;
+  overflow: hidden;
+  will-change: transform;
 }
+.myth-front { transform: rotateY(0deg) translateZ(1px); }
 
-/* MYTH FRONT */
+/* MYTH FRONT — fully red */
 .myth-front {
   background:
-    radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.45), transparent 55%),
-    linear-gradient(135deg, #FFF4C2 0%, #FFE08A 55%, #F5C24A 100%);
-  border: 1px solid rgba(201,149,42,0.45);
+    radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.18), transparent 55%),
+    linear-gradient(135deg, #B91C1C 0%, #991B1B 55%, #7F1D1D 100%);
+  border: 1px solid rgba(255,255,255,0.12);
   box-shadow:
-    0 8px 22px rgba(201,149,42,0.22),
-    inset 0 1px 0 rgba(255,255,255,0.6);
+    0 8px 22px rgba(153,27,27,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+  color: #fff;
+}
+.myth-front::after {
+  content: ""; position: absolute; top: -45%; right: -12%;
+  width: 200px; height: 200px; border-radius: 50%; opacity: 0.10;
+  background: radial-gradient(circle, #fff 0%, transparent 70%);
+  pointer-events: none;
 }
 .myth-icon-img {
   width: 84px; height: 84px; flex-shrink: 0; border-radius: 16px;
-  background: rgba(255,255,255,0.6); padding: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.92); padding: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.6);
   display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 2;
 }
 .myth-icon-img img { width: 100%; height: 100%; object-fit: contain; }
 .myth-content { flex: 1; min-width: 0; }
@@ -772,30 +919,35 @@ html, body {
 .myth-tag {
   display: inline-flex; align-items: center; gap: 7px;
   font-size: 11.5px; font-weight: 800;
-  color: var(--text); letter-spacing: 2px;
+  color: #FFFFFF; letter-spacing: 2px;
+  position: relative; z-index: 2;
 }
 .myth-tag .x-icon {
   width: 22px; height: 22px; border-radius: 6px;
-  background: #fff; color: #DC2626;
+  background: #fff; color: #B91C1C;
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 13px; font-weight: 900;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.18);
 }
 .myth-reveal {
-  font-size: 9.5px; font-weight: 700; color: #B45309;
+  font-size: 9.5px; font-weight: 700; color: #FFD2D2;
   font-style: italic; white-space: nowrap;
   display: flex; align-items: center; gap: 4px;
+  position: relative; z-index: 2;
 }
 .myth-text {
   font-family: 'Fraunces', 'Playfair Display', serif;
   font-size: 16px; font-weight: 600;
-  color: #4A2A0A; line-height: 1.35;
+  color: #FFFFFF; line-height: 1.35;
   letter-spacing: -0.2px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  position: relative; z-index: 2;
 }
+.myth-content { position: relative; z-index: 2; }
 
 /* FACT BACK */
 .myth-back {
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(1px);
   background: linear-gradient(135deg, #C8E6C9 0%, #81C784 100%);
   border: 1.5px solid rgba(46,125,50,0.4);
   flex-direction: column; align-items: flex-start; justify-content: center;
@@ -865,20 +1017,67 @@ html, body {
 .viewer-btn:active { background: rgba(255,255,255,0.25); }
 .viewer-btn.playing { background: var(--gold); color: #fff; border-color: var(--gold); }
 
-/* ===================== CONCLUSION ===================== */
-.conclusion-card { margin: 22px 16px; background: linear-gradient(135deg, #FBF6EC 0%, #F4E9D6 60%, #ECD9B0 100%); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow); max-width: 760px; margin-left: auto; margin-right: auto; border: 1px solid rgba(201,149,42,0.25); position: relative; overflow: hidden; }
-.conclusion-card::before { content: ""; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, rgba(201,149,42,0.20) 0%, transparent 70%); }
-.conclusion-card .head { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: 1.6px; color: var(--green-deep); margin-bottom: 12px; position: relative; z-index: 2; }
-.conclusion-card .head i { color: var(--gold); }
-.conclusion-card p { font-size: 13.5px; color: #2B2B2B; line-height: 1.7; position: relative; z-index: 2; font-family: 'Manrope', sans-serif; }
-.conclusion-card p em { font-style: italic; font-weight: 600; color: var(--maroon); font-family: 'Fraunces', serif; }
+/* ===================== CONCLUSION (medium purple theme) ===================== */
+.conclusion-card {
+  margin: 22px 16px;
+  background:
+    radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.18), transparent 55%),
+    linear-gradient(135deg, #8B5CF6 0%, #7C3AED 55%, #6D28D9 100%);
+  border-radius: var(--radius-lg); padding: 24px;
+  box-shadow: 0 10px 28px rgba(109,40,217,0.30), inset 0 1px 0 rgba(255,255,255,0.18);
+  max-width: 760px; margin-left: auto; margin-right: auto;
+  border: 1px solid rgba(255,255,255,0.18);
+  position: relative; overflow: hidden;
+  color: #fff;
+}
+.conclusion-card::before {
+  content: ""; position: absolute; top: -40px; right: -40px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, transparent 70%);
+  pointer-events: none;
+}
+.conclusion-card::after {
+  content: ""; position: absolute; bottom: -50px; left: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.conclusion-card .head {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 800; letter-spacing: 1.6px;
+  color: #FDE68A; margin-bottom: 12px; position: relative; z-index: 2;
+  text-transform: uppercase;
+}
+.conclusion-card .head i { color: #FCD34D; }
+.conclusion-card p {
+  font-size: 13.5px; color: #F5F3FF; line-height: 1.7;
+  position: relative; z-index: 2; font-family: 'Manrope', sans-serif;
+}
+.conclusion-card p em {
+  font-style: italic; font-weight: 600;
+  color: #FDE68A; font-family: 'Fraunces', serif;
+}
 .video-cta-wrap { margin-top: 18px; position: relative; z-index: 2; }
-.video-label { font-size: 10px; font-weight: 800; letter-spacing: 1.4px; color: var(--maroon); text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
-.video-label i { color: #E53935; font-size: 13px; }
-.conclusion-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #0F4C2A 0%, #1F6E3D 50%, #2E8B4A 100%); color: #fff; border: none; padding: 14px; border-radius: 24px; font-weight: 700; font-size: 13.5px; cursor: pointer; text-decoration: none; box-shadow: 0 6px 20px rgba(15,76,42,0.40); transition: transform .15s ease, box-shadow .15s ease; font-family: 'Manrope', sans-serif; letter-spacing: .2px; }
-.conclusion-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(15,76,42,0.50); }
-.conclusion-btn:active { transform: scale(0.97); box-shadow: 0 3px 10px rgba(15,76,42,0.30); }
-.conclusion-btn i { font-size: 16px; color: #FFD66B; }
+.video-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.4px;
+  color: #FDE68A; text-transform: uppercase;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 5px;
+}
+.video-label i { color: #FCA5A5; font-size: 13px; }
+.conclusion-btn {
+  width: 100%; display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F5F3FF 100%);
+  color: #6D28D9;
+  border: none; padding: 14px; border-radius: 24px;
+  font-weight: 800; font-size: 13.5px; cursor: pointer; text-decoration: none;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(109,40,217,0.10);
+  transition: transform .15s ease, box-shadow .15s ease;
+  font-family: 'Manrope', sans-serif; letter-spacing: .2px;
+}
+.conclusion-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(0,0,0,0.25); }
+.conclusion-btn:active { transform: scale(0.97); box-shadow: 0 3px 10px rgba(0,0,0,0.18); }
+.conclusion-btn i { font-size: 16px; color: #DC2626; }
 
 /* ===================== TEAM ===================== */
 .team-section { margin: 22px 16px; max-width: 760px; margin-left: auto; margin-right: auto; }
@@ -903,8 +1102,8 @@ html, body {
 .team-member::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 36px; background: linear-gradient(135deg, var(--green) 0%, #1B5E20 100%); border-radius: 16px 16px 50% 50% / 16px 16px 16px 16px; }
 .team-member.tm-2::before { background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-deep) 100%); }
 .team-member.tm-3::before { background: linear-gradient(135deg, #7B3FA8 0%, #5B2C8A 100%); }
-.team-member-img-wrap { position: relative; z-index: 2; width: 64px; height: 64px; margin: 0 auto 8px; border-radius: 50%; padding: 3px; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-.team-member-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: linear-gradient(135deg,#eee,#ddd); display: flex; align-items:center; justify-content:center; font-family: 'Fraunces', 'Playfair Display', serif; font-weight:800; color: var(--text); font-size: 22px; }
+.team-member-img-wrap { position: relative; z-index: 2; width: 72px; height: 72px; margin: 0 auto 8px; border-radius: 50%; padding: 3px; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); overflow: hidden; }
+.team-member-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center 25%; background: linear-gradient(135deg,#eee,#ddd); display: flex; align-items:center; justify-content:center; font-family: 'Fraunces', 'Playfair Display', serif; font-weight:800; color: var(--text); font-size: 22px; }
 .team-member-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 3px; }
 .team-member-role { display: inline-block; font-size: 8.5px; font-weight: 800; background: var(--green-light); color: var(--green); padding: 2px 7px; border-radius: 10px; letter-spacing: .5px; margin-bottom: 4px; text-transform: uppercase; }
 .team-member.tm-2 .team-member-role { background: #FDECEC; color: var(--maroon); }
@@ -935,7 +1134,7 @@ html, body {
   .brand-text .sub { font-size: 8.5px; }
   .uni-text .l1 { font-size: 7.5px; }
   .uni-text .l2 { font-size: 10px; }
-  .brand .logo, .uni .logo { width: 32px; height: 32px; }
+  .brand .logo, .uni .logo { width: 42px; height: 42px; }
 }
 
 /* ===================== RESPONSIVE — DESKTOP/LAPTOP ===================== */
@@ -1119,66 +1318,114 @@ html, body {
     <div class="chem-stack">
 
       <div class="chem-tile ct-1">
-        <div class="chem-tile-head">
-          <div class="chem-ic"><i class="fa-solid fa-atom"></i></div>
-          <div class="chem-term">Withanolides</div>
-          <span class="chem-badge">Primary Active</span>
-          <button class="info-btn" aria-label="Info" data-title="Withanolides" data-info="Withanolides are naturally occurring C28-steroidal lactones found exclusively in the genus Withania. They are the primary bioactive compounds responsible for adaptogenic, anti-inflammatory, anti-tumor, and immunomodulatory effects. Withaferin A is the most studied withanolide with proven anti-cancer activity."><i class="fa-solid fa-circle-info"></i></button>
+        <div class="chem-inner">
+          <div class="chem-face front">
+            <div class="chem-tile-head">
+              <div class="chem-ic"><i class="fa-solid fa-atom"></i></div>
+              <div class="chem-term">Withanolides</div>
+              <span class="chem-badge">Primary</span>
+              <button class="info-btn" aria-label="Info" data-title="Withanolides" data-info="Withanolides are naturally occurring C28-steroidal lactones found exclusively in the genus Withania. They are the primary bioactive compounds responsible for adaptogenic, anti-inflammatory, anti-tumor, and immunomodulatory effects. Withaferin A is the most studied withanolide with proven anti-cancer activity."><i class="fa-solid fa-circle-info"></i></button>
+            </div>
+            <div class="chem-front-body">
+              <div class="chem-compounds">
+                <span class="chem-tag">Withaferin A</span>
+                <span class="chem-tag">Withanolide D</span>
+                <span class="chem-tag">Withanolide B</span>
+                <span class="chem-tag">Withanolide A</span>
+              </div>
+              <div class="chem-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn more</div>
+            </div>
+          </div>
+          <div class="chem-face back">
+            <span class="chem-back-tag">Action &amp; Mechanism</span>
+            <div class="chem-back-title">Adaptogenic &amp; Anti-Tumor Class</div>
+            <div class="chem-back-text">C28-steroidal lactones unique to <strong>Withania</strong>. Modulate the HPA axis, lower cortisol, inhibit NF-κB, and induce apoptosis in cancer cells.</div>
+            <div class="chem-back-hint"><i class="fa-solid fa-rotate-left"></i> Tap to flip back</div>
+          </div>
         </div>
-        <div class="chem-compounds">
-          <span class="chem-tag">Withaferin A</span>
-          <span class="chem-tag">Withanolide D</span>
-          <span class="chem-tag">Withanolide B</span>
-          <span class="chem-tag">Withanolide A</span>
-        </div>
-        <div class="chem-action">Primary active class · Adaptogenic &amp; anti-tumor properties</div>
       </div>
 
       <div class="chem-tile ct-2">
-        <div class="chem-tile-head">
-          <div class="chem-ic"><i class="fa-solid fa-pen-nib"></i></div>
-          <div class="chem-term">Alkaloids</div>
-          <span class="chem-badge">Neuroactive</span>
-          <button class="info-btn" aria-label="Info" data-title="Alkaloids" data-info="Alkaloids are nitrogen-containing organic compounds with profound physiological effects. Ashwagandha alkaloids like Somniferine and Anaferine contribute to its sedative, analgesic, and muscle-relaxant properties by acting on the central nervous system."><i class="fa-solid fa-circle-info"></i></button>
+        <div class="chem-inner">
+          <div class="chem-face front">
+            <div class="chem-tile-head">
+              <div class="chem-ic"><i class="fa-solid fa-pen-nib"></i></div>
+              <div class="chem-term">Alkaloids</div>
+              <span class="chem-badge">Neuroactive</span>
+              <button class="info-btn" aria-label="Info" data-title="Alkaloids" data-info="Alkaloids are nitrogen-containing organic compounds with profound physiological effects. Ashwagandha alkaloids like Somniferine and Anaferine contribute to its sedative, analgesic, and muscle-relaxant properties by acting on the central nervous system."><i class="fa-solid fa-circle-info"></i></button>
+            </div>
+            <div class="chem-front-body">
+              <div class="chem-compounds">
+                <span class="chem-tag">Somniferine</span>
+                <span class="chem-tag">Anaferine</span>
+                <span class="chem-tag">Withanine</span>
+                <span class="chem-tag">Somnine</span>
+              </div>
+              <div class="chem-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn more</div>
+            </div>
+          </div>
+          <div class="chem-face back">
+            <span class="chem-back-tag">Action &amp; Mechanism</span>
+            <div class="chem-back-title">Sedative &amp; CNS Relaxant</div>
+            <div class="chem-back-text">Nitrogen-containing compounds acting on the central nervous system. Provide <strong>sedative</strong>, <strong>analgesic</strong>, and muscle-relaxant effects via GABAergic modulation.</div>
+            <div class="chem-back-hint"><i class="fa-solid fa-rotate-left"></i> Tap to flip back</div>
+          </div>
         </div>
-        <div class="chem-compounds">
-          <span class="chem-tag">Somniferine</span>
-          <span class="chem-tag">Anaferine</span>
-          <span class="chem-tag">Withanine</span>
-          <span class="chem-tag">Somnine</span>
-        </div>
-        <div class="chem-action">Sedative &amp; CNS relaxant effects</div>
       </div>
 
       <div class="chem-tile ct-3">
-        <div class="chem-tile-head">
-          <div class="chem-ic"><i class="fa-solid fa-location-arrow"></i></div>
-          <div class="chem-term">Glycosides</div>
-          <span class="chem-badge">Immunomodulatory</span>
-          <button class="info-btn" aria-label="Info" data-title="Glycosides" data-info="Glycosides are compounds where a sugar molecule is bonded to a non-sugar moiety (aglycone). In Ashwagandha, Withanosides and Sitoindosides are key glycosides. They enhance bioavailability and support neuroprotection, memory enhancement, and immunomodulation."><i class="fa-solid fa-circle-info"></i></button>
+        <div class="chem-inner">
+          <div class="chem-face front">
+            <div class="chem-tile-head">
+              <div class="chem-ic"><i class="fa-solid fa-dna"></i></div>
+              <div class="chem-term">Glycosides</div>
+              <span class="chem-badge">Immune</span>
+              <button class="info-btn" aria-label="Info" data-title="Glycosides" data-info="Glycosides are compounds where a sugar molecule is bonded to a non-sugar moiety (aglycone). In Ashwagandha, Withanosides and Sitoindosides are key glycosides. They enhance bioavailability and support neuroprotection, memory enhancement, and immunomodulation."><i class="fa-solid fa-circle-info"></i></button>
+            </div>
+            <div class="chem-front-body">
+              <div class="chem-compounds">
+                <span class="chem-tag">Withanosides</span>
+                <span class="chem-tag">Sitoindosides</span>
+                <span class="chem-tag">Withanoside IV</span>
+              </div>
+              <div class="chem-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn more</div>
+            </div>
+          </div>
+          <div class="chem-face back">
+            <span class="chem-back-tag">Action &amp; Mechanism</span>
+            <div class="chem-back-title">Neuroprotective &amp; Immunomodulatory</div>
+            <div class="chem-back-text">Sugar-conjugated compounds with enhanced bioavailability. Promote <strong>axon growth</strong>, support memory, and balance both innate &amp; adaptive immunity.</div>
+            <div class="chem-back-hint"><i class="fa-solid fa-rotate-left"></i> Tap to flip back</div>
+          </div>
         </div>
-        <div class="chem-compounds">
-          <span class="chem-tag">Withanosides</span>
-          <span class="chem-tag">Sitoindosides</span>
-          <span class="chem-tag">Withanoside IV</span>
-        </div>
-        <div class="chem-action">Neuroprotective &amp; immunomodulatory action</div>
       </div>
 
       <div class="chem-tile ct-4">
-        <div class="chem-tile-head">
-          <div class="chem-ic"><i class="fa-solid fa-shield-halved"></i></div>
-          <div class="chem-term">Flavonoids &amp; Sterols</div>
-          <span class="chem-badge">Antioxidant</span>
-          <button class="info-btn" aria-label="Info" data-title="Flavonoids &amp; Sterols" data-info="Flavonoids are polyphenolic antioxidants. Sterols like Beta-sitosterol have structural similarity to cholesterol and competitively inhibit its intestinal absorption, supporting cardiovascular health and reducing LDL levels."><i class="fa-solid fa-circle-info"></i></button>
+        <div class="chem-inner">
+          <div class="chem-face front">
+            <div class="chem-tile-head">
+              <div class="chem-ic"><i class="fa-solid fa-shield-halved"></i></div>
+              <div class="chem-term">Flavonoids &amp; Sterols</div>
+              <span class="chem-badge">Antioxidant</span>
+              <button class="info-btn" aria-label="Info" data-title="Flavonoids &amp; Sterols" data-info="Flavonoids are polyphenolic antioxidants. Sterols like Beta-sitosterol have structural similarity to cholesterol and competitively inhibit its intestinal absorption, supporting cardiovascular health and reducing LDL levels."><i class="fa-solid fa-circle-info"></i></button>
+            </div>
+            <div class="chem-front-body">
+              <div class="chem-compounds">
+                <span class="chem-tag">β-Sitosterol</span>
+                <span class="chem-tag">Flavonoids</span>
+                <span class="chem-tag">Polyphenols</span>
+                <span class="chem-tag">Iron (Fe)</span>
+              </div>
+              <div class="chem-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn more</div>
+            </div>
+          </div>
+          <div class="chem-face back">
+            <span class="chem-back-tag">Action &amp; Mechanism</span>
+            <div class="chem-back-title">Antioxidant &amp; Cardioprotective</div>
+            <div class="chem-back-text">Polyphenolic free-radical scavengers. <strong>β-Sitosterol</strong> competes with cholesterol absorption, lowering LDL and supporting cardiovascular health.</div>
+            <div class="chem-back-hint"><i class="fa-solid fa-rotate-left"></i> Tap to flip back</div>
+          </div>
         </div>
-        <div class="chem-compounds">
-          <span class="chem-tag">β-Sitosterol</span>
-          <span class="chem-tag">Flavonoids</span>
-          <span class="chem-tag">Polyphenols</span>
-          <span class="chem-tag">Iron (Fe)</span>
-        </div>
-        <div class="chem-action">Antioxidant &amp; cardiovascular support</div>
       </div>
 
     </div>
@@ -1327,7 +1574,7 @@ html, body {
     <div class="flip-card tu-1">
       <div class="flip-inner">
         <div class="flip-front">
-          <div class="flip-icon"><i class="fa-solid fa-moon"></i></div>
+          <div class="flip-icon"><i class="fa-regular fa-moon"></i></div>
           <div class="flip-title-wrap">
             <div class="flip-label">Insomnia &amp; Sleep Support</div>
             <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
@@ -1343,7 +1590,7 @@ html, body {
     <div class="flip-card tu-2">
       <div class="flip-inner">
         <div class="flip-front">
-          <div class="flip-icon"><i class="fa-solid fa-bone"></i></div>
+          <div class="flip-icon"><i class="fa-solid fa-shield-heart"></i></div>
           <div class="flip-title-wrap">
             <div class="flip-label">Arthritis &amp; Joint Care</div>
             <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
@@ -1359,7 +1606,7 @@ html, body {
     <div class="flip-card tu-3">
       <div class="flip-inner">
         <div class="flip-front">
-          <div class="flip-icon"><i class="fa-solid fa-brain"></i></div>
+          <div class="flip-icon"><i class="fa-solid fa-spa"></i></div>
           <div class="flip-title-wrap">
             <div class="flip-label">Nervous Exhaustion</div>
             <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
@@ -1375,7 +1622,7 @@ html, body {
     <div class="flip-card tu-4">
       <div class="flip-inner">
         <div class="flip-front">
-          <div class="flip-icon"><i class="fa-solid fa-heart"></i></div>
+          <div class="flip-icon"><i class="fa-solid fa-bolt"></i></div>
           <div class="flip-title-wrap">
             <div class="flip-label">Weakness &amp; Fatigue</div>
             <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
@@ -1391,7 +1638,7 @@ html, body {
     <div class="flip-card tu-5">
       <div class="flip-inner">
         <div class="flip-front">
-          <div class="flip-icon"><i class="fa-solid fa-person-pregnant"></i></div>
+          <div class="flip-icon"><i class="fa-solid fa-seedling"></i></div>
           <div class="flip-title-wrap">
             <div class="flip-label">Aphrodisiac &amp; Fertility Support</div>
             <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
@@ -1709,6 +1956,16 @@ document.querySelectorAll('.myth-card').forEach(card => {
   });
 });
 
+/* Chemical Constituents — flip on tap (info button bubbles handled separately) */
+document.querySelectorAll('.chem-tile').forEach(tile => {
+  tile.addEventListener('click', (e) => {
+    // ignore clicks coming from the info button (it has its own modal)
+    if (e.target.closest('.info-btn')) return;
+    const inner = tile.querySelector('.chem-inner');
+    if (inner) inner.classList.toggle('flipped');
+  });
+});
+
 /* ============================================================
    CHEMICAL INFO MODAL
    ============================================================ */
@@ -1730,14 +1987,40 @@ overlay.addEventListener('click', e => { if (e.target === overlay) overlay.class
 /* ============================================================
    INTERSECTION OBSERVER — SCROLL ANIMATIONS
    ============================================================ */
+const ANIM_SELECTOR = '.profile-item, .zig-item, .chem-tile, .flip-card, .pharm-tile, .myth-card, .product-card, .team-hero, .team-member';
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('in-view');
   });
 }, { threshold: 0.12 });
-document.querySelectorAll(
-  '.profile-item, .zig-item, .chem-tile, .flip-card, .pharm-tile, .myth-card, .product-card, .team-hero, .team-member'
-).forEach(el => observer.observe(el));
+document.querySelectorAll(ANIM_SELECTOR).forEach(el => observer.observe(el));
+
+/* ------------------------------------------------------------
+   FIX: When the user returns via browser back-button (bfcache),
+   IntersectionObserver may not re-fire for already-visible
+   elements, leaving sections (history/timeline, 3D model, etc.)
+   stuck in the hidden/glitched state. Force-reveal everything
+   currently in (or above) the viewport on pageshow / popstate.
+   ------------------------------------------------------------ */
+function forceRevealVisible() {
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+  document.querySelectorAll(ANIM_SELECTOR).forEach(el => {
+    const r = el.getBoundingClientRect();
+    // already passed or currently in viewport
+    if (r.top < vh + 80) el.classList.add('in-view');
+  });
+  // Also reset any flipped cards that may have been left flipped
+  document.querySelectorAll('.flip-inner.flipped, .pharm-inner.flipped, .myth-inner.flipped, .chem-inner.flipped')
+    .forEach(inner => inner.classList.remove('flipped'));
+}
+window.addEventListener('pageshow', (e) => {
+  // e.persisted === true means restored from bfcache
+  forceRevealVisible();
+});
+window.addEventListener('popstate', forceRevealVisible);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') forceRevealVisible();
+});
 
 /* ============================================================
    360° PRODUCT VIEWER
