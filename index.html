@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Withania Somnifera | Ashwagandha — Quaid-e-Azam College of Pharmacy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 
 <style>
@@ -16,8 +16,12 @@
   --maroon-deep: #5A1414;
   --maroon-light: #A23B3B;
   --green: #2E7D32;
+  --green-deep: #1B5E20;
   --green-soft: #4CAF50;
   --green-light: #E8F5E9;
+  --green-classic-1: #0F4C2A;
+  --green-classic-2: #1F6E3D;
+  --green-classic-3: #2E8B4A;
   --cream: #FBF6EC;
   --beige: #F4E9D6;
   --card: #FFFFFF;
@@ -40,87 +44,228 @@ html, body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-.container { max-width: 480px; margin: 0 auto; background: var(--cream); position: relative; }
-
-/* ===================== TOP NAV ===================== */
-.top-nav {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px;
-  background: rgba(255,255,255,0.90);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  position: sticky; top: 0; z-index: 50;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+.page-wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  background: var(--cream);
+  position: relative;
+  box-shadow: 0 0 60px rgba(0,0,0,0.06);
+  min-height: 100vh;
 }
-.brand { display: flex; align-items: center; gap: 8px; }
-.brand img { width: 32px; height: 32px; object-fit: contain; }
-.brand-text .title { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--maroon); font-size: 13px; }
-.brand-text .sub { font-size: 9px; color: var(--muted); letter-spacing: .4px; }
-.uni { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-.uni .uni-text { text-align: right; line-height: 1.05; }
-.uni .uni-text .l1 { font-size: 8px; color: var(--muted); letter-spacing: 1px; font-weight: 600; }
-.uni .uni-text .l2 { font-size: 10px; color: var(--maroon); font-weight: 700; }
-.uni img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
 
-/* ===================== HERO ===================== */
-.hero { position: relative; height: 300px; overflow: hidden; }
+/* ===================== HEADER (initial: full-width flat, on scroll: floating sticky pill) ===================== */
+.header-spacer { height: 0; transition: height .35s ease; }
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  margin: 0;
+  padding: 14px 22px;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-radius: 0;
+  transition:
+    margin .4s cubic-bezier(.2,.8,.2,1),
+    padding .4s cubic-bezier(.2,.8,.2,1),
+    border-radius .4s cubic-bezier(.2,.8,.2,1),
+    box-shadow .4s ease,
+    background .35s ease,
+    top .4s ease;
+}
+.top-nav.is-stuck {
+  top: 10px;
+  margin: 10px 12px 0;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border-bottom-color: transparent;
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.05);
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand .logo {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg,#fff,#f3eed7);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 0 0 2px var(--gold), 0 4px 10px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+  font-family: 'Playfair Display', serif;
+  font-weight: 800; color: var(--maroon); font-size: 14px;
+  overflow: hidden;
+}
+.brand .logo img { width: 100%; height: 100%; object-fit: cover; }
+.brand-text { line-height: 1.05; min-width: 0; }
+.brand-text .title { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--maroon); font-size: 13.5px; letter-spacing: .3px; white-space: nowrap; }
+.brand-text .sub   { font-size: 9.5px; color: var(--muted); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; }
+
+.uni { display: flex; align-items: center; gap: 8px; }
+.uni-text { text-align: right; line-height: 1.05; }
+.uni-text .l1 { font-size: 8.5px; color: var(--muted); letter-spacing: 1.4px; font-weight: 600; }
+.uni-text .l2 { font-size: 11px; color: var(--maroon); font-weight: 800; letter-spacing: .6px; }
+.uni .logo {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg,#fff,#e9f3eb);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 0 0 2px var(--green), 0 4px 10px rgba(0,0,0,0.08);
+  font-family: 'Playfair Display', serif; font-weight: 800; color: var(--green-deep); font-size: 13px;
+  overflow: hidden;
+}
+.uni .logo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ===================== HERO BANNER (Pharmacognostic) ===================== */
+.hero {
+  position: relative;
+  min-height: 460px;
+  overflow: hidden;
+  isolation: isolate;
+}
 .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; }
 .hero-overlay {
   position: absolute; inset: 0; z-index: 1;
-  background: linear-gradient(155deg, rgba(40,15,5,0.72) 0%, rgba(20,50,15,0.55) 60%, rgba(30,60,20,0.4) 100%);
+  background:
+    linear-gradient(120deg, rgba(10,30,15,0.78) 0%, rgba(15,55,25,0.55) 45%, rgba(20,70,30,0.30) 100%),
+    radial-gradient(120% 80% at 0% 0%, rgba(0,0,0,0.55), transparent 60%);
 }
-.hero-content { position: relative; z-index: 2; padding: 44px 22px 28px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
-.hero h1 {
-  font-family: 'Playfair Display', serif; color: #FFFDF6;
-  font-size: 33px; line-height: 1.0; font-weight: 800; letter-spacing: 1px;
-  text-shadow: 0 3px 14px rgba(0,0,0,0.45);
+.hero-content {
+  position: relative; z-index: 2;
+  padding: 70px 32px 64px;
+  max-width: 720px;
+  display: flex; flex-direction: column; gap: 16px;
 }
-.hero h1 .italic { font-style: italic; display: block; color: #E8D5A3; letter-spacing: 2px; }
-.hero .tagline { margin-top: 8px; font-size: 12.5px; color: rgba(255,255,255,0.88); font-weight: 500; text-shadow: 0 1px 6px rgba(0,0,0,0.3); }
-.hero .desc { margin-top: 8px; font-size: 11.5px; color: rgba(255,255,255,0.70); max-width: 82%; line-height: 1.55; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  align-self: flex-start;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 3px;
+  color: #F5E6C0;
+  text-transform: uppercase;
+  padding: 6px 14px; border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.22);
+  backdrop-filter: blur(6px);
+}
+.hero-eyebrow i { color: var(--gold); font-size: 10px; }
 
-/* ===================== TABS ===================== */
-.tabs { margin: 16px 16px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.tab {
-  background: var(--card); border-radius: var(--radius); padding: 14px 6px 11px;
-  text-align: center; box-shadow: var(--shadow-sm); cursor: pointer;
-  transition: transform .15s ease, box-shadow .2s ease;
-  border: 1.5px solid transparent; user-select: none;
+.hero-title {
+  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  line-height: .95;
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+  text-shadow: 0 4px 22px rgba(0,0,0,0.35);
 }
-.tab:active { transform: scale(0.96); }
-.tab.active { border-color: var(--green); box-shadow: 0 0 0 3px rgba(46,125,50,0.12), var(--shadow); }
-.tab .icon-circle { width: 38px; height: 38px; margin: 0 auto 6px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
-.tab .label { font-size: 11.5px; font-weight: 600; color: var(--text); }
-.tab.t-overview .icon-circle { background: #E8F5E9; color: var(--green); }
-.tab.t-uses .icon-circle     { background: #F3E8F7; color: #7B3FA8; }
-.tab.t-actions .icon-circle  { background: #FDECEC; color: var(--maroon); }
+.hero-title .withania {
+  display: block;
+  font-size: clamp(46px, 8vw, 92px);
+  font-weight: 700;
+  font-style: normal;
+  background: linear-gradient(135deg, #A8E6A3 0%, #4CAF50 35%, #2E7D32 65%, #1B5E20 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+  letter-spacing: 3px;
+}
+.hero-title .somnifera {
+  display: block;
+  font-size: clamp(50px, 8.6vw, 100px);
+  font-weight: 700;
+  font-style: italic;
+  background: linear-gradient(135deg, #FFD2B8 0%, #E96E5A 30%, #C03A2E 60%, #7B1E1E 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  letter-spacing: 4px;
+  margin-top: 2px;
+}
+.hero-rule {
+  width: 90px; height: 3px; border-radius: 3px; margin-top: 6px;
+  background: linear-gradient(to right, var(--gold), transparent);
+}
+.hero-tagline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(15px, 1.8vw, 19px);
+  font-style: italic;
+  color: #F8EFD8;
+  font-weight: 500;
+  letter-spacing: .3px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+}
+.hero-desc {
+  font-size: clamp(12.5px, 1.4vw, 14.5px);
+  color: rgba(255,255,255,0.82);
+  max-width: 560px;
+  line-height: 1.6;
+}
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;
+}
+.hero-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .8px;
+  color: #fff; padding: 5px 11px; border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.20);
+  backdrop-filter: blur(6px);
+}
+.hero-chip i { font-size: 10px; color: var(--gold-light); }
+
+/* ===================== SECTION TITLE ===================== */
+.section-title-block { text-align: center; margin: 36px 16px 18px; }
+.section-eyebrow {
+  display: inline-block;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 2.5px;
+  color: var(--green-deep); text-transform: uppercase;
+  background: var(--green-light); padding: 5px 14px; border-radius: 999px;
+  margin-bottom: 8px;
+}
+.section-title-h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 700; color: var(--text);
+  letter-spacing: .3px;
+}
+.section-rule {
+  width: 64px; height: 3px; margin: 8px auto 0;
+  background: linear-gradient(to right, var(--gold), var(--green));
+  border-radius: 3px;
+}
+.section-title { font-size: 11.5px; font-weight: 800; letter-spacing: 2px; color: var(--text); margin-bottom: 16px; text-transform: uppercase; text-align:center; }
 
 /* ===================== CARD BASE ===================== */
 .card { background: var(--card); margin: 16px; border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; }
-.card-header { display: flex; align-items: center; gap: 10px; padding: 15px 18px; border-bottom: 1px solid #F1ECE0; }
-.card-header .ic { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: var(--green-light); color: var(--green); font-size: 14px; }
-.card-header h2 { font-size: 12px; font-weight: 700; letter-spacing: 1.2px; color: var(--text); text-transform: uppercase; flex: 1; }
-.card-body { padding: 18px; }
+.card-header { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid #F1ECE0; }
+.card-header .ic { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: var(--green-light); color: var(--green); font-size: 15px; }
+.card-header h2 { font-size: 12.5px; font-weight: 800; letter-spacing: 1.4px; color: var(--text); text-transform: uppercase; flex: 1; }
+.card-body { padding: 20px; }
 
-/* ===================== BOTANICAL PROFILE ===================== */
-.profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+/* ===================== BOTANICAL PROFILE — single column tiles ===================== */
+.profile-stack { display: flex; flex-direction: column; gap: 12px; }
 .profile-item {
-  background: var(--cream); border-radius: 12px; padding: 12px;
-  border-left: 3px solid var(--green-soft);
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--cream) 100%);
+  border-radius: 14px; padding: 14px 16px;
+  border-left: 4px solid var(--green-soft);
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: var(--shadow-sm);
   opacity: 0; transform: translateY(14px);
   transition: opacity 0.45s ease, transform 0.45s ease;
 }
 .profile-item.in-view { opacity: 1; transform: none; }
-.profile-item .pk { font-size: 9.5px; font-weight: 700; color: var(--maroon); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
-.profile-item .pv { font-size: 12px; color: var(--text); font-weight: 500; }
+.profile-item .pi-ic {
+  width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--green-light); color: var(--green-deep); font-size: 16px;
+}
+.profile-item .pi-text { flex: 1; min-width: 0; }
+.profile-item .pk { font-size: 9.5px; font-weight: 800; color: var(--maroon); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+.profile-item .pv { font-size: 13px; color: var(--text); font-weight: 500; }
 .profile-item .pv em { font-style: italic; }
-.profile-item.wide { grid-column: span 2; border-left-color: var(--gold); }
+.profile-item.gold-accent { border-left-color: var(--gold); }
+.profile-item.gold-accent .pi-ic { background: var(--gold-light); color: #A87520; }
 
-/* ===================== HISTORICAL TIMELINE — ZIGZAG CENTER LINE ===================== */
+/* ===================== ZIGZAG TIMELINE ===================== */
 .timeline-section { margin: 22px 16px; }
-.section-title { font-size: 12px; font-weight: 700; letter-spacing: 1.4px; color: var(--text); margin-bottom: 18px; text-transform: uppercase; }
-
-.zig-timeline { position: relative; padding: 8px 0 4px; }
+.zig-timeline { position: relative; padding: 8px 0 4px; max-width: 760px; margin: 0 auto; }
 .zig-timeline::before {
   content: ""; position: absolute;
   left: 50%; top: 0; bottom: 0;
@@ -129,35 +274,15 @@ html, body {
   border-radius: 3px;
   box-shadow: 0 0 12px rgba(123,30,30,0.18);
 }
-.zig-item {
-  position: relative; width: 100%;
-  display: flex; margin-bottom: 26px;
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
+.zig-item { position: relative; width: 100%; display: flex; margin-bottom: 26px; opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .zig-item.in-view { opacity: 1; transform: none; }
 .zig-item.left  { justify-content: flex-start; }
 .zig-item.right { justify-content: flex-end; }
-
-.zig-dot {
-  position: absolute; left: 50%; top: 16px;
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--maroon); border: 3px solid #fff;
-  box-shadow: 0 0 0 3px var(--maroon), 0 0 14px rgba(123,30,30,0.4);
-  transform: translateX(-50%); z-index: 2;
-}
+.zig-dot { position: absolute; left: 50%; top: 16px; width: 18px; height: 18px; border-radius: 50%; background: var(--maroon); border: 3px solid #fff; box-shadow: 0 0 0 3px var(--maroon), 0 0 14px rgba(123,30,30,0.4); transform: translateX(-50%); z-index: 2; }
 .zig-item.c-amber .zig-dot { background: #B45309; box-shadow: 0 0 0 3px #B45309, 0 0 14px rgba(180,83,9,0.4); }
 .zig-item.c-gold  .zig-dot { background: var(--gold); box-shadow: 0 0 0 3px var(--gold), 0 0 14px rgba(201,149,42,0.4); }
 .zig-item.c-green .zig-dot { background: var(--green); box-shadow: 0 0 0 3px var(--green), 0 0 14px rgba(46,125,50,0.4); }
-
-.zig-card {
-  width: calc(50% - 22px);
-  background: var(--card);
-  border-radius: 14px; padding: 12px 14px;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  border: 1px solid rgba(0,0,0,0.04);
-}
+.zig-card { width: calc(50% - 22px); background: var(--card); border-radius: 14px; padding: 12px 14px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.04); }
 .zig-item.left .zig-card  { border-left: 3px solid var(--maroon); }
 .zig-item.right .zig-card { border-right: 3px solid var(--maroon); }
 .zig-item.c-amber.left .zig-card  { border-left-color: #B45309; }
@@ -166,62 +291,76 @@ html, body {
 .zig-item.c-gold.right .zig-card  { border-right-color: var(--gold); }
 .zig-item.c-green.left .zig-card  { border-left-color: var(--green); }
 .zig-item.c-green.right .zig-card { border-right-color: var(--green); }
-
-/* connector arrow from line to card */
-.zig-card::after {
-  content: ""; position: absolute; top: 18px;
-  width: 14px; height: 2px; background: rgba(0,0,0,0.1);
-}
+.zig-card::after { content: ""; position: absolute; top: 18px; width: 14px; height: 2px; background: rgba(0,0,0,0.1); }
 .zig-item.left  .zig-card::after { right: -14px; }
 .zig-item.right .zig-card::after { left: -14px; }
-
 .zig-year { font-size: 10px; font-weight: 800; color: var(--maroon); letter-spacing: .6px; margin-bottom: 4px; text-transform: uppercase; }
 .zig-item.c-amber .zig-year { color: #B45309; }
 .zig-item.c-gold  .zig-year { color: #A87520; }
 .zig-item.c-green .zig-year { color: var(--green); }
-.zig-head { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px; line-height: 1.25; }
-.zig-body { font-size: 10.5px; color: var(--muted); line-height: 1.5; }
+.zig-head { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; line-height: 1.25; }
+.zig-body { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
 .zig-body em { font-style: italic; }
 .zig-body strong { color: var(--text); }
 
-/* ===================== CHEMICAL CONSTITUENTS ===================== */
-.chemical .card-header .ic { background: var(--green-light); color: var(--green); }
-.chem-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+/* ===================== CHEMICAL CONSTITUENTS — single column ===================== */
+.chem-stack { display: flex; flex-direction: column; gap: 14px; }
 .chem-tile {
-  background: var(--cream); border-radius: 14px; padding: 14px 12px;
-  border: 1.5px solid transparent; position: relative;
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--cream) 100%);
+  border-radius: 16px; padding: 16px 18px;
+  border: 1.5px solid rgba(0,0,0,0.05);
+  position: relative; overflow: hidden;
+  box-shadow: var(--shadow-sm);
   opacity: 0; transform: translateY(14px);
-  transition: opacity 0.4s ease, transform 0.4s ease, border-color .2s;
+  transition: opacity 0.45s ease, transform 0.45s ease, box-shadow .25s, border-color .25s;
 }
 .chem-tile.in-view { opacity: 1; transform: none; }
-.chem-tile:nth-child(2) { transition-delay: 0.1s; }
-.chem-tile:nth-child(3) { transition-delay: 0.15s; }
-.chem-tile:nth-child(4) { transition-delay: 0.2s; }
-.chem-tile:hover { border-color: var(--green-soft); }
-.chem-tile-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-.chem-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.chem-term { font-size: 12.5px; font-weight: 700; color: var(--text); flex: 1; }
-.info-btn { background: none; border: none; cursor: pointer; padding: 2px 4px; color: var(--green); font-size: 14px; line-height: 1; transition: transform .15s; }
+.chem-tile:hover { box-shadow: var(--shadow); border-color: rgba(46,125,50,0.25); }
+.chem-tile::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+}
+.chem-tile.ct-1::before { background: linear-gradient(to bottom, #4CAF50, #1B5E20); }
+.chem-tile.ct-2::before { background: linear-gradient(to bottom, #C9952A, #8B6914); }
+.chem-tile.ct-3::before { background: linear-gradient(to bottom, #2563EB, #1E3A8A); }
+.chem-tile.ct-4::before { background: linear-gradient(to bottom, #7B3FA8, #4A1A6E); }
+
+.chem-tile-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.chem-ic {
+  width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.chem-tile.ct-1 .chem-ic { background: #E8F5E9; color: #1B5E20; }
+.chem-tile.ct-2 .chem-ic { background: var(--gold-light); color: #8B6914; }
+.chem-tile.ct-3 .chem-ic { background: #DBEAFE; color: #1E3A8A; }
+.chem-tile.ct-4 .chem-ic { background: #F3E8F7; color: #5B2C8A; }
+.chem-term { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--text); flex: 1; }
+.chem-badge {
+  font-size: 8.5px; font-weight: 800; letter-spacing: 1px;
+  padding: 3px 9px; border-radius: 999px; text-transform: uppercase; color: #fff;
+}
+.chem-tile.ct-1 .chem-badge { background: #2E7D32; }
+.chem-tile.ct-2 .chem-badge { background: #C9952A; }
+.chem-tile.ct-3 .chem-badge { background: #2563EB; }
+.chem-tile.ct-4 .chem-badge { background: #7B3FA8; }
+.info-btn { background: none; border: none; cursor: pointer; padding: 4px 6px; color: var(--green); font-size: 14px; line-height: 1; transition: transform .15s; }
 .info-btn:active { transform: scale(0.9); }
-.chem-compounds { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
-.chem-tag { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; background: #fff; border: 1px solid rgba(0,0,0,0.08); color: var(--text); }
-.chem-action { font-size: 10.5px; color: var(--muted); line-height: 1.4; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 7px; margin-top: 4px; }
-.chem-tile.ct-1 .chem-dot { background: #4CAF50; } .chem-tile.ct-1 { border-left: 3px solid #4CAF50; }
-.chem-tile.ct-2 .chem-dot { background: #7B3FA8; } .chem-tile.ct-2 { border-left: 3px solid #7B3FA8; }
-.chem-tile.ct-3 .chem-dot { background: #2563EB; } .chem-tile.ct-3 { border-left: 3px solid #2563EB; }
-.chem-tile.ct-4 .chem-dot { background: var(--gold); } .chem-tile.ct-4 { border-left: 3px solid var(--gold); }
-.chem-footnote { margin-top: 12px; font-size: 11px; color: var(--muted); background: var(--green-light); padding: 8px 12px; border-radius: 10px; border-left: 3px solid var(--green); }
+.chem-compounds { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.chem-tag { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #fff; border: 1px solid rgba(0,0,0,0.10); color: var(--text); }
+.chem-action { font-size: 11.5px; color: var(--muted); line-height: 1.5; border-top: 1px dashed rgba(0,0,0,0.08); padding-top: 9px; }
+.chem-footnote { margin-top: 14px; font-size: 11.5px; color: var(--muted); background: var(--green-light); padding: 10px 14px; border-radius: 12px; border-left: 3px solid var(--green); }
+.chem-footnote i { color: var(--gold); margin-right: 4px; }
 
 /* ===================== INFO MODAL ===================== */
 .info-modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.5); align-items: flex-end; justify-content: center; }
 .info-modal-overlay.open { display: flex; }
-.info-modal { background: var(--card); border-radius: 22px 22px 0 0; padding: 24px 20px 34px; width: 100%; max-width: 480px; box-shadow: 0 -4px 24px rgba(0,0,0,0.15); animation: slideUp 0.3s ease; }
+.info-modal { background: var(--card); border-radius: 22px 22px 0 0; padding: 24px 22px 34px; width: 100%; max-width: 540px; box-shadow: 0 -4px 24px rgba(0,0,0,0.15); animation: slideUp 0.3s ease; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.info-modal-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--maroon); margin-bottom: 10px; font-weight: 700; }
-.info-modal-text { font-size: 13px; color: var(--text); line-height: 1.65; }
-.info-modal-close { margin-top: 18px; width: 100%; background: var(--maroon); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; }
+.info-modal-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--maroon); margin-bottom: 10px; font-weight: 700; }
+.info-modal-text { font-size: 13.5px; color: var(--text); line-height: 1.65; }
+.info-modal-close { margin-top: 18px; width: 100%; background: var(--maroon); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; letter-spacing: .5px; }
 
-/* ===================== 3D MODEL ===================== */
+/* ===================== 3D MODEL — minimalist (no overlay) ===================== */
 .model-section { margin: 16px; }
 .model-link-card {
   display: block; text-decoration: none;
@@ -232,52 +371,43 @@ html, body {
 .model-link-card:active { transform: scale(0.98); box-shadow: var(--shadow-lg); }
 .model-img-wrap { position: relative; aspect-ratio: 16/9; overflow: hidden; background: linear-gradient(135deg, #1B5E20, #0E3F11); }
 .model-img-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
-.model-img-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(46,125,50,0.55) 0%, rgba(30,10,5,0.45) 100%);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+.model-360-chip {
+  position: absolute; top: 12px; right: 12px;
+  background: linear-gradient(135deg, var(--gold) 0%, #A87520 100%);
+  color: #fff;
+  padding: 6px 12px; border-radius: 999px;
+  font-size: 10px; font-weight: 800; letter-spacing: 1.4px;
+  box-shadow: 0 4px 14px rgba(201,149,42,0.45);
+  display: inline-flex; align-items: center; gap: 6px;
+  z-index: 2;
 }
-.model-play-btn {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: rgba(255,255,255,0.92);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; color: var(--maroon);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-  animation: pulseGlow 2.4s ease-in-out infinite;
-}
-@keyframes pulseGlow {
-  0%,100% { box-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 0 0 0 rgba(255,255,255,0.6); }
-  50%     { box-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 0 0 16px rgba(255,255,255,0); }
-}
-.model-cta-text { font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,0.4); letter-spacing: .5px; }
-.model-badge { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); backdrop-filter: blur(6px); border-radius: 20px; padding: 4px 10px; font-size: 10px; font-weight: 700; color: var(--maroon); letter-spacing: .5px; }
-.model-link-row { padding: 10px 16px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); font-weight: 600; }
-.model-link-row i { color: var(--green); font-size: 11px; }
+.model-360-chip i { font-size: 10px; }
+.model-link-row { padding: 12px 18px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); font-weight: 600; }
+.model-link-row .label { color: var(--text); font-weight: 700; }
+.model-link-row .arrow { margin-left: auto; color: var(--green); }
 
-/* ===================== PHARMACOLOGICAL ACTIONS — 16:9 BEAUTIFUL TILES ===================== */
+/* ===================== PHARMACOLOGICAL ACTIONS — single column premium green tiles ===================== */
 .pharm-section { margin: 22px 16px; }
-.pharm-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
+.pharm-stack { display: flex; flex-direction: column; gap: 14px; max-width: 760px; margin: 0 auto; }
 .pharm-tile {
-  position: relative; aspect-ratio: 16/9;
-  border-radius: 16px; overflow: hidden;
+  position: relative;
+  border-radius: 18px; overflow: hidden;
   box-shadow: var(--shadow);
-  cursor: pointer; perspective: 1000px;
-  opacity: 0; transform: translateY(16px);
+  cursor: pointer; perspective: 1400px;
+  opacity: 0; transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
+  height: 130px;
 }
 .pharm-tile.in-view { opacity: 1; transform: none; }
-.pharm-tile:nth-child(2) { transition-delay: 0.08s; }
-.pharm-tile:nth-child(3) { transition-delay: 0.16s; }
-.pharm-tile:nth-child(4) { transition-delay: 0.24s; }
-.pharm-tile:nth-child(5) { transition-delay: 0.32s; }
-.pharm-tile:nth-child(6) { transition-delay: 0.40s; }
+.pharm-tile:nth-child(2) { transition-delay: 0.06s; }
+.pharm-tile:nth-child(3) { transition-delay: 0.12s; }
+.pharm-tile:nth-child(4) { transition-delay: 0.18s; }
+.pharm-tile:nth-child(5) { transition-delay: 0.24s; }
+.pharm-tile:nth-child(6) { transition-delay: 0.30s; }
 
 .pharm-inner {
   position: relative; width: 100%; height: 100%;
-  transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
+  transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
   transform-style: preserve-3d;
 }
 .pharm-inner.flipped { transform: rotateY(180deg); }
@@ -285,163 +415,158 @@ html, body {
 .pharm-front, .pharm-back {
   position: absolute; inset: 0;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border-radius: 18px;
   display: flex; align-items: center;
-  padding: 12px 14px; gap: 12px;
-  border-radius: 16px;
+  padding: 18px 22px; gap: 18px;
 }
 
-/* FRONT - gradient background with icon + title */
+/* Premium classical green gradient — different angles to keep variety */
 .pharm-front {
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.16), transparent 55%),
+    linear-gradient(135deg, #0F4C2A 0%, #1F6E3D 50%, #2E8B4A 100%);
   overflow: hidden;
 }
 .pharm-front::before {
   content: ""; position: absolute;
-  top: -30%; right: -20%; width: 130px; height: 130px;
-  border-radius: 50%; opacity: 0.18;
+  top: -50%; right: -10%; width: 220px; height: 220px;
+  border-radius: 50%; opacity: 0.10;
   background: radial-gradient(circle, #fff 0%, transparent 70%);
 }
 .pharm-front::after {
   content: ""; position: absolute;
-  bottom: -40%; left: -15%; width: 100px; height: 100px;
-  border-radius: 50%; opacity: 0.12;
+  bottom: -40%; left: -10%; width: 180px; height: 180px;
+  border-radius: 50%; opacity: 0.08;
   background: radial-gradient(circle, #fff 0%, transparent 70%);
 }
+.pharm-tile.pt-2 .pharm-front { background: radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.16), transparent 55%), linear-gradient(135deg, #0E3F2A 0%, #1B5E20 50%, #2E7D32 100%); }
+.pharm-tile.pt-3 .pharm-front { background: radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.16), transparent 55%), linear-gradient(135deg, #0F4C2A 0%, #16793F 55%, #2EA055 100%); }
+.pharm-tile.pt-4 .pharm-front { background: radial-gradient(120% 90% at 100% 0%, rgba(255,255,255,0.16), transparent 55%), linear-gradient(135deg, #103A26 0%, #1F6E3D 50%, #3D9C5A 100%); }
+.pharm-tile.pt-5 .pharm-front { background: radial-gradient(120% 90% at 0% 100%, rgba(255,255,255,0.18), transparent 55%), linear-gradient(135deg, #0C3E22 0%, #195C30 55%, #2D8244 100%); }
+.pharm-tile.pt-6 .pharm-front { background: radial-gradient(120% 90% at 100% 100%, rgba(255,255,255,0.16), transparent 55%), linear-gradient(135deg, #103823 0%, #1B6936 50%, #309251 100%); }
+
 .pharm-icon-box {
-  width: 46px; height: 46px; border-radius: 12px;
-  background: rgba(255,255,255,0.22);
+  width: 64px; height: 64px; border-radius: 16px;
+  background: rgba(255,255,255,0.18);
   backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px; color: #fff;
+  font-size: 26px; color: #fff;
   flex-shrink: 0; z-index: 2;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.30), 0 4px 14px rgba(0,0,0,0.15);
 }
 .pharm-title-wrap { flex: 1; z-index: 2; min-width: 0; }
 .pharm-title {
-  font-size: 12.5px; font-weight: 800; color: #fff;
-  line-height: 1.2; letter-spacing: .2px;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700; color: #fff;
+  line-height: 1.2; letter-spacing: .3px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  margin-bottom: 4px;
 }
 .pharm-tap-hint {
-  font-size: 9px; color: rgba(255,255,255,0.85);
-  margin-top: 4px; font-weight: 500;
-  display: flex; align-items: center; gap: 3px;
+  font-size: 10.5px; color: rgba(255,255,255,0.85);
+  font-weight: 500; letter-spacing: .5px;
+  display: flex; align-items: center; gap: 5px;
 }
-.pharm-tap-hint i { font-size: 8px; }
-
-/* Tile gradient themes */
-.pharm-tile.pt-1 .pharm-front { background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%); }
-.pharm-tile.pt-2 .pharm-front { background: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%); }
-.pharm-tile.pt-3 .pharm-front { background: linear-gradient(135deg, #14B8A6 0%, #0F766E 100%); }
-.pharm-tile.pt-4 .pharm-front { background: linear-gradient(135deg, #7B3FA8 0%, #5B2C8A 100%); }
-.pharm-tile.pt-5 .pharm-front { background: linear-gradient(135deg, #DC2626 0%, #7B1E1E 100%); }
-.pharm-tile.pt-6 .pharm-front { background: linear-gradient(135deg, #F59E0B 0%, #B45309 100%); }
+.pharm-tap-hint i { font-size: 9px; color: var(--gold-light); }
 
 /* BACK */
 .pharm-back {
   transform: rotateY(180deg);
-  background: #fff;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F4F9F5 100%);
   flex-direction: column; align-items: flex-start; justify-content: center;
-  padding: 12px 14px;
-  border: 2px solid;
-}
-.pharm-tile.pt-1 .pharm-back { border-color: #2E7D32; }
-.pharm-tile.pt-2 .pharm-back { border-color: #2563EB; }
-.pharm-tile.pt-3 .pharm-back { border-color: #14B8A6; }
-.pharm-tile.pt-4 .pharm-back { border-color: #7B3FA8; }
-.pharm-tile.pt-5 .pharm-back { border-color: #DC2626; }
-.pharm-tile.pt-6 .pharm-back { border-color: #F59E0B; }
-
-.pharm-back-text {
-  font-size: 9.8px; color: var(--text);
-  line-height: 1.45; font-weight: 500;
+  padding: 16px 22px;
+  border: 2px solid var(--green-soft);
 }
 .pharm-back-tag {
-  font-size: 8.5px; font-weight: 800; letter-spacing: 1px;
-  padding: 2px 7px; border-radius: 10px; color: #fff;
-  margin-bottom: 6px; text-transform: uppercase;
-  align-self: flex-start;
+  font-size: 9px; font-weight: 800; letter-spacing: 1.4px;
+  padding: 3px 10px; border-radius: 999px; color: #fff;
+  margin-bottom: 8px; text-transform: uppercase;
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-deep) 100%);
 }
-.pharm-tile.pt-1 .pharm-back-tag { background: #2E7D32; }
-.pharm-tile.pt-2 .pharm-back-tag { background: #2563EB; }
-.pharm-tile.pt-3 .pharm-back-tag { background: #14B8A6; }
-.pharm-tile.pt-4 .pharm-back-tag { background: #7B3FA8; }
-.pharm-tile.pt-5 .pharm-back-tag { background: #DC2626; }
-.pharm-tile.pt-6 .pharm-back-tag { background: #F59E0B; }
+.pharm-back-text { font-size: 12px; color: var(--text); line-height: 1.55; font-weight: 500; }
 
-/* ===================== TRADITIONAL USES (FLIP CARDS) ===================== */
+/* ===================== TRADITIONAL USES — single column flip ===================== */
 .trad-section { margin: 22px 16px; }
-.trad-grid-flip { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.trad-stack { display: flex; flex-direction: column; gap: 12px; max-width: 760px; margin: 0 auto; }
 .flip-card {
-  perspective: 900px; cursor: pointer;
+  perspective: 1200px; cursor: pointer;
   opacity: 0; transform: translateY(14px);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 .flip-card.in-view { opacity: 1; transform: none; }
-.flip-card:nth-child(2) { transition-delay: 0.08s; }
-.flip-card:nth-child(3) { transition-delay: 0.16s; }
-.flip-card:nth-child(4) { transition-delay: 0.24s; }
-.flip-card:nth-child(5) { transition-delay: 0.32s; }
+.flip-card:nth-child(2) { transition-delay: 0.06s; }
+.flip-card:nth-child(3) { transition-delay: 0.12s; }
+.flip-card:nth-child(4) { transition-delay: 0.18s; }
+.flip-card:nth-child(5) { transition-delay: 0.24s; }
 .flip-inner {
-  position: relative; width: 100%; height: 130px;
-  transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+  position: relative; width: 100%; height: 110px;
+  transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
   transform-style: preserve-3d;
 }
 .flip-inner.flipped { transform: rotateY(180deg); }
 .flip-front, .flip-back {
-  position: absolute; inset: 0; border-radius: 14px;
+  position: absolute; inset: 0; border-radius: 16px;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 10px 8px; text-align: center; box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; box-shadow: var(--shadow-sm);
 }
 .flip-back { transform: rotateY(180deg); }
-.flip-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff; margin-bottom: 7px; }
-.flip-label { font-size: 10.5px; font-weight: 600; color: var(--text); line-height: 1.25; }
-.flip-back-text { font-size: 10px; color: #fff; line-height: 1.45; }
-.flip-hint { font-size: 8.5px; color: rgba(255,255,255,0.7); position: absolute; bottom: 7px; }
-.flip-tap { font-size: 8px; color: var(--muted); margin-top: 4px; }
-
-.flip-inner.trad-h { height: 120px; }
-.flip-front.tf-1 { background: #E0F2FE; }
-.flip-front.tf-2 { background: #FEE2E2; }
-.flip-front.tf-3 { background: #FEF3C7; }
-.flip-front.tf-4 { background: #FCE7F3; }
-.flip-front.tf-5 { background: #E8F5E9; }
-.flip-back.tb-1 { background: #0369A1; }
-.flip-back.tb-2 { background: #B91C1C; }
-.flip-back.tb-3 { background: #B45309; }
-.flip-back.tb-4 { background: #BE185D; }
-.flip-back.tb-5 { background: var(--green); }
-.trad-fifth { grid-column: span 2; }
-.flip-inner.trad-h.wide-h { height: 80px; }
-
-/* ===================== MISCONCEPTIONS — MYTH/FACT REVEAL STYLE ===================== */
-.misc-section { margin: 22px 16px; }
-.misc-section .section-title-row {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 6px;
+.flip-front {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAF8 100%);
+  border: 1.5px solid rgba(0,0,0,0.05);
 }
-.misc-section .section-title { margin: 0; }
+.flip-icon {
+  width: 56px; height: 56px; flex-shrink: 0; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: #fff;
+}
+.flip-title-wrap { flex: 1; min-width: 0; }
+.flip-label { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 4px; }
+.flip-tap { font-size: 10.5px; color: var(--muted); font-weight: 500; display: flex; align-items: center; gap: 5px; }
+.flip-tap i { font-size: 9px; color: var(--green-soft); }
+
+.flip-back {
+  flex-direction: column; align-items: flex-start; justify-content: center;
+  color: #fff;
+}
+.flip-back-text { font-size: 12.5px; color: #fff; line-height: 1.55; font-weight: 500; }
+.flip-back-hint { font-size: 10px; color: rgba(255,255,255,0.75); margin-top: 8px; font-style: italic; }
+
+.flip-card.tu-1 .flip-icon { background: linear-gradient(135deg, #1E40AF, #0369A1); }
+.flip-card.tu-1 .flip-back { background: linear-gradient(135deg, #1E40AF, #0369A1); }
+.flip-card.tu-2 .flip-icon { background: linear-gradient(135deg, #DC2626, #991B1B); }
+.flip-card.tu-2 .flip-back { background: linear-gradient(135deg, #DC2626, #991B1B); }
+.flip-card.tu-3 .flip-icon { background: linear-gradient(135deg, #D97706, #B45309); }
+.flip-card.tu-3 .flip-back { background: linear-gradient(135deg, #D97706, #B45309); }
+.flip-card.tu-4 .flip-icon { background: linear-gradient(135deg, #BE185D, #831843); }
+.flip-card.tu-4 .flip-back { background: linear-gradient(135deg, #BE185D, #831843); }
+.flip-card.tu-5 .flip-icon { background: linear-gradient(135deg, var(--green), var(--green-deep)); }
+.flip-card.tu-5 .flip-back { background: linear-gradient(135deg, var(--green), var(--green-deep)); }
+
+/* ===================== MISCONCEPTIONS — Myth/Reality with image icons ===================== */
+.misc-section { margin: 22px 16px; }
 .misc-hint {
-  font-size: 11px; color: #B45309; font-style: italic;
-  margin-bottom: 14px; display: flex; align-items: center; gap: 5px;
+  font-size: 11.5px; color: #B45309; font-style: italic;
+  margin-bottom: 16px; text-align:center;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
 .misc-hint i { color: var(--gold); }
 
-.myth-stack { display: flex; flex-direction: column; gap: 14px; }
+.myth-stack { display: flex; flex-direction: column; gap: 16px; max-width: 760px; margin: 0 auto; }
 
 .myth-card {
-  perspective: 1200px; cursor: pointer;
+  perspective: 1400px; cursor: pointer;
   opacity: 0; transform: translateY(16px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 .myth-card.in-view { opacity: 1; transform: none; }
-.myth-card:nth-child(2) { transition-delay: 0.1s; }
-.myth-card:nth-child(3) { transition-delay: 0.2s; }
-.myth-card:nth-child(4) { transition-delay: 0.3s; }
+.myth-card:nth-child(2) { transition-delay: 0.08s; }
+.myth-card:nth-child(3) { transition-delay: 0.16s; }
+.myth-card:nth-child(4) { transition-delay: 0.24s; }
 
 .myth-inner {
-  position: relative; width: 100%; min-height: 130px;
-  transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+  position: relative; width: 100%; min-height: 160px;
+  transition: transform 0.75s cubic-bezier(0.4,0,0.2,1);
   transform-style: preserve-3d;
 }
 .myth-inner.flipped { transform: rotateY(180deg); }
@@ -449,24 +574,32 @@ html, body {
 .myth-front, .myth-back {
   position: absolute; inset: 0;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  border-radius: 16px; padding: 16px 18px;
-  display: flex; flex-direction: column; justify-content: center; gap: 10px;
-  box-shadow: var(--shadow-sm);
-  min-height: 130px;
+  border-radius: 18px; padding: 18px 20px;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: var(--shadow);
+  min-height: 160px;
 }
 
-/* MYTH FRONT (yellow gradient like screenshot) */
+/* MYTH FRONT */
 .myth-front {
   background: linear-gradient(135deg, #FCE5A8 0%, #F5D27A 100%);
-  border: 1.5px solid rgba(201,149,42,0.35);
+  border: 1.5px solid rgba(201,149,42,0.4);
 }
-.myth-front-top {
+.myth-icon-img {
+  width: 84px; height: 84px; flex-shrink: 0; border-radius: 16px;
+  background: rgba(255,255,255,0.6); padding: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(255,255,255,0.6);
+  display: flex; align-items: center; justify-content: center;
+}
+.myth-icon-img img { width: 100%; height: 100%; object-fit: contain; }
+.myth-content { flex: 1; min-width: 0; }
+.myth-top {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 10px;
+  gap: 10px; margin-bottom: 8px;
 }
 .myth-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 12px; font-weight: 800;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11.5px; font-weight: 800;
   color: var(--text); letter-spacing: 2px;
 }
 .myth-tag .x-icon {
@@ -477,27 +610,31 @@ html, body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
 }
 .myth-reveal {
-  font-size: 10px; font-weight: 600; color: #B45309;
+  font-size: 9.5px; font-weight: 700; color: #B45309;
   font-style: italic; white-space: nowrap;
+  display: flex; align-items: center; gap: 4px;
 }
 .myth-text {
-  font-size: 14.5px; font-weight: 600;
-  color: #4A2A0A; line-height: 1.4;
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; font-weight: 600;
+  color: #4A2A0A; line-height: 1.35;
 }
 
-/* FACT BACK (green gradient) */
+/* FACT BACK */
 .myth-back {
   transform: rotateY(180deg);
   background: linear-gradient(135deg, #C8E6C9 0%, #81C784 100%);
   border: 1.5px solid rgba(46,125,50,0.4);
+  flex-direction: column; align-items: flex-start; justify-content: center;
+  padding: 18px 22px; gap: 8px;
 }
 .myth-back-top {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 10px;
+  gap: 10px; width: 100%;
 }
 .fact-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 12px; font-weight: 800;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11.5px; font-weight: 800;
   color: var(--text); letter-spacing: 2px;
 }
 .fact-tag .check-icon {
@@ -508,388 +645,135 @@ html, body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
 }
 .fact-back-hint {
-  font-size: 10px; font-weight: 600; color: #1B5E20;
+  font-size: 9.5px; font-weight: 700; color: #1B5E20;
   font-style: italic; white-space: nowrap;
 }
 .fact-text {
   font-size: 12.5px; color: #1B3A1C;
-  line-height: 1.5; font-weight: 500;
+  line-height: 1.55; font-weight: 500;
 }
 .fact-text strong { color: #1B5E20; font-weight: 700; }
 
-/* ===================== PRODUCT SECTION (3 PRODUCTS + 360 VIEWER) ===================== */
+/* ===================== PRODUCTS ===================== */
 .products-section { margin: 22px 16px; }
-.products-section .section-title { margin-bottom: 6px; }
-.products-hint {
-  font-size: 11px; color: var(--green); font-style: italic;
-  margin-bottom: 16px; display: flex; align-items: center; gap: 5px;
-}
+.products-hint { font-size: 11.5px; color: var(--green); font-style: italic; margin-bottom: 16px; text-align:center; display: flex; align-items: center; justify-content:center; gap: 5px; }
 .products-hint i { color: var(--green-soft); }
-
-.product-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 14px; margin-bottom: 16px;
-}
-.product-card {
-  background: #fff; border-radius: 18px;
-  padding: 12px 12px 14px;
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(0,0,0,0.04);
-  transition: transform .2s ease, box-shadow .2s ease;
-  opacity: 0; transform: translateY(14px);
-  animation-fill-mode: both;
-}
+.product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; max-width: 760px; margin-left: auto; margin-right: auto; }
+.product-card { background: #fff; border-radius: 18px; padding: 12px 12px 14px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform .2s ease, box-shadow .2s ease; opacity: 0; transform: translateY(14px); }
 .product-card.in-view { opacity: 1; transform: none; transition: opacity 0.5s ease, transform 0.5s ease; }
 .product-card:nth-child(2).in-view { transition-delay: 0.1s; }
 .product-card:active { transform: scale(0.97); box-shadow: var(--shadow-lg); }
-
-.product-frame {
-  position: relative; width: 100%; aspect-ratio: 4/3;
-  border-radius: 14px; overflow: hidden;
-  background: linear-gradient(135deg, #FBF6EC 0%, #F4E9D6 100%);
-  border: 1.5px solid rgba(201,149,42,0.25);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6),
-              0 4px 12px rgba(0,0,0,0.06);
-  margin-bottom: 10px;
-  display: flex; align-items: center; justify-content: center;
-}
-.product-frame img {
-  width: 100%; height: 100%;
-  object-fit: contain;
-  padding: 8px;
-  display: block;
-}
-.product-name {
-  font-size: 12.5px; font-weight: 700; color: var(--maroon);
-  text-align: center; line-height: 1.25;
-  font-family: 'Playfair Display', serif;
-}
-.product-sub {
-  font-size: 10px; color: var(--muted);
-  text-align: center; margin-top: 3px;
-}
-.product-badge {
-  position: absolute; top: 8px; right: 8px;
-  background: var(--green); color: #fff;
-  font-size: 8.5px; font-weight: 800;
-  padding: 3px 7px; border-radius: 10px;
-  letter-spacing: .5px;
-  box-shadow: 0 2px 6px rgba(46,125,50,0.4);
-}
+.product-frame { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 14px; overflow: hidden; background: linear-gradient(135deg, #FBF6EC 0%, #F4E9D6 100%); border: 1.5px solid rgba(201,149,42,0.25); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6), 0 4px 12px rgba(0,0,0,0.06); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; }
+.product-frame img { width: 100%; height: 100%; object-fit: contain; padding: 8px; display: block; }
+.product-name { font-size: 13px; font-weight: 700; color: var(--maroon); text-align: center; line-height: 1.25; font-family: 'Playfair Display', serif; }
+.product-sub { font-size: 10.5px; color: var(--muted); text-align: center; margin-top: 3px; }
+.product-badge { position: absolute; top: 8px; right: 8px; background: var(--green); color: #fff; font-size: 8.5px; font-weight: 800; padding: 3px 7px; border-radius: 10px; letter-spacing: .5px; box-shadow: 0 2px 6px rgba(46,125,50,0.4); }
 .product-badge.gold { background: linear-gradient(135deg, var(--gold), #A87520); }
 
-/* 360 VIEWER */
-.viewer-section {
-  margin-top: 4px;
-  background: linear-gradient(135deg, #1B1B1B 0%, #2B2B2B 100%);
-  border-radius: 20px; overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-}
-.viewer-header {
-  padding: 14px 16px 8px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.viewer-title {
-  font-size: 11px; font-weight: 800; color: #fff;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  display: flex; align-items: center; gap: 8px;
-}
+.viewer-section { margin-top: 4px; background: linear-gradient(135deg, #1B1B1B 0%, #2B2B2B 100%); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); position: relative; max-width: 760px; margin-left: auto; margin-right: auto; }
+.viewer-header { padding: 14px 16px 8px; display: flex; align-items: center; justify-content: space-between; }
+.viewer-title { font-size: 11px; font-weight: 800; color: #fff; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
 .viewer-title i { color: var(--gold); }
-.viewer-360-badge {
-  background: linear-gradient(135deg, var(--gold), #A87520);
-  color: #fff; font-size: 9px; font-weight: 800;
-  padding: 4px 9px; border-radius: 12px;
-  letter-spacing: 1px;
-  box-shadow: 0 2px 8px rgba(201,149,42,0.4);
-}
-.viewer-stage {
-  position: relative; width: 100%; aspect-ratio: 1/1;
-  background: radial-gradient(ellipse at center, #3A3A3A 0%, #1B1B1B 75%);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  cursor: grab;
-  user-select: none;
-  touch-action: pan-y;
-}
+.viewer-360-badge { background: linear-gradient(135deg, var(--gold), #A87520); color: #fff; font-size: 9px; font-weight: 800; padding: 4px 9px; border-radius: 12px; letter-spacing: 1px; box-shadow: 0 2px 8px rgba(201,149,42,0.4); }
+.viewer-stage { position: relative; width: 100%; aspect-ratio: 1/1; background: radial-gradient(ellipse at center, #3A3A3A 0%, #1B1B1B 75%); display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: grab; user-select: none; touch-action: pan-y; }
 .viewer-stage:active { cursor: grabbing; }
-.viewer-stage::before {
-  content: ""; position: absolute;
-  bottom: 12%; left: 50%; transform: translateX(-50%);
-  width: 60%; height: 16px;
-  background: radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, transparent 70%);
-  border-radius: 50%;
-  filter: blur(6px);
-}
-.viewer-stage img {
-  width: 78%; height: 78%;
-  object-fit: contain;
-  position: relative; z-index: 2;
-  transition: opacity 0.05s linear;
-  filter: drop-shadow(0 12px 18px rgba(0,0,0,0.45));
-  pointer-events: none;
-}
-.viewer-spin-icon {
-  position: absolute; top: 12px; right: 12px;
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; color: var(--gold);
-  border: 1px solid rgba(255,255,255,0.18);
-  animation: spin 4s linear infinite;
-  z-index: 3;
-}
+.viewer-stage::before { content: ""; position: absolute; bottom: 12%; left: 50%; transform: translateX(-50%); width: 60%; height: 16px; background: radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, transparent 70%); border-radius: 50%; filter: blur(6px); }
+.viewer-stage img { width: 78%; height: 78%; object-fit: contain; position: relative; z-index: 2; transition: opacity 0.05s linear; filter: drop-shadow(0 12px 18px rgba(0,0,0,0.45)); pointer-events: none; }
+.viewer-spin-icon { position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.12); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--gold); border: 1px solid rgba(255,255,255,0.18); animation: spin 4s linear infinite; z-index: 3; }
 @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-
-.viewer-progress {
-  position: absolute; bottom: 14px; left: 50%;
-  transform: translateX(-50%);
-  width: 70%; height: 4px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 4px; overflow: hidden;
-  z-index: 3;
-}
-.viewer-progress-bar {
-  height: 100%; width: 0;
-  background: linear-gradient(to right, var(--gold), #FFD66B);
-  border-radius: 4px;
-  transition: width 0.05s linear;
-  box-shadow: 0 0 8px rgba(201,149,42,0.6);
-}
-.viewer-frame-count {
-  position: absolute; bottom: 22px; right: 14px;
-  font-size: 9.5px; font-weight: 700;
-  color: rgba(255,255,255,0.8);
-  letter-spacing: .5px;
-  z-index: 3;
-}
-
-.viewer-footer {
-  padding: 14px 16px 16px;
-  display: flex; align-items: center; gap: 8px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-.viewer-instruction {
-  flex: 1;
-  font-size: 10.5px; color: rgba(255,255,255,0.75);
-  line-height: 1.4;
-  display: flex; align-items: center; gap: 6px;
-}
+.viewer-progress { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); width: 70%; height: 4px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; z-index: 3; }
+.viewer-progress-bar { height: 100%; width: 0; background: linear-gradient(to right, var(--gold), #FFD66B); border-radius: 4px; transition: width 0.05s linear; box-shadow: 0 0 8px rgba(201,149,42,0.6); }
+.viewer-frame-count { position: absolute; bottom: 22px; right: 14px; font-size: 9.5px; font-weight: 700; color: rgba(255,255,255,0.8); letter-spacing: .5px; z-index: 3; }
+.viewer-footer { padding: 14px 16px 16px; display: flex; align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,0.08); }
+.viewer-instruction { flex: 1; font-size: 10.5px; color: rgba(255,255,255,0.75); line-height: 1.4; display: flex; align-items: center; gap: 6px; }
 .viewer-instruction i { color: var(--gold); font-size: 12px; }
 .viewer-actions { display: flex; gap: 6px; }
-.viewer-btn {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.18);
-  color: #fff; font-size: 11px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: background .15s ease;
-}
+.viewer-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .15s ease; }
 .viewer-btn:active { background: rgba(255,255,255,0.25); }
 .viewer-btn.playing { background: var(--gold); color: #fff; border-color: var(--gold); }
 
 /* ===================== CONCLUSION ===================== */
-.conclusion-card {
-  margin: 22px 16px;
-  background: linear-gradient(135deg, #F3E8F7 0%, #E8DBF0 100%);
-  border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow);
-}
-.conclusion-card .head { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 1.2px; color: #5B2C8A; margin-bottom: 10px; }
-.conclusion-card p { font-size: 12.5px; color: #2B2B2B; line-height: 1.6; }
+.conclusion-card { margin: 22px 16px; background: linear-gradient(135deg, #F3E8F7 0%, #E8DBF0 100%); border-radius: var(--radius-lg); padding: 22px; box-shadow: var(--shadow); max-width: 760px; margin-left: auto; margin-right: auto; }
+.conclusion-card .head { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: 1.4px; color: #5B2C8A; margin-bottom: 12px; }
+.conclusion-card p { font-size: 13px; color: #2B2B2B; line-height: 1.6; }
 .conclusion-card p em { font-style: italic; font-weight: 600; }
-.video-cta-wrap { margin-top: 16px; }
-.video-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: #7B3FA8; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+.video-cta-wrap { margin-top: 18px; }
+.video-label { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; color: #7B3FA8; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
 .video-label i { color: #E53935; font-size: 13px; }
-.conclusion-btn {
-  width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
-  background: linear-gradient(135deg, #7B3FA8, #5B2C8A);
-  color: #fff; border: none; padding: 14px; border-radius: 24px;
-  font-weight: 700; font-size: 13.5px; cursor: pointer; text-decoration: none;
-  box-shadow: 0 6px 20px rgba(91,44,138,0.4);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
+.conclusion-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #7B3FA8, #5B2C8A); color: #fff; border: none; padding: 14px; border-radius: 24px; font-weight: 700; font-size: 13.5px; cursor: pointer; text-decoration: none; box-shadow: 0 6px 20px rgba(91,44,138,0.4); transition: transform .15s ease, box-shadow .15s ease; }
 .conclusion-btn:active { transform: scale(0.97); box-shadow: 0 3px 10px rgba(91,44,138,0.3); }
 .conclusion-btn i { font-size: 16px; }
 
-/* ===================== TEAM — REDESIGNED ===================== */
-.team-section { margin: 22px 16px; }
-.team-section .section-title { text-align: center; margin-bottom: 18px; }
-
-/* Featured Haris card — full width hero style */
-.team-hero {
-  position: relative;
-  background: linear-gradient(135deg, #FBF6EC 0%, #F4E9D6 60%, #ECD9B0 100%);
-  border-radius: 22px;
-  padding: 18px 16px 16px;
-  margin-bottom: 14px;
-  border: 2px solid var(--gold);
-  box-shadow: 0 8px 24px rgba(201,149,42,0.18), inset 0 0 0 1px rgba(255,255,255,0.5);
-  overflow: hidden;
-  opacity: 0; transform: translateY(14px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
+/* ===================== TEAM ===================== */
+.team-section { margin: 22px 16px; max-width: 760px; margin-left: auto; margin-right: auto; }
+.team-hero { position: relative; background: linear-gradient(135deg, #FBF6EC 0%, #F4E9D6 60%, #ECD9B0 100%); border-radius: 22px; padding: 18px 16px 16px; margin-bottom: 14px; border: 2px solid var(--gold); box-shadow: 0 8px 24px rgba(201,149,42,0.18), inset 0 0 0 1px rgba(255,255,255,0.5); overflow: hidden; opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
 .team-hero.in-view { opacity: 1; transform: none; }
-.team-hero::before {
-  content: ""; position: absolute; top: -40px; right: -40px;
-  width: 130px; height: 130px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(201,149,42,0.25) 0%, transparent 70%);
-}
-.team-hero::after {
-  content: "✦"; position: absolute; top: 14px; right: 14px;
-  color: var(--gold); font-size: 16px; opacity: 0.6;
-}
-.team-hero-inner {
-  position: relative; z-index: 2;
-  display: flex; align-items: center; gap: 14px;
-}
-.team-hero-img-wrap {
-  position: relative; flex-shrink: 0;
-}
-.team-hero-img {
-  width: 88px; height: 88px; border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid var(--gold);
-  box-shadow: 0 0 0 3px #fff, 0 6px 18px rgba(201,149,42,0.35);
-  background: #ddd; display: block;
-}
+.team-hero::before { content: ""; position: absolute; top: -40px; right: -40px; width: 130px; height: 130px; border-radius: 50%; background: radial-gradient(circle, rgba(201,149,42,0.25) 0%, transparent 70%); }
+.team-hero::after { content: "✦"; position: absolute; top: 14px; right: 14px; color: var(--gold); font-size: 16px; opacity: 0.6; }
+.team-hero-inner { position: relative; z-index: 2; display: flex; align-items: center; gap: 14px; }
+.team-hero-img-wrap { position: relative; flex-shrink: 0; }
+.team-hero-img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 4px solid var(--gold); box-shadow: 0 0 0 3px #fff, 0 6px 18px rgba(201,149,42,0.35); background: linear-gradient(135deg,#fff,#f3eed7); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-weight: 800; color: var(--maroon); font-size: 32px; }
 .team-hero-info { flex: 1; }
-.team-hero-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 19px; font-weight: 800;
-  color: var(--maroon); line-height: 1.1;
-  margin-bottom: 4px;
-}
-.horizon-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, var(--gold) 0%, #A87520 100%);
-  color: #fff; font-size: 9.5px; font-weight: 800;
-  letter-spacing: 1.4px; padding: 3px 10px; border-radius: 20px;
-  margin-bottom: 5px;
-  box-shadow: 0 2px 6px rgba(201,149,42,0.4);
-}
-.horizon-role {
-  font-size: 11px; color: var(--green); font-weight: 700;
-  margin-bottom: 3px;
-  display: flex; align-items: center; gap: 5px;
-}
+.team-hero-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 800; color: var(--maroon); line-height: 1.1; margin-bottom: 4px; }
+.horizon-badge { display: inline-block; background: linear-gradient(135deg, var(--gold) 0%, #A87520 100%); color: #fff; font-size: 9.5px; font-weight: 800; letter-spacing: 1.4px; padding: 3px 10px; border-radius: 20px; margin-bottom: 5px; box-shadow: 0 2px 6px rgba(201,149,42,0.4); }
+.horizon-role { font-size: 11.5px; color: var(--green); font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 5px; }
 .horizon-role i { font-size: 9px; }
-.team-hero-roll {
-  font-size: 10.5px; color: var(--muted);
-  font-weight: 600; letter-spacing: .5px;
-}
-
-/* Other team members - elegant grid */
-.team-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.team-member {
-  position: relative;
-  background: #fff;
-  border-radius: 16px;
-  padding: 14px 8px 12px;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0,0,0,0.04);
-  overflow: hidden;
-  opacity: 0; transform: translateY(14px);
-  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow .25s ease;
-}
+.team-hero-roll { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: .5px; }
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.team-member { position: relative; background: #fff; border-radius: 16px; padding: 14px 8px 12px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.04); overflow: hidden; opacity: 0; transform: translateY(14px); transition: opacity 0.4s ease, transform 0.4s ease, box-shadow .25s ease; }
 .team-member.in-view { opacity: 1; transform: none; }
 .team-member:nth-child(2) { transition-delay: 0.08s; }
 .team-member:nth-child(3) { transition-delay: 0.16s; }
-.team-member:active { box-shadow: var(--shadow); }
-
-/* decorative top stripe */
-.team-member::before {
-  content: ""; position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 36px;
-  background: linear-gradient(135deg, var(--green) 0%, #1B5E20 100%);
-  border-radius: 16px 16px 50% 50% / 16px 16px 16px 16px;
-}
+.team-member::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 36px; background: linear-gradient(135deg, var(--green) 0%, #1B5E20 100%); border-radius: 16px 16px 50% 50% / 16px 16px 16px 16px; }
 .team-member.tm-2::before { background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-deep) 100%); }
 .team-member.tm-3::before { background: linear-gradient(135deg, #7B3FA8 0%, #5B2C8A 100%); }
-
-.team-member-img-wrap {
-  position: relative; z-index: 2;
-  width: 64px; height: 64px;
-  margin: 0 auto 8px;
-  border-radius: 50%;
-  padding: 3px;
-  background: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-.team-member-img {
-  width: 100%; height: 100%;
-  border-radius: 50%; object-fit: cover;
-  background: #ddd; display: block;
-}
-.team-member-name {
-  font-size: 11.5px; font-weight: 700; color: var(--text);
-  line-height: 1.2; margin-bottom: 3px;
-}
-.team-member-role {
-  display: inline-block;
-  font-size: 8px; font-weight: 700;
-  background: var(--green-light); color: var(--green);
-  padding: 2px 7px; border-radius: 10px;
-  letter-spacing: .5px; margin-bottom: 4px;
-  text-transform: uppercase;
-}
+.team-member-img-wrap { position: relative; z-index: 2; width: 64px; height: 64px; margin: 0 auto 8px; border-radius: 50%; padding: 3px; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+.team-member-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: linear-gradient(135deg,#eee,#ddd); display: flex; align-items:center; justify-content:center; font-family: 'Playfair Display', serif; font-weight:800; color: var(--text); font-size: 22px; }
+.team-member-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 3px; }
+.team-member-role { display: inline-block; font-size: 8.5px; font-weight: 800; background: var(--green-light); color: var(--green); padding: 2px 7px; border-radius: 10px; letter-spacing: .5px; margin-bottom: 4px; text-transform: uppercase; }
 .team-member.tm-2 .team-member-role { background: #FDECEC; color: var(--maroon); }
 .team-member.tm-3 .team-member-role { background: #F3E8F7; color: #7B3FA8; }
-.team-member-roll {
-  font-size: 9.5px; color: var(--muted);
-  font-weight: 600; letter-spacing: .3px;
-}
-
-/* ===================== PRESENTED TO ===================== */
-.instructor-card {
-  margin-top: 18px; background: var(--card);
-  border-radius: var(--radius); padding: 16px;
-  display: flex; align-items: flex-start; gap: 14px;
-  box-shadow: var(--shadow-sm);
-  border: 1.5px solid rgba(123,30,30,0.12);
-}
-.instructor-card img {
-  width: 86px; height: 108px;
-  border-radius: 14px; object-fit: cover; object-position: center top;
-  border: 3px solid var(--maroon); flex-shrink: 0; background: #ddd;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-}
-.instructor-card .info .ptd { font-size: 9px; color: var(--muted); letter-spacing: 1px; font-weight: 600; }
-.instructor-card .info .nm { font-size: 16px; color: var(--maroon); font-weight: 700; font-family: 'Playfair Display', serif; margin-bottom: 3px; }
-.instructor-card .info .rl { font-size: 11px; color: var(--green); font-weight: 600; margin-bottom: 6px; }
-.instructor-card .info .ds { font-size: 11px; color: var(--muted); line-height: 1.5; font-style: italic; }
+.team-member-roll { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: .3px; }
+.instructor-card { margin-top: 18px; background: var(--card); border-radius: var(--radius); padding: 16px; display: flex; align-items: flex-start; gap: 14px; box-shadow: var(--shadow-sm); border: 1.5px solid rgba(123,30,30,0.12); }
+.instructor-card .avatar { width: 86px; height: 108px; border-radius: 14px; border: 3px solid var(--maroon); flex-shrink: 0; background: linear-gradient(135deg, var(--maroon-light), var(--maroon-deep)); box-shadow: 0 4px 14px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Playfair Display', serif; font-weight: 800; font-size: 32px; }
+.instructor-card .info .ptd { font-size: 9.5px; color: var(--muted); letter-spacing: 1.2px; font-weight: 700; }
+.instructor-card .info .nm { font-size: 17px; color: var(--maroon); font-weight: 700; font-family: 'Playfair Display', serif; margin-bottom: 3px; }
+.instructor-card .info .rl { font-size: 11.5px; color: var(--green); font-weight: 700; margin-bottom: 6px; }
+.instructor-card .info .ds { font-size: 11.5px; color: var(--muted); line-height: 1.5; font-style: italic; }
 
 /* ===================== REFERENCES ===================== */
-.references {
-  margin: 22px 16px 24px;
-  background: linear-gradient(135deg, var(--maroon-deep), var(--maroon));
-  color: #fff; border-radius: var(--radius-lg); padding: 18px 20px;
-  box-shadow: var(--shadow);
-}
-.references .ref-head { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 1.4px; margin-bottom: 14px; text-transform: uppercase; }
+.references { margin: 22px 16px 24px; background: linear-gradient(135deg, var(--maroon-deep), var(--maroon)); color: #fff; border-radius: var(--radius-lg); padding: 20px 22px; box-shadow: var(--shadow); max-width: 760px; margin-left: auto; margin-right: auto; }
+.references .ref-head { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 800; letter-spacing: 1.4px; margin-bottom: 14px; text-transform: uppercase; }
 .references ul { list-style: none; }
-.references ul li { padding: 5px 0 5px 14px; position: relative; font-size: 11px; line-height: 1.6; opacity: .92; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.references ul li { padding: 6px 0 6px 14px; position: relative; font-size: 11.5px; line-height: 1.6; opacity: .92; border-bottom: 1px solid rgba(255,255,255,0.08); }
 .references ul li:last-child { border-bottom: none; }
 .references ul li::before { content: "•"; position: absolute; left: 2px; color: var(--gold-light); }
 
-/* ===================== UTIL ===================== */
-.img-placeholder { background: linear-gradient(135deg, #ddd, #ccc); display: flex; align-items: center; justify-content: center; color: #999; font-size: 10px; font-weight: 600; }
-@media (min-width: 481px) { .container { box-shadow: 0 0 60px rgba(0,0,0,0.08); min-height: 100vh; } }
+/* ===================== RESPONSIVE — DESKTOP/LAPTOP ===================== */
+@media (min-width: 720px) {
+  .hero-content { padding: 90px 60px 72px; }
+  .card, .timeline-section, .pharm-section, .trad-section, .misc-section, .products-section, .conclusion-card, .team-section, .references, .model-section {
+    margin-left: auto; margin-right: auto; max-width: 820px;
+  }
+  .card { margin-top: 22px; margin-bottom: 22px; }
+  /* botanical profile shown two columns on wider screens */
+  .profile-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .profile-stack .profile-item.full { grid-column: span 2; }
+}
+@media (min-width: 1024px) {
+  .hero { min-height: 540px; }
+  .hero-content { padding: 110px 80px 90px; max-width: 820px; }
+  .pharm-tile { height: 140px; }
+}
 </style>
 </head>
 <body>
-<div class="container">
+<div class="page-wrap">
 
 <!-- ===================== TOP NAV ===================== -->
-<nav class="top-nav" aria-label="Primary">
+<nav class="top-nav" id="topNav" aria-label="Primary">
   <div class="brand">
-    <img src="assets/logos/qacp-logo.webp" alt="QACP" onerror="this.style.display='none'">
+    <div class="logo">Q</div>
     <div class="brand-text">
       <div class="title">Quaid-e-Azam</div>
       <div class="sub">College of Pharmacy</div>
@@ -900,70 +784,117 @@ html, body {
       <div class="l1">UNIVERSITY of</div>
       <div class="l2">SARGODHA</div>
     </div>
-    <img src="assets/logos/uos-logo.webp" alt="UOS" onerror="this.style.display='none'">
+    <div class="logo">U</div>
   </div>
 </nav>
 
-<!-- ===================== HERO ===================== -->
+<!-- ===================== HERO BANNER ===================== -->
 <header class="hero" id="overview">
   <img class="hero-bg" src="assets/main/ashwagandha-main.png" alt="Ashwagandha plant" onerror="this.style.opacity=0.3">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <h1>WITHANIA<br><span class="italic">SOMNIFERA</span></h1>
-    <p class="tagline">A Scientific &amp; Pharmacognostic Overview</p>
-    <p class="desc">An important medicinal plant of the Solanaceae family, rich in withanolides with wide-ranging therapeutic applications.</p>
+    <span class="hero-eyebrow"><i class="fa-solid fa-mortar-pestle"></i> Pharmacognostic Monograph</span>
+    <h1 class="hero-title">
+      <span class="withania">WITHANIA</span>
+      <span class="somnifera">Somnifera</span>
+    </h1>
+    <div class="hero-rule"></div>
+    <p class="hero-tagline">A Scientific &amp; Pharmacognostic Overview</p>
+    <p class="hero-desc">An important medicinal plant of the Solanaceae family, rich in withanolides with wide-ranging therapeutic applications across traditional and modern medicine.</p>
+    <div class="hero-meta">
+      <span class="hero-chip"><i class="fa-solid fa-leaf"></i> Solanaceae</span>
+      <span class="hero-chip"><i class="fa-solid fa-flask"></i> Withanolides</span>
+      <span class="hero-chip"><i class="fa-solid fa-shield-heart"></i> Adaptogen</span>
+    </div>
   </div>
 </header>
 
-<!-- ===================== TABS ===================== -->
-<div class="tabs" role="tablist">
-  <div class="tab t-overview active" role="tab"><div class="icon-circle"><i class="fa-solid fa-seedling"></i></div><div class="label">Overview</div></div>
-  <div class="tab t-uses" role="tab"><div class="icon-circle"><i class="fa-solid fa-mortar-pestle"></i></div><div class="label">Uses</div></div>
-  <div class="tab t-actions" role="tab"><div class="icon-circle"><i class="fa-solid fa-flask"></i></div><div class="label">Actions</div></div>
-</div>
-
 <!-- ===================== BOTANICAL PROFILE ===================== -->
-<section class="card" style="margin-top:16px;">
-  <div class="card-header">
-    <div class="ic"><i class="fa-solid fa-leaf"></i></div>
-    <h2>Botanical &amp; Pharmacognostic Profile</h2>
-  </div>
+<div class="section-title-block">
+  <div class="section-eyebrow">Classification</div>
+  <h2 class="section-title-h2">Taxonomical Profile</h2>
+  <div class="section-rule"></div>
+</div>
+<section class="card">
   <div class="card-body">
-    <div class="profile-grid">
-      <div class="profile-item"><div class="pk">Botanical Name</div><div class="pv"><em>Withania somnifera</em> (L.) Dunal</div></div>
-      <div class="profile-item"><div class="pk">Family</div><div class="pv">Solanaceae</div></div>
-      <div class="profile-item"><div class="pk">Common Names</div><div class="pv">Ashwagandha, Indian Ginseng, Winter Cherry</div></div>
-      <div class="profile-item"><div class="pk">Part Used</div><div class="pv">Dried roots &amp; stem bases</div></div>
-      <div class="profile-item"><div class="pk">Taste</div><div class="pv">Bitter, Astringent (Tikta, Kashaya)</div></div>
-      <div class="profile-item"><div class="pk">Category</div><div class="pv">Rasayana — Rejuvenative adaptogen</div></div>
-      <div class="profile-item wide"><div class="pk">Habitat &amp; Distribution</div><div class="pv">Cultivated in dry regions of Pakistan, India, Middle East &amp; Africa. Prefers arid, sandy soils with minimal rainfall.</div></div>
+    <div class="profile-stack">
+      <div class="profile-item">
+        <div class="pi-ic"><i class="fa-solid fa-flask-vial"></i></div>
+        <div class="pi-text">
+          <div class="pk">Botanical Name</div>
+          <div class="pv"><em>Withania somnifera</em> (L.) Dunal</div>
+        </div>
+      </div>
+      <div class="profile-item">
+        <div class="pi-ic"><i class="fa-solid fa-seedling"></i></div>
+        <div class="pi-text">
+          <div class="pk">Family</div>
+          <div class="pv">Solanaceae</div>
+        </div>
+      </div>
+      <div class="profile-item">
+        <div class="pi-ic"><i class="fa-solid fa-book-open"></i></div>
+        <div class="pi-text">
+          <div class="pk">Common Names</div>
+          <div class="pv">Ashwagandha · Indian Ginseng · Winter Cherry</div>
+        </div>
+      </div>
+      <div class="profile-item">
+        <div class="pi-ic"><i class="fa-solid fa-leaf"></i></div>
+        <div class="pi-text">
+          <div class="pk">Part Used</div>
+          <div class="pv">Dried roots and stem bases</div>
+        </div>
+      </div>
+      <div class="profile-item gold-accent">
+        <div class="pi-ic"><i class="fa-solid fa-globe"></i></div>
+        <div class="pi-text">
+          <div class="pk">Habitat / Cultivation</div>
+          <div class="pv">Pakistan · India · Middle East · Africa (arid, sandy soils)</div>
+        </div>
+      </div>
+      <div class="profile-item gold-accent">
+        <div class="pi-ic"><i class="fa-solid fa-hourglass-half"></i></div>
+        <div class="pi-text">
+          <div class="pk">Kingdom Lineage</div>
+          <div class="pv">Plantae → Angiosperms → Eudicots → Solanales</div>
+        </div>
+      </div>
+      <div class="profile-item full">
+        <div class="pi-ic"><i class="fa-solid fa-mortar-pestle"></i></div>
+        <div class="pi-text">
+          <div class="pk">Taste &amp; Category</div>
+          <div class="pv">Bitter, Astringent (Tikta, Kashaya) — <em>Rasayana</em>, Rejuvenative Adaptogen</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ===================== HISTORICAL TIMELINE — ZIGZAG ===================== -->
+<!-- ===================== HISTORICAL TIMELINE ===================== -->
+<div class="section-title-block">
+  <div class="section-eyebrow">Heritage</div>
+  <h2 class="section-title-h2">Historical Background</h2>
+  <div class="section-rule"></div>
+</div>
 <section class="timeline-section">
-  <div class="section-title">HISTORICAL BACKGROUND</div>
   <div class="zig-timeline">
-
     <div class="zig-item left">
       <div class="zig-dot"></div>
       <div class="zig-card">
         <div class="zig-year">~3000 BCE</div>
         <div class="zig-head">Charaka Samhita — First Mention</div>
-        <div class="zig-body">Documented as a <em>Rasayana</em> in the Charaka Samhita, prescribing it for longevity, memory enhancement, and vitality.</div>
+        <div class="zig-body">Documented as a <em>Rasayana</em> in the Charaka Samhita, prescribed for longevity, memory enhancement, and vitality.</div>
       </div>
     </div>
-
     <div class="zig-item right c-amber">
       <div class="zig-dot"></div>
       <div class="zig-card">
         <div class="zig-year">~600 BCE</div>
         <div class="zig-head">Sushruta Samhita — Surgical Classic</div>
-        <div class="zig-body">Included in <em>Sushruta Samhita</em> for wound healing. Classified as <strong>Balya</strong> (strength-promoting) and <strong>Vajikara</strong>.</div>
+        <div class="zig-body">Included in <em>Sushruta Samhita</em> for wound healing. Classified as <strong>Balya</strong> and <strong>Vajikara</strong>.</div>
       </div>
     </div>
-
     <div class="zig-item left c-gold">
       <div class="zig-dot"></div>
       <div class="zig-card">
@@ -972,79 +903,86 @@ html, body {
         <div class="zig-body">Ibn Sina referenced Ashwagandha as a strengthening herb. Integrated into Unani medicine as <em>Asgandh</em>.</div>
       </div>
     </div>
-
     <div class="zig-item right c-green">
       <div class="zig-dot"></div>
       <div class="zig-card">
         <div class="zig-year">2000s — Modern</div>
         <div class="zig-head">Pharmacological Validation</div>
-        <div class="zig-body">Modern research isolates <strong>withanolides</strong>. Trials confirm anti-stress, immunomodulatory, and neuroprotective effects.</div>
+        <div class="zig-body">Modern research isolates <strong>withanolides</strong>. Trials confirm anti-stress, immunomodulatory and neuroprotective effects.</div>
       </div>
     </div>
-
   </div>
 </section>
 
 <!-- ===================== CHEMICAL CONSTITUENTS ===================== -->
+<div class="section-title-block">
+  <div class="section-eyebrow">Phytochemistry</div>
+  <h2 class="section-title-h2">Chemical Constituents</h2>
+  <div class="section-rule"></div>
+</div>
 <section class="card chemical">
-  <div class="card-header">
-    <div class="ic"><i class="fa-solid fa-flask-vial"></i></div>
-    <h2>Chemical Constituents</h2>
-  </div>
   <div class="card-body">
-    <div class="chem-tiles">
+    <div class="chem-stack">
 
       <div class="chem-tile ct-1">
-        <div class="chem-tile-header">
-          <div class="chem-dot"></div>
+        <div class="chem-tile-head">
+          <div class="chem-ic"><i class="fa-solid fa-atom"></i></div>
           <div class="chem-term">Withanolides</div>
+          <span class="chem-badge">Primary Active</span>
           <button class="info-btn" aria-label="Info" data-title="Withanolides" data-info="Withanolides are naturally occurring C28-steroidal lactones found exclusively in the genus Withania. They are the primary bioactive compounds responsible for adaptogenic, anti-inflammatory, anti-tumor, and immunomodulatory effects. Withaferin A is the most studied withanolide with proven anti-cancer activity."><i class="fa-solid fa-circle-info"></i></button>
         </div>
         <div class="chem-compounds">
           <span class="chem-tag">Withaferin A</span>
           <span class="chem-tag">Withanolide D</span>
-          <span class="chem-tag">Withanone</span>
+          <span class="chem-tag">Withanolide B</span>
+          <span class="chem-tag">Withanolide A</span>
         </div>
-        <div class="chem-action">Primary active class · Adaptogenic &amp; anti-tumor</div>
+        <div class="chem-action">Primary active class · Adaptogenic &amp; anti-tumor properties</div>
       </div>
 
       <div class="chem-tile ct-2">
-        <div class="chem-tile-header">
-          <div class="chem-dot"></div>
+        <div class="chem-tile-head">
+          <div class="chem-ic"><i class="fa-solid fa-pen-nib"></i></div>
           <div class="chem-term">Alkaloids</div>
+          <span class="chem-badge">Neuroactive</span>
           <button class="info-btn" aria-label="Info" data-title="Alkaloids" data-info="Alkaloids are nitrogen-containing organic compounds with profound physiological effects. Ashwagandha alkaloids like Somniferine and Anaferine contribute to its sedative, analgesic, and muscle-relaxant properties by acting on the central nervous system."><i class="fa-solid fa-circle-info"></i></button>
         </div>
         <div class="chem-compounds">
           <span class="chem-tag">Somniferine</span>
           <span class="chem-tag">Anaferine</span>
           <span class="chem-tag">Withanine</span>
+          <span class="chem-tag">Somnine</span>
         </div>
         <div class="chem-action">Sedative &amp; CNS relaxant effects</div>
       </div>
 
       <div class="chem-tile ct-3">
-        <div class="chem-tile-header">
-          <div class="chem-dot"></div>
+        <div class="chem-tile-head">
+          <div class="chem-ic"><i class="fa-solid fa-location-arrow"></i></div>
           <div class="chem-term">Glycosides</div>
+          <span class="chem-badge">Immunomodulatory</span>
           <button class="info-btn" aria-label="Info" data-title="Glycosides" data-info="Glycosides are compounds where a sugar molecule is bonded to a non-sugar moiety (aglycone). In Ashwagandha, Withanosides and Sitoindosides are key glycosides. They enhance bioavailability and support neuroprotection, memory enhancement, and immunomodulation."><i class="fa-solid fa-circle-info"></i></button>
         </div>
         <div class="chem-compounds">
-          <span class="chem-tag">Withanosides I–VII</span>
+          <span class="chem-tag">Withanosides</span>
           <span class="chem-tag">Sitoindosides</span>
+          <span class="chem-tag">Withanoside IV</span>
         </div>
-        <div class="chem-action">Neuroprotective &amp; immunomodulatory</div>
+        <div class="chem-action">Neuroprotective &amp; immunomodulatory action</div>
       </div>
 
       <div class="chem-tile ct-4">
-        <div class="chem-tile-header">
-          <div class="chem-dot"></div>
+        <div class="chem-tile-head">
+          <div class="chem-ic"><i class="fa-solid fa-shield-halved"></i></div>
           <div class="chem-term">Flavonoids &amp; Sterols</div>
+          <span class="chem-badge">Antioxidant</span>
           <button class="info-btn" aria-label="Info" data-title="Flavonoids &amp; Sterols" data-info="Flavonoids are polyphenolic antioxidants. Sterols like Beta-sitosterol have structural similarity to cholesterol and competitively inhibit its intestinal absorption, supporting cardiovascular health and reducing LDL levels."><i class="fa-solid fa-circle-info"></i></button>
         </div>
         <div class="chem-compounds">
           <span class="chem-tag">β-Sitosterol</span>
-          <span class="chem-tag">Kaempferol</span>
-          <span class="chem-tag">Quercetin</span>
+          <span class="chem-tag">Flavonoids</span>
+          <span class="chem-tag">Polyphenols</span>
+          <span class="chem-tag">Iron (Fe)</span>
         </div>
         <div class="chem-action">Antioxidant &amp; cardiovascular support</div>
       </div>
@@ -1054,29 +992,35 @@ html, body {
   </div>
 </section>
 
-<!-- ===================== 3D PLANT MODEL ===================== -->
+<!-- ===================== 3D PLANT MODEL — minimalist ===================== -->
+<div class="section-title-block">
+  <div class="section-eyebrow">Interactive</div>
+  <h2 class="section-title-h2">3D Plant Model</h2>
+  <div class="section-rule"></div>
+</div>
 <section class="model-section" id="model3d">
-  <div class="section-title">3D PLANT MODEL</div>
   <a href="https://ash3d.netlify.app/" target="_blank" rel="noopener" class="model-link-card">
     <div class="model-img-wrap">
-      <img src="assets/main/ashwagandha-3d-thumbnail.png" alt="Ashwagandha 3D Model Preview" onerror="this.style.display='none'">
-      <div class="model-img-overlay">
-        <div class="model-play-btn"><i class="fa-solid fa-cube"></i></div>
-        <div class="model-cta-text">Tap to Explore 3D Model</div>
-      </div>
-      <div class="model-badge">360° INTERACTIVE</div>
+      <img src="assets/main/ashwagandha-main.png" alt="Ashwagandha 3D Model Preview">
+      <span class="model-360-chip"><i class="fa-solid fa-cube"></i> 360°</span>
     </div>
     <div class="model-link-row">
-      <i class="fa-solid fa-arrow-up-right-from-square"></i>
-      <span>ash3d.netlify.app — Opens in browser</span>
+      <i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--green);"></i>
+      <span class="label">ash3d.netlify.app</span>
+      <span>— interactive 3D viewer</span>
+      <i class="fa-solid fa-chevron-right arrow"></i>
     </div>
   </a>
 </section>
 
-<!-- ===================== PHARMACOLOGICAL ACTIONS — 16:9 BEAUTIFUL TILES ===================== -->
+<!-- ===================== PHARMACOLOGICAL ACTIONS — premium green flip tiles ===================== -->
+<div class="section-title-block">
+  <div class="section-eyebrow">Therapeutic</div>
+  <h2 class="section-title-h2">Pharmacological Actions</h2>
+  <div class="section-rule"></div>
+</div>
 <section class="pharm-section" id="actions">
-  <div class="section-title">PHARMACOLOGICAL ACTIONS</div>
-  <div class="pharm-grid">
+  <div class="pharm-stack">
 
     <div class="pharm-tile pt-1">
       <div class="pharm-inner">
@@ -1084,7 +1028,7 @@ html, body {
           <div class="pharm-icon-box"><i class="fa-solid fa-leaf"></i></div>
           <div class="pharm-title-wrap">
             <div class="pharm-title">Adaptogenic &amp; Anti-Stress</div>
-            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to learn</div>
+            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
           </div>
         </div>
         <div class="pharm-back">
@@ -1100,7 +1044,7 @@ html, body {
           <div class="pharm-icon-box"><i class="fa-solid fa-shield-virus"></i></div>
           <div class="pharm-title-wrap">
             <div class="pharm-title">Immunomodulatory</div>
-            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to learn</div>
+            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
           </div>
         </div>
         <div class="pharm-back">
@@ -1116,7 +1060,7 @@ html, body {
           <div class="pharm-icon-box"><i class="fa-solid fa-droplet"></i></div>
           <div class="pharm-title-wrap">
             <div class="pharm-title">Anti-Diabetic Potential</div>
-            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to learn</div>
+            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
           </div>
         </div>
         <div class="pharm-back">
@@ -1132,7 +1076,7 @@ html, body {
           <div class="pharm-icon-box"><i class="fa-solid fa-brain"></i></div>
           <div class="pharm-title-wrap">
             <div class="pharm-title">Neuroprotective</div>
-            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to learn</div>
+            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
           </div>
         </div>
         <div class="pharm-back">
@@ -1148,7 +1092,7 @@ html, body {
           <div class="pharm-icon-box"><i class="fa-solid fa-heart-pulse"></i></div>
           <div class="pharm-title-wrap">
             <div class="pharm-title">Cardioprotective</div>
-            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to learn</div>
+            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
           </div>
         </div>
         <div class="pharm-back">
@@ -1164,12 +1108,12 @@ html, body {
           <div class="pharm-icon-box"><i class="fa-solid fa-fire"></i></div>
           <div class="pharm-title-wrap">
             <div class="pharm-title">Anti-Inflammatory &amp; Antioxidant</div>
-            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to learn</div>
+            <div class="pharm-tap-hint"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
           </div>
         </div>
         <div class="pharm-back">
           <div class="pharm-back-tag">Mechanism</div>
-          <div class="pharm-back-text">Withaferin A inhibits NF-κB pathway, suppressing TNF-α and IL-6. Strong free radical scavenger.</div>
+          <div class="pharm-back-text">Withaferin A inhibits NF-κB pathway, suppressing TNF-α and IL-6. A strong free radical scavenger.</div>
         </div>
       </div>
     </div>
@@ -1177,79 +1121,91 @@ html, body {
   </div>
 </section>
 
-<!-- ===================== TRADITIONAL USES (FLIP CARDS) ===================== -->
+<!-- ===================== TRADITIONAL USES ===================== -->
+<div class="section-title-block">
+  <div class="section-eyebrow">Heritage Use</div>
+  <h2 class="section-title-h2">Traditional Uses</h2>
+  <div class="section-rule"></div>
+</div>
 <section class="trad-section" id="uses">
-  <div class="section-title">TRADITIONAL USES</div>
-  <div class="trad-grid-flip">
+  <div class="trad-stack">
 
-    <div class="flip-card">
-      <div class="flip-inner trad-h">
-        <div class="flip-front tf-1">
-          <div class="flip-icon" style="background:#0369A1;font-size:18px;"><i class="fa-solid fa-moon"></i></div>
-          <div class="flip-label">Insomnia</div>
-          <div class="flip-tap">Tap to learn</div>
-        </div>
-        <div class="flip-back tb-1">
-          <div class="flip-back-text">Triethylene glycol promotes sleep induction and improves sleep quality by modulating GABA receptors.</div>
-          <div class="flip-hint">Tap back</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="flip-card">
-      <div class="flip-inner trad-h">
-        <div class="flip-front tf-2">
-          <div class="flip-icon" style="background:#B91C1C;font-size:18px;"><i class="fa-solid fa-bone"></i></div>
-          <div class="flip-label">Arthritis</div>
-          <div class="flip-tap">Tap to learn</div>
-        </div>
-        <div class="flip-back tb-2">
-          <div class="flip-back-text">Withanolides inhibit COX enzymes and reduce joint inflammation in rheumatoid &amp; osteoarthritis.</div>
-          <div class="flip-hint">Tap back</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="flip-card">
-      <div class="flip-inner trad-h">
-        <div class="flip-front tf-3">
-          <div class="flip-icon" style="background:#B45309;font-size:18px;"><i class="fa-solid fa-brain"></i></div>
-          <div class="flip-label">Nervous Exhaustion</div>
-          <div class="flip-tap">Tap to learn</div>
-        </div>
-        <div class="flip-back tb-3">
-          <div class="flip-back-text">Acts as a nervine tonic, reducing anxiety and mental fatigue via GABA modulation and cortisol reduction.</div>
-          <div class="flip-hint">Tap back</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="flip-card">
-      <div class="flip-inner trad-h">
-        <div class="flip-front tf-4">
-          <div class="flip-icon" style="background:#BE185D;font-size:18px;"><i class="fa-solid fa-heart"></i></div>
-          <div class="flip-label">Weakness &amp; Fatigue</div>
-          <div class="flip-tap">Tap to learn</div>
-        </div>
-        <div class="flip-back tb-4">
-          <div class="flip-back-text">Increases endurance and muscle strength by enhancing mitochondrial function and reducing oxidative stress.</div>
-          <div class="flip-hint">Tap back</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="flip-card trad-fifth">
-      <div class="flip-inner trad-h wide-h" style="height:80px;">
-        <div class="flip-front tf-5" style="flex-direction:row;gap:12px;padding:12px 16px;">
-          <div class="flip-icon" style="background:var(--green);font-size:18px;margin:0;width:40px;height:40px;flex-shrink:0;"><i class="fa-solid fa-person-pregnant"></i></div>
-          <div style="text-align:left;">
-            <div class="flip-label" style="font-size:11.5px;">Aphrodisiac &amp; Fertility Support</div>
-            <div class="flip-tap">Tap to learn</div>
+    <div class="flip-card tu-1">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-icon"><i class="fa-solid fa-moon"></i></div>
+          <div class="flip-title-wrap">
+            <div class="flip-label">Insomnia &amp; Sleep Support</div>
+            <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
           </div>
         </div>
-        <div class="flip-back tb-5">
+        <div class="flip-back">
+          <div class="flip-back-text">Triethylene glycol promotes sleep induction and improves sleep quality by modulating GABA receptors in the brain.</div>
+          <div class="flip-back-hint">Tap to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card tu-2">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-icon"><i class="fa-solid fa-bone"></i></div>
+          <div class="flip-title-wrap">
+            <div class="flip-label">Arthritis &amp; Joint Care</div>
+            <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
+          </div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-text">Withanolides inhibit COX enzymes and reduce joint inflammation in rheumatoid &amp; osteoarthritis.</div>
+          <div class="flip-back-hint">Tap to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card tu-3">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-icon"><i class="fa-solid fa-brain"></i></div>
+          <div class="flip-title-wrap">
+            <div class="flip-label">Nervous Exhaustion</div>
+            <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
+          </div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-text">Acts as a nervine tonic, reducing anxiety and mental fatigue via GABA modulation and cortisol reduction.</div>
+          <div class="flip-back-hint">Tap to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card tu-4">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-icon"><i class="fa-solid fa-heart"></i></div>
+          <div class="flip-title-wrap">
+            <div class="flip-label">Weakness &amp; Fatigue</div>
+            <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
+          </div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-text">Increases endurance and muscle strength by enhancing mitochondrial function and reducing oxidative stress.</div>
+          <div class="flip-back-hint">Tap to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card tu-5">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-icon"><i class="fa-solid fa-person-pregnant"></i></div>
+          <div class="flip-title-wrap">
+            <div class="flip-label">Aphrodisiac &amp; Fertility Support</div>
+            <div class="flip-tap"><i class="fa-solid fa-hand-pointer"></i> Tap to flip &amp; learn</div>
+          </div>
+        </div>
+        <div class="flip-back">
           <div class="flip-back-text">Improves testosterone &amp; sperm quality. Balances female hormones &amp; reduces stress-related infertility.</div>
-          <div class="flip-hint">Tap back</div>
+          <div class="flip-back-hint">Tap to flip back</div>
         </div>
       </div>
     </div>
@@ -1257,12 +1213,14 @@ html, body {
   </div>
 </section>
 
-<!-- ===================== MISCONCEPTIONS — MYTH/FACT REVEAL ===================== -->
+<!-- ===================== MISCONCEPTIONS — Myth/Reality with image icons ===================== -->
+<div class="section-title-block">
+  <div class="section-eyebrow">Clarification</div>
+  <h2 class="section-title-h2">Myth vs Reality</h2>
+  <div class="section-rule"></div>
+</div>
 <section class="misc-section">
-  <div class="section-title-row">
-    <div class="section-title">MYTH vs REALITY</div>
-  </div>
-  <div class="misc-hint"><i class="fa-solid fa-hand-pointer"></i> Tap each card to flip and reveal the truth!</div>
+  <div class="misc-hint"><i class="fa-solid fa-hand-pointer"></i> Tap each card to flip and reveal the truth</div>
 
   <div class="myth-stack">
 
@@ -1270,16 +1228,21 @@ html, body {
     <div class="myth-card">
       <div class="myth-inner">
         <div class="myth-front">
-          <div class="myth-front-top">
-            <div class="myth-tag"><span class="x-icon"><i class="fa-solid fa-xmark"></i></span> MYTH</div>
-            <div class="myth-reveal">tap to reveal →</div>
+          <div class="myth-icon-img">
+            <img src="assets/main/workgradually.jpeg" alt="Works gradually">
           </div>
-          <div class="myth-text">Ashwagandha gives instant results.</div>
+          <div class="myth-content">
+            <div class="myth-top">
+              <div class="myth-tag"><span class="x-icon"><i class="fa-solid fa-xmark"></i></span> MYTH</div>
+              <div class="myth-reveal">tap to reveal <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+            <div class="myth-text">Ashwagandha gives instant results.</div>
+          </div>
         </div>
         <div class="myth-back">
           <div class="myth-back-top">
             <div class="fact-tag"><span class="check-icon"><i class="fa-solid fa-check"></i></span> FACT</div>
-            <div class="fact-back-hint">← tap to flip back</div>
+            <div class="fact-back-hint"><i class="fa-solid fa-arrow-left"></i> tap to flip back</div>
           </div>
           <div class="fact-text">It works <strong>gradually</strong>. Noticeable effects appear after <strong>4–8 weeks</strong> of consistent daily use. Ashwagandha is an adaptogen — patience and consistency are essential.</div>
         </div>
@@ -1290,16 +1253,21 @@ html, body {
     <div class="myth-card">
       <div class="myth-inner">
         <div class="myth-front">
-          <div class="myth-front-top">
-            <div class="myth-tag"><span class="x-icon"><i class="fa-solid fa-xmark"></i></span> MYTH</div>
-            <div class="myth-reveal">tap to reveal →</div>
+          <div class="myth-icon-img">
+            <img src="assets/main/onlygym.jpeg" alt="Not only for gym">
           </div>
-          <div class="myth-text">It is only for stress or gym use.</div>
+          <div class="myth-content">
+            <div class="myth-top">
+              <div class="myth-tag"><span class="x-icon"><i class="fa-solid fa-xmark"></i></span> MYTH</div>
+              <div class="myth-reveal">tap to reveal <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+            <div class="myth-text">It is only for stress or gym use.</div>
+          </div>
         </div>
         <div class="myth-back">
           <div class="myth-back-top">
             <div class="fact-tag"><span class="check-icon"><i class="fa-solid fa-check"></i></span> FACT</div>
-            <div class="fact-back-hint">← tap to flip back</div>
+            <div class="fact-back-hint"><i class="fa-solid fa-arrow-left"></i> tap to flip back</div>
           </div>
           <div class="fact-text">It benefits <strong>everyone</strong> — men, women &amp; elderly. Supports hormonal balance, thyroid, sleep, cognition &amp; immunity, not just athletic performance.</div>
         </div>
@@ -1310,16 +1278,21 @@ html, body {
     <div class="myth-card">
       <div class="myth-inner">
         <div class="myth-front">
-          <div class="myth-front-top">
-            <div class="myth-tag"><span class="x-icon"><i class="fa-solid fa-xmark"></i></span> MYTH</div>
-            <div class="myth-reveal">tap to reveal →</div>
+          <div class="myth-icon-img">
+            <img src="assets/main/noside.jpeg" alt="Side effects exist">
           </div>
-          <div class="myth-text">It has absolutely no side effects.</div>
+          <div class="myth-content">
+            <div class="myth-top">
+              <div class="myth-tag"><span class="x-icon"><i class="fa-solid fa-xmark"></i></span> MYTH</div>
+              <div class="myth-reveal">tap to reveal <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+            <div class="myth-text">It has absolutely no side effects.</div>
+          </div>
         </div>
         <div class="myth-back">
           <div class="myth-back-top">
             <div class="fact-tag"><span class="check-icon"><i class="fa-solid fa-check"></i></span> FACT</div>
-            <div class="fact-back-hint">← tap to flip back</div>
+            <div class="fact-back-hint"><i class="fa-solid fa-arrow-left"></i> tap to flip back</div>
           </div>
           <div class="fact-text">High doses may cause <strong>GI upset, sedation or diarrhea</strong>. May interact with thyroid, immunosuppressant &amp; sedative medications. <strong>Avoid in pregnancy.</strong></div>
         </div>
@@ -1330,16 +1303,21 @@ html, body {
     <div class="myth-card">
       <div class="myth-inner">
         <div class="myth-front">
-          <div class="myth-front-top">
-            <div class="myth-tag"><span class="x-icon"><i class="fa-solid fa-xmark"></i></span> MYTH</div>
-            <div class="myth-reveal">tap to reveal →</div>
+          <div class="myth-icon-img">
+            <img src="assets/main/highdose.jpeg" alt="Recommended dose">
           </div>
-          <div class="myth-text">More dose means better results.</div>
+          <div class="myth-content">
+            <div class="myth-top">
+              <div class="myth-tag"><span class="x-icon"><i class="fa-solid fa-xmark"></i></span> MYTH</div>
+              <div class="myth-reveal">tap to reveal <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+            <div class="myth-text">More dose means better results.</div>
+          </div>
         </div>
         <div class="myth-back">
           <div class="myth-back-top">
             <div class="fact-tag"><span class="check-icon"><i class="fa-solid fa-check"></i></span> FACT</div>
-            <div class="fact-back-hint">← tap to flip back</div>
+            <div class="fact-back-hint"><i class="fa-solid fa-arrow-left"></i> tap to flip back</div>
           </div>
           <div class="fact-text">Recommended dose is <strong>300–600 mg/day</strong> of standardised extract. Exceeding this increases adverse effects without added benefits. Always follow clinical guidance.</div>
         </div>
@@ -1349,13 +1327,16 @@ html, body {
   </div>
 </section>
 
-<!-- ===================== PRODUCTS (3 PRODUCTS + 360° VIEWER) ===================== -->
+<!-- ===================== PRODUCTS ===================== -->
+<div class="section-title-block">
+  <div class="section-eyebrow">Marketed</div>
+  <h2 class="section-title-h2">Products in Pakistan</h2>
+  <div class="section-rule"></div>
+</div>
 <section class="products-section" id="products">
-  <div class="section-title">MARKETED PRODUCTS (PAKISTAN)</div>
-  <div class="products-hint"><i class="fa-solid fa-sparkles"></i> Two main dosage forms &amp; an interactive 360° product preview</div>
+  <div class="products-hint"><i class="fa-solid fa-sparkles"></i> Two main dosage forms &amp; an interactive 360° preview</div>
 
   <div class="product-grid">
-
     <div class="product-card">
       <div class="product-frame">
         <span class="product-badge gold">Most Popular</span>
@@ -1364,7 +1345,6 @@ html, body {
       <div class="product-name">Capsules</div>
       <div class="product-sub">300–600 mg standardised extract</div>
     </div>
-
     <div class="product-card">
       <div class="product-frame">
         <span class="product-badge">Traditional</span>
@@ -1373,23 +1353,19 @@ html, body {
       <div class="product-name">Powder (Churna)</div>
       <div class="product-sub">Raw root powder · Ayurvedic form</div>
     </div>
-
   </div>
 
-  <!-- 360 VIEWER -->
   <div class="viewer-section">
     <div class="viewer-header">
       <div class="viewer-title"><i class="fa-solid fa-cube"></i> 3D Product Preview</div>
       <div class="viewer-360-badge">360°</div>
     </div>
-
     <div class="viewer-stage" id="viewerStage">
       <div class="viewer-spin-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
       <img id="viewerImg" src="assets/products/product-360/product-1.webp" alt="Product 360 view" onerror="this.style.opacity=0.2">
       <div class="viewer-frame-count" id="frameCount">1 / 9</div>
       <div class="viewer-progress"><div class="viewer-progress-bar" id="progressBar"></div></div>
     </div>
-
     <div class="viewer-footer">
       <div class="viewer-instruction">
         <i class="fa-solid fa-hand-pointer"></i>
@@ -1416,15 +1392,17 @@ html, body {
   </div>
 </section>
 
-<!-- ===================== TEAM — REDESIGNED ===================== -->
+<!-- ===================== TEAM ===================== -->
+<div class="section-title-block">
+  <div class="section-eyebrow">Credits</div>
+  <h2 class="section-title-h2">Presented By</h2>
+  <div class="section-rule"></div>
+</div>
 <section class="team-section">
-  <div class="section-title">PRESENTED BY</div>
-
-  <!-- HARIS — featured hero card -->
   <div class="team-hero">
     <div class="team-hero-inner">
       <div class="team-hero-img-wrap">
-        <img class="team-hero-img" src="assets/team/haris-horizon.webp" alt="Muhammad Haris" onerror="this.classList.add('img-placeholder');this.alt='H'">
+        <div class="team-hero-img">H</div>
       </div>
       <div class="team-hero-info">
         <div class="team-hero-name">Muhammad Haris</div>
@@ -1435,42 +1413,30 @@ html, body {
     </div>
   </div>
 
-  <!-- Other 3 members in elegant grid -->
   <div class="team-grid">
-
     <div class="team-member tm-1">
-      <div class="team-member-img-wrap">
-        <img class="team-member-img" src="assets/team/zohaib-tahir.webp" alt="Zohaib Tahir" onerror="this.classList.add('img-placeholder');this.alt='Z'">
-      </div>
+      <div class="team-member-img-wrap"><div class="team-member-img">Z</div></div>
       <div class="team-member-name">Zohaib Tahir</div>
       <div class="team-member-role">Member</div>
       <div class="team-member-roll">DP-2403</div>
     </div>
-
     <div class="team-member tm-2">
-      <div class="team-member-img-wrap">
-        <img class="team-member-img" src="assets/team/ali-haider.webp" alt="Ali Haider" onerror="this.classList.add('img-placeholder');this.alt='A'">
-      </div>
+      <div class="team-member-img-wrap"><div class="team-member-img">A</div></div>
       <div class="team-member-name">Ali Haider</div>
       <div class="team-member-role">CR</div>
       <div class="team-member-roll">DP-2626</div>
     </div>
-
     <div class="team-member tm-3">
-      <div class="team-member-img-wrap">
-        <img class="team-member-img" src="assets/team/salman.webp" alt="Salman" onerror="this.classList.add('img-placeholder');this.alt='S'">
-      </div>
+      <div class="team-member-img-wrap"><div class="team-member-img">S</div></div>
       <div class="team-member-name">Salman</div>
       <div class="team-member-role">Member</div>
       <div class="team-member-roll">DP-2419</div>
     </div>
-
   </div>
 
-  <!-- PRESENTED TO -->
-  <div class="section-title" style="margin-top:22px;">PRESENTED TO</div>
+  <div class="section-title" style="margin-top:24px;">PRESENTED TO</div>
   <div class="instructor-card">
-    <img src="assets/team/dr-zeenat-aman.webp" alt="Dr. Zeenat Aman" onerror="this.classList.add('img-placeholder');this.alt='Dr. Zeenat'">
+    <div class="avatar">Z</div>
     <div class="info">
       <div class="ptd">COURSE INSTRUCTOR</div>
       <div class="nm">Dr. Zeenat Aman</div>
@@ -1492,7 +1458,7 @@ html, body {
   </ul>
 </section>
 
-</div><!-- /container -->
+</div><!-- /page-wrap -->
 
 <!-- ===================== INFO MODAL ===================== -->
 <div class="info-modal-overlay" id="infoModalOverlay">
@@ -1505,7 +1471,24 @@ html, body {
 
 <script>
 /* ============================================================
-   FLIP CARDS (Traditional Uses + Pharm tiles + Myth cards)
+   STICKY NAV — turn into floating curved pill on scroll
+   ============================================================ */
+(function () {
+  const nav = document.getElementById('topNav');
+  if (!nav) return;
+  const onScroll = () => {
+    if (window.scrollY > 30) {
+      nav.classList.add('is-stuck');
+    } else {
+      nav.classList.remove('is-stuck');
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+/* ============================================================
+   FLIP CARDS (Pharm + Traditional + Myth)
    ============================================================ */
 document.querySelectorAll('.flip-card').forEach(card => {
   card.addEventListener('click', () => {
@@ -1513,14 +1496,12 @@ document.querySelectorAll('.flip-card').forEach(card => {
     if (inner) inner.classList.toggle('flipped');
   });
 });
-
 document.querySelectorAll('.pharm-tile').forEach(tile => {
   tile.addEventListener('click', () => {
     const inner = tile.querySelector('.pharm-inner');
     if (inner) inner.classList.toggle('flipped');
   });
 });
-
 document.querySelectorAll('.myth-card').forEach(card => {
   card.addEventListener('click', () => {
     const inner = card.querySelector('.myth-inner');
@@ -1529,23 +1510,12 @@ document.querySelectorAll('.myth-card').forEach(card => {
 });
 
 /* ============================================================
-   TABS ACTIVE STATE
-   ============================================================ */
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-  });
-});
-
-/* ============================================================
-   CHEMICAL INFO MODALS
+   CHEMICAL INFO MODAL
    ============================================================ */
 const overlay = document.getElementById('infoModalOverlay');
 const modalTitle = document.getElementById('infoModalTitle');
 const modalText = document.getElementById('infoModalText');
 const modalClose = document.getElementById('infoModalClose');
-
 document.querySelectorAll('.info-btn').forEach(btn => {
   btn.addEventListener('click', e => {
     e.stopPropagation();
@@ -1565,7 +1535,6 @@ const observer = new IntersectionObserver((entries) => {
     if (entry.isIntersecting) entry.target.classList.add('in-view');
   });
 }, { threshold: 0.12 });
-
 document.querySelectorAll(
   '.profile-item, .zig-item, .chem-tile, .flip-card, .pharm-tile, .myth-card, .product-card, .team-hero, .team-member'
 ).forEach(el => observer.observe(el));
@@ -1581,77 +1550,22 @@ document.querySelectorAll(
   const progressBar = document.getElementById('progressBar');
   const autoplayBtn = document.getElementById('autoplayBtn');
   if (!stage || !img) return;
-
-  // Preload all frames
-  const frames = [];
-  for (let i = 1; i <= TOTAL_FRAMES; i++) {
-    const im = new Image();
-    im.src = `assets/products/product-360/product-${i}.webp`;
-    frames.push(im);
-  }
-
-  let currentFrame = 0;
-  let isDragging = false;
-  let startX = 0;
-  let startFrame = 0;
-  let autoplayId = null;
-
+  let currentFrame = 0, isDragging = false, startX = 0, startFrame = 0, autoplayId = null;
   const setFrame = (idx) => {
     currentFrame = ((idx % TOTAL_FRAMES) + TOTAL_FRAMES) % TOTAL_FRAMES;
     img.src = `assets/products/product-360/product-${currentFrame + 1}.webp`;
     frameCount.textContent = `${currentFrame + 1} / ${TOTAL_FRAMES}`;
     progressBar.style.width = `${((currentFrame + 1) / TOTAL_FRAMES) * 100}%`;
   };
-
-  const stopAutoplay = () => {
-    if (autoplayId) {
-      clearInterval(autoplayId);
-      autoplayId = null;
-      autoplayBtn.classList.remove('playing');
-      autoplayBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-    }
-  };
-
-  const startAutoplay = () => {
-    stopAutoplay();
-    autoplayBtn.classList.add('playing');
-    autoplayBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-    autoplayId = setInterval(() => setFrame(currentFrame + 1), 130);
-  };
-
-  // Mouse drag
-  stage.addEventListener('mousedown', (e) => {
-    isDragging = true; startX = e.clientX; startFrame = currentFrame;
-    stopAutoplay();
-    e.preventDefault();
-  });
-  window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const dx = e.clientX - startX;
-    const stepPx = 18; // pixels per frame
-    const delta = Math.round(dx / stepPx);
-    setFrame(startFrame + delta);
-  });
+  const stopAutoplay = () => { if (autoplayId) { clearInterval(autoplayId); autoplayId = null; autoplayBtn.classList.remove('playing'); autoplayBtn.innerHTML = '<i class="fa-solid fa-play"></i>'; } };
+  const startAutoplay = () => { stopAutoplay(); autoplayBtn.classList.add('playing'); autoplayBtn.innerHTML = '<i class="fa-solid fa-pause"></i>'; autoplayId = setInterval(() => setFrame(currentFrame + 1), 130); };
+  stage.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX; startFrame = currentFrame; stopAutoplay(); e.preventDefault(); });
+  window.addEventListener('mousemove', (e) => { if (!isDragging) return; const dx = e.clientX - startX; const delta = Math.round(dx / 18); setFrame(startFrame + delta); });
   window.addEventListener('mouseup', () => { isDragging = false; });
-
-  // Touch drag
-  stage.addEventListener('touchstart', (e) => {
-    isDragging = true; startX = e.touches[0].clientX; startFrame = currentFrame;
-    stopAutoplay();
-  }, { passive: true });
-  stage.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    const dx = e.touches[0].clientX - startX;
-    const stepPx = 18;
-    const delta = Math.round(dx / stepPx);
-    setFrame(startFrame + delta);
-  }, { passive: true });
+  stage.addEventListener('touchstart', (e) => { isDragging = true; startX = e.touches[0].clientX; startFrame = currentFrame; stopAutoplay(); }, { passive: true });
+  stage.addEventListener('touchmove', (e) => { if (!isDragging) return; const dx = e.touches[0].clientX - startX; const delta = Math.round(dx / 18); setFrame(startFrame + delta); }, { passive: true });
   stage.addEventListener('touchend', () => { isDragging = false; });
-
-  autoplayBtn.addEventListener('click', () => {
-    if (autoplayId) stopAutoplay(); else startAutoplay();
-  });
-
+  autoplayBtn.addEventListener('click', () => { if (autoplayId) stopAutoplay(); else startAutoplay(); });
   setFrame(0);
 })();
 </script>
