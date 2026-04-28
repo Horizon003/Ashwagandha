@@ -1,1051 +1,248 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Withania Somnifera – Ashwagandha</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/style.css"/>
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ashwagandha 3D | Haris (Horizon)</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Model Viewer -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <style>
+        /* Hide Default Progress Bar of Model Viewer */
+        model-viewer::part(default-progress-bar) {
+            display: none;
+        }
+
+        /* Apple Style Background */
+        .apple-bg {
+            background-color: #f5f5f7;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* --- Tutorial Animations --- */
+        .touch-indicator {
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.3); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+        }
+
+        /* Drag / Swipe Animation */
+        @keyframes swipeAnim {
+            0% { transform: translateX(-20px); }
+            50% { transform: translateX(20px); }
+            100% { transform: translateX(-20px); }
+        }
+        .anim-swipe {
+            animation: swipeAnim 2.5s ease-in-out infinite;
+        }
+
+        /* Pinch Animation */
+        @keyframes pinchTop {
+            0%, 100% { transform: translate(-15px, -15px); }
+            50% { transform: translate(5px, 5px); }
+        }
+        @keyframes pinchBottom {
+            0%, 100% { transform: translate(15px, 15px); }
+            50% { transform: translate(-5px, -5px); }
+        }
+        .anim-pinch-1 { animation: pinchTop 2.5s ease-in-out infinite; }
+        .anim-pinch-2 { animation: pinchBottom 2.5s ease-in-out infinite; }
+    </style>
 </head>
-<body>
-<canvas id="bg-gradient-canvas" aria-hidden="true"></canvas>
+<body class="overflow-hidden bg-black text-black font-sans selection:bg-gray-300 antialiased">
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCROLL PROGRESS BAR
-═══════════════════════════════════════════════════════════ -->
-<div id="scroll-progress"></div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     STICKY HEADER
-═══════════════════════════════════════════════════════════ -->
-<header id="site-header">
-  <div class="header-inner">
-    <!-- LEFT -->
-    <div class="header-brand">
-      <img src="assets/logos/qacp-logo.webp" alt="QACP Logo" class="header-logo" onerror="this.style.display='none'"/>
-      <div class="header-text">
-        <span class="header-text-main">Quaid-e-Azam</span>
-        <span class="header-text-sub">College of Pharmacy</span>
-      </div>
-    </div>
-    <!-- CENTER -->
-    <div class="header-center">
-      <span class="header-plant-name">WITHANIA SOMNIFERA</span>
-    </div>
-    <!-- RIGHT -->
-    <div class="header-brand header-brand-right">
-      <div class="header-text header-text-right">
-        <span class="header-text-main">University of</span>
-        <span class="header-text-sub">Sargodha</span>
-      </div>
-      <img src="assets/logos/uos-logo.webp" alt="UoS Logo" class="header-logo" onerror="this.style.display='none'"/>
-    </div>
-  </div>
-</header>
-
-<!-- ═══════════════════════════════════════════════════════════
-     NAV DOTS
-═══════════════════════════════════════════════════════════ -->
-<nav id="nav-dots" aria-label="Section navigation">
-  <ul>
-    <li><button data-section="0" title="Hero"></button></li>
-    <li><button data-section="1" title="Taxonomy"></button></li>
-    <li><button data-section="2" title="History"></button></li>
-    <li><button data-section="3" title="Constituents"></button></li>
-    <li><button data-section="4" title="Medicinal Uses"></button></li>
-    <li><button data-section="5" title="Traditional Uses"></button></li>
-    <li><button data-section="6" title="Pharmacology"></button></li>
-    <li><button data-section="7" title="Misconceptions"></button></li>
-    <li><button data-section="8" title="Dosage Forms"></button></li>
-    <li><button data-section="9" title="Conclusion"></button></li>
-    <li><button data-section="10" title="Team"></button></li>
-    <li><button data-section="11" title="Presented To"></button></li>
-    <li><button data-section="12" title="References"></button></li>
-  </ul>
-</nav>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 0 — HERO
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-0" class="section hero-section" data-section="0">
-  <canvas id="particle-canvas"></canvas>
-  <div class="hero-orb hero-orb-one"></div>
-  <div class="hero-orb hero-orb-two"></div>
-
-  <div class="hero-content hero-shell">
-    <div class="hero-copy">
-      <div class="hero-badge gsap-fade">Pharm D Pharmacognosy Presentation</div>
-      <h1 class="hero-title" id="hero-typing"></h1>
-      <p class="hero-subtitle gsap-fade"><em>Withania somnifera</em> (L.) Dunal</p>
-      <p class="hero-tagline gsap-fade">Modern professional overview with scientific, botanical and pharmacognostic focus</p>
-      <div class="hero-divider gsap-fade">
-        <span></span><i class="fa-solid fa-leaf"></i><span></span>
-      </div>
-      <div class="hero-highlights gsap-fade">
-        <div class="hero-chip"><i class="fa-solid fa-microscope"></i><span>Scientific Profile</span></div>
-        <div class="hero-chip"><i class="fa-solid fa-seedling"></i><span>Medicinal Plant</span></div>
-        <div class="hero-chip"><i class="fa-solid fa-shield-heart"></i><span>Clinical Relevance</span></div>
-      </div>
+    <!-- Splash Screen with Loading Bar -->
+    <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white transition-opacity duration-700">
+        <div class="mb-8 flex flex-col items-center">
+            <!-- Sleek Icon -->
+            <svg class="w-16 h-16 mb-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path>
+            </svg>
+            <h1 class="text-2xl font-semibold tracking-tight text-black">Ashwagandha 3D</h1>
+            <p class="text-sm text-gray-500 mt-2" id="progress-text">Loading Model 0%</p>
+        </div>
+        <!-- Progress Bar -->
+        <div class="w-64 h-[2px] bg-gray-200 rounded-full overflow-hidden">
+            <div id="progress-bar" class="h-full bg-black w-0 transition-all duration-300 ease-out"></div>
+        </div>
     </div>
 
-    <div class="hero-visual gsap-right">
-      <div class="hero-image-card" id="hero-bg">
-        <div class="hero-image-topbar">
-          <span class="hero-image-label">Main plant image</span>
-          <span class="hero-image-pill">Ashwagandha</span>
-        </div>
-        <div class="hero-image-frame">
-          <img src="assets/main/ashwagandha-main.webp" alt="Ashwagandha" id="hero-img" class="hero-img"/>
-        </div>
-      </div>
-    </div>
-  </div>
+    <!-- Main Application Area -->
+    <div class="h-screen w-full flex flex-col apple-bg relative">
+        
+        <!-- Top Bar -->
+        <header class="h-16 w-full glass absolute top-0 z-30 flex items-center justify-center px-6">
+            <h2 class="text-lg font-medium tracking-wide">3D Model Overview</h2>
+        </header>
 
-  <div class="scroll-indicator gsap-fade">
-    <div class="scroll-mouse">
-      <div class="scroll-wheel"></div>
-    </div>
-    <span>Scroll to Explore</span>
-  </div>
-</section>
+        <!-- 3D Model Viewer Container -->
+        <main class="flex-grow w-full relative">
+            <model-viewer
+                id="main-viewer"
+                src="ashwagandha.glb"
+                camera-controls
+                touch-action="pan-y"
+                shadow-intensity="1.5"
+                shadow-softness="1"
+                environment-image="neutral"
+                exposure="1"
+                class="w-full h-full outline-none"
+                alt="A 3D model of Ashwagandha">
+            </model-viewer>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 1 — TAXONOMICAL PROFILE
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-1" class="section dark-section" data-section="1">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Classification</div>
-      <h2 class="section-title">Taxonomical Profile</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="taxo-grid">
-      <div class="taxo-card gsap-left" style="--delay:0.0s">
-        <div class="taxo-icon"><i class="fa-solid fa-flask"></i></div>
-        <div class="taxo-label">Botanical Name</div>
-        <div class="taxo-value"><em>Withania somnifera</em> (L.) Dunal</div>
-        <div class="taxo-bar"></div>
-      </div>
-      <div class="taxo-card gsap-right" style="--delay:0.1s">
-        <div class="taxo-icon"><i class="fa-solid fa-seedling"></i></div>
-        <div class="taxo-label">Family</div>
-        <div class="taxo-value">Solanaceae</div>
-        <div class="taxo-bar"></div>
-      </div>
-      <div class="taxo-card gsap-left" style="--delay:0.2s">
-        <div class="taxo-icon"><i class="fa-solid fa-book-open"></i></div>
-        <div class="taxo-label">Common Names</div>
-        <div class="taxo-value">Ashwagandha · Indian Ginseng · Winter Cherry</div>
-        <div class="taxo-bar"></div>
-      </div>
-      <div class="taxo-card gsap-right" style="--delay:0.3s">
-        <div class="taxo-icon"><i class="fa-solid fa-leaf"></i></div>
-        <div class="taxo-label">Part Used</div>
-        <div class="taxo-value">Dried roots and stem bases</div>
-        <div class="taxo-bar"></div>
-      </div>
-      <div class="taxo-card gsap-left" style="--delay:0.4s">
-        <div class="taxo-icon"><i class="fa-solid fa-earth-asia"></i></div>
-        <div class="taxo-label">Habitat / Cultivation</div>
-        <div class="taxo-value">Pakistan · India · Middle East · Africa</div>
-        <div class="taxo-bar"></div>
-      </div>
-      <div class="taxo-card gsap-right" style="--delay:0.5s">
-        <div class="taxo-icon"><i class="fa-solid fa-dna"></i></div>
-        <div class="taxo-label">Kingdom</div>
-        <div class="taxo-value">Plantae → Angiosperms → Eudicots → Solanales</div>
-        <div class="taxo-bar"></div>
-      </div>
-    </div>
-  </div>
-</section>
+            <!-- Tutorial Overlay (Fades in after load) -->
+            <div id="tutorial-overlay" class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-1000">
+                <div class="bg-white/80 backdrop-blur-xl px-10 py-8 rounded-3xl shadow-2xl flex gap-12 border border-gray-200/50">
+                    
+                    <!-- Drag to Rotate Indicator -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative w-20 h-20 flex items-center justify-center mb-4 bg-gray-100 rounded-full">
+                            <div class="w-6 h-6 bg-black rounded-full absolute anim-swipe touch-indicator"></div>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-800 text-center tracking-tight">1 Finger<br><span class="text-gray-500 font-normal">Drag to Rotate</span></span>
+                    </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 1B — 360° 3D PLANT VIEWER (Modal Launch)
-═══════════════════════════════════════════════════════════ -->
+                    <!-- Pinch to Zoom Indicator -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative w-20 h-20 flex items-center justify-center mb-4 bg-gray-100 rounded-full">
+                            <div class="w-5 h-5 border-2 border-black rounded-full absolute anim-pinch-1 touch-indicator"></div>
+                            <div class="w-5 h-5 border-2 border-black rounded-full absolute anim-pinch-2 touch-indicator"></div>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-800 text-center tracking-tight">2 Fingers<br><span class="text-gray-500 font-normal">Pinch to Zoom</span></span>
+                    </div>
 
-<section id="sec-1b" class="section dark-section plant360-section" data-section="1b">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge"><i class="fa-solid fa-rotate"></i> Interactive 3D</div>
-      <h2 class="section-title">360° Plant View</h2>
-      <p class="section-sub">Explore the real 3D model of Ashwagandha — rotate, zoom, inspect every detail</p>
-      <div class="section-rule"></div>
-    </div>
-
-    <!-- Launch Card -->
-    <div class="p3d-launch-wrap gsap-up">
-      <div class="p3d-launch-card" id="p3d-open-btn">
-        <div class="p3d-launch-glow"></div>
-        <div class="p3d-launch-icon">
-          <i class="fa-solid fa-cube"></i>
-          <div class="p3d-orbit-ring p3d-ring-1"></div>
-          <div class="p3d-orbit-ring p3d-ring-2"></div>
-        </div>
-        <div class="p3d-launch-text">
-          <h3>Open 3D Model</h3>
-          <p>Withania somnifera — Full plant with roots</p>
-        </div>
-        <div class="p3d-launch-cta">
-          <span>Explore Now</span>
-          <i class="fa-solid fa-arrow-right"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- Model Info Cards -->
-    <div class="p3d-info-grid gsap-up" style="--delay:0.12s">
-
-      <div class="p3d-info-card">
-        <div class="p3d-info-icon" style="--ic:#22c55e">
-          <i class="fa-solid fa-rotate-3d"></i>
-        </div>
-        <div>
-          <h4>Full 360° Rotation</h4>
-          <p>Drag in any direction — inspect stem, leaves, roots &amp; berries from every angle</p>
-        </div>
-      </div>
-
-      <div class="p3d-info-card">
-        <div class="p3d-info-icon" style="--ic:#f59e0b">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
-        <div>
-          <h4>High Detail Texture</h4>
-          <p>Meshy AI generated model with realistic bark, root system and berry textures</p>
-        </div>
-      </div>
-
-      <div class="p3d-info-card">
-        <div class="p3d-info-icon" style="--ic:#14b8a6">
-          <i class="fa-solid fa-leaf"></i>
-        </div>
-        <div>
-          <h4>Complete Morphology</h4>
-          <p>Aerial parts + root system visible — ideal for botanical study and identification</p>
-        </div>
-      </div>
-
-      <div class="p3d-info-card">
-        <div class="p3d-info-icon" style="--ic:#8b5cf6">
-          <i class="fa-solid fa-mobile-screen"></i>
-        </div>
-        <div>
-          <h4>Mobile Optimised</h4>
-          <p>Pinch to zoom, finger drag to rotate — works perfectly on any screen size</p>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     3D MODEL MODAL OVERLAY
-═══════════════════════════════════════════════════════════ -->
-<div class="p3d-modal-overlay" id="p3d-modal" aria-hidden="true">
-  <div class="p3d-modal-inner">
-
-    <!-- Modal header bar -->
-    <div class="p3d-modal-header">
-      <div class="p3d-modal-title">
-        <i class="fa-solid fa-seedling"></i>
-        <span>Ashwagandha 3D Model</span>
-      </div>
-      <button class="p3d-modal-close" id="p3d-close-btn" aria-label="Close">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-
-    <!-- 9:16 Frame -->
-    <div class="p3d-modal-frame-wrap">
-
-      <!-- Loading screen -->
-      <div class="p3d-loading" id="p3d-loading">
-        <div class="p3d-spinner"></div>
-        <div class="p3d-load-text">
-          <span id="p3d-pct">0%</span>
-          <span class="p3d-load-label">Loading 3D Model…</span>
-        </div>
-        <div class="p3d-load-bar-wrap">
-          <div class="p3d-load-bar" id="p3d-load-bar"></div>
-        </div>
-      </div>
-
-      <!-- Tutorial overlay — 3 steps -->
-      <div class="p3d-tutorial" id="p3d-tutorial">
-        <button class="p3d-skip-btn" id="p3d-skip-btn">Skip <i class="fa-solid fa-forward"></i></button>
-        <div class="p3d-tut-steps">
-
-          <div class="p3d-tut-step active" data-step="0">
-            <div class="p3d-tut-icon"><i class="fa-solid fa-hand-pointer"></i></div>
-            <p class="p3d-tut-text">Drag finger to <strong>rotate</strong> the plant</p>
-            <div class="p3d-tut-anim drag-anim"></div>
-          </div>
-
-          <div class="p3d-tut-step" data-step="1">
-            <div class="p3d-tut-icon"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
-            <p class="p3d-tut-text">Pinch to <strong>zoom in/out</strong></p>
-            <div class="p3d-tut-anim zoom-anim"></div>
-          </div>
-
-          <div class="p3d-tut-step" data-step="2">
-            <div class="p3d-tut-icon"><i class="fa-solid fa-rotate"></i></div>
-            <p class="p3d-tut-text">Use <strong>Auto Rotate</strong> for hands-free view</p>
-          </div>
-
-        </div>
-        <!-- Step dots -->
-        <div class="p3d-tut-dots">
-          <span class="p3d-dot active" data-dot="0"></span>
-          <span class="p3d-dot" data-dot="1"></span>
-          <span class="p3d-dot" data-dot="2"></span>
-        </div>
-        <button class="p3d-tut-next" id="p3d-tut-next">Next <i class="fa-solid fa-chevron-right"></i></button>
-      </div>
-
-      <!-- model-viewer -->
-      <model-viewer
-        id="plant-model"
-        src="assets/3d/ashwagandha.glb"
-        alt="Ashwagandha 3D Plant Model"
-        camera-controls
-        touch-action="pan-y"
-        auto-rotate
-        auto-rotate-delay="500"
-        rotation-per-second="28deg"
-        shadow-intensity="1"
-        shadow-softness="0.6"
-        exposure="1.3"
-        environment-image="neutral"
-        loading="lazy"
-        style="background:#ffffff; --poster-color:#ffffff; width:100%; height:100%; display:block;"
-      ></model-viewer>
-
-    </div>
-
-    <!-- Bottom controls -->
-    <div class="p3d-modal-controls">
-      <button id="p3d-auto-btn" class="plant360-auto-btn active">
-        <i class="fa-solid fa-rotate"></i>
-        <span id="p3d-auto-label">Auto Rotating</span>
-      </button>
-      <button id="p3d-reset-btn" class="p3d-reset-btn">
-        <i class="fa-solid fa-arrows-to-circle"></i>
-        Reset
-      </button>
-    </div>
-
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 2 — HISTORICAL BACKGROUND
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-2" class="section dark-section alt-bg" data-section="2">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Heritage</div>
-      <h2 class="section-title">Historical Background</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="timeline">
-      <div class="timeline-line" id="timeline-line"></div>
-      <div class="timeline-item gsap-timeline" style="--delay:0s">
-        <div class="tl-dot"><i class="fa-solid fa-clock-rotate-left"></i></div>
-        <div class="tl-card">
-          <div class="tl-year">~3000 BCE</div>
-          <h3>Ancient Ayurvedic Use</h3>
-          <p>One of the most revered herbs in Ayurveda, used continuously for over 3,000 years for vitality and longevity.</p>
-        </div>
-      </div>
-      <div class="timeline-item tl-right gsap-timeline" style="--delay:0.15s">
-        <div class="tl-dot"><i class="fa-solid fa-scroll"></i></div>
-        <div class="tl-card">
-          <div class="tl-year">Charaka Samhita</div>
-          <h3>Classical Text Reference</h3>
-          <p>Mentioned in the ancient Charaka Samhita as a powerful Rasayana (rejuvenative tonic) supporting physical and mental health.</p>
-        </div>
-      </div>
-      <div class="timeline-item gsap-timeline" style="--delay:0.3s">
-        <div class="tl-dot"><i class="fa-solid fa-book"></i></div>
-        <div class="tl-card">
-          <div class="tl-year">Sushruta Samhita</div>
-          <h3>Surgical & Healing Text</h3>
-          <p>Referenced in Sushruta Samhita for its role in treating inflammation, fatigue, and as a general health tonic.</p>
-        </div>
-      </div>
-      <div class="timeline-item tl-right gsap-timeline" style="--delay:0.45s">
-        <div class="tl-dot"><i class="fa-solid fa-language"></i></div>
-        <div class="tl-card">
-          <div class="tl-year">Etymology</div>
-          <h3>"Smell of Horse" (Ashwa + Gandha)</h3>
-          <p>Sanskrit name meaning the smell of horse — signifying that it grants the strength and vitality of a stallion.</p>
-        </div>
-      </div>
-      <div class="timeline-item gsap-timeline" style="--delay:0.6s">
-        <div class="tl-dot"><i class="fa-solid fa-microscope"></i></div>
-        <div class="tl-card">
-          <div class="tl-year">20th–21st Century</div>
-          <h3>Modern Pharmacological Research</h3>
-          <p>Hundreds of clinical studies confirm adaptogenic, neuroprotective, anti-inflammatory, and immunomodulatory properties.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 3 — CHEMICAL CONSTITUENTS
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-3" class="section dark-section" data-section="3">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Phytochemistry</div>
-      <h2 class="section-title">Chemical Constituents</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="chem-groups">
-      <div class="chem-group gsap-up" style="--delay:0s" data-group="withanolides">
-        <div class="chem-group-header">
-          <div class="chem-group-icon"><i class="fa-solid fa-atom"></i></div>
-          <h3>Withanolides</h3>
-          <span class="chem-badge primary">Primary Active</span>
-        </div>
-        <div class="chem-compounds">
-          <div class="chem-chip" data-tooltip="The most potent anti-cancer withanolide. Inhibits NF-κB pathway & induces apoptosis in tumor cells.">Withaferin A</div>
-          <div class="chem-chip" data-tooltip="Promotes muscle growth; studied for anabolic effects and cognitive enhancement.">Withanolide D</div>
-          <div class="chem-chip" data-tooltip="Exhibits anti-inflammatory activity by inhibiting cyclooxygenase enzymes.">Withanolide B</div>
-          <div class="chem-chip" data-tooltip="Shows anxiolytic effects comparable to lorazepam in animal studies.">Withanolide A</div>
-        </div>
-      </div>
-      <div class="chem-group gsap-up" style="--delay:0.1s" data-group="alkaloids">
-        <div class="chem-group-header">
-          <div class="chem-group-icon"><i class="fa-solid fa-vial"></i></div>
-          <h3>Alkaloids</h3>
-          <span class="chem-badge secondary">Neuroactive</span>
-        </div>
-        <div class="chem-compounds">
-          <div class="chem-chip" data-tooltip="Contributes to the sedative 'somnifera' (sleep-inducing) properties of the plant.">Somniferine</div>
-          <div class="chem-chip" data-tooltip="Exhibits neuromuscular blocking activity; structural analog of nicotine.">Anaferine</div>
-          <div class="chem-chip" data-tooltip="Mild cholinergic activity supporting cognitive enhancement.">Withanine</div>
-          <div class="chem-chip" data-tooltip="Contributes to the bitter taste; anti-parasitic properties studied.">Somnine</div>
-        </div>
-      </div>
-      <div class="chem-group gsap-up" style="--delay:0.2s" data-group="glycosides">
-        <div class="chem-group-header">
-          <div class="chem-group-icon"><i class="fa-solid fa-circle-nodes"></i></div>
-          <h3>Glycosides</h3>
-          <span class="chem-badge accent">Immunomodulatory</span>
-        </div>
-        <div class="chem-compounds">
-          <div class="chem-chip" data-tooltip="Withanosides I–VII provide anxiolytic & antidepressant activity by modulating GABA receptors.">Withanosides</div>
-          <div class="chem-chip" data-tooltip="Sitoindosides VII–X demonstrate immunostimulant properties and anti-stress activity.">Sitoindosides</div>
-          <div class="chem-chip" data-tooltip="Steroid glycosides that contribute to the plant's adaptogenic effects.">Withanoside IV</div>
-        </div>
-      </div>
-      <div class="chem-group gsap-up" style="--delay:0.3s" data-group="others">
-        <div class="chem-group-header">
-          <div class="chem-group-icon"><i class="fa-solid fa-shield-halved"></i></div>
-          <h3>Flavonoids &amp; Sterols</h3>
-          <span class="chem-badge green">Antioxidant</span>
-        </div>
-        <div class="chem-compounds">
-          <div class="chem-chip" data-tooltip="Plant-derived sterols that inhibit cholesterol absorption and provide cardioprotective benefits.">β-Sitosterol</div>
-          <div class="chem-chip" data-tooltip="Polyphenolic compounds with strong antioxidant activity — neutralizes free radicals.">Flavonoids</div>
-          <div class="chem-chip" data-tooltip="Chlorogenic acid and similar compounds exhibit potent anti-inflammatory activity.">Polyphenols</div>
-          <div class="chem-chip" data-tooltip="Iron-containing compound — explains traditional use for anemia and weakness.">Iron (Fe)</div>
-        </div>
-      </div>
-    </div>
-    <div id="chem-tooltip" class="chem-tooltip"></div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 4 — MODERN MEDICINAL USES
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-4" class="section dark-section alt-bg" data-section="4">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Evidence-Based</div>
-      <h2 class="section-title">Modern Medicinal Uses</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="med-grid">
-      <div class="med-card gsap-up" style="--delay:0s">
-        <div class="med-icon-wrap">
-          <i class="fa-solid fa-brain"></i>
-          <div class="med-ring"></div>
-        </div>
-        <h3>Stress &amp; Anxiety</h3>
-        <p>Reduces cortisol levels by up to 30% in clinical trials. Acts on HPA axis to regulate stress response.</p>
-        <div class="med-progress"><div class="med-bar" style="--w:92%"></div></div>
-        <span class="med-percent">92% Efficacy</span>
-      </div>
-      <div class="med-card gsap-up" style="--delay:0.08s">
-        <div class="med-icon-wrap">
-          <i class="fa-solid fa-moon"></i>
-          <div class="med-ring"></div>
-        </div>
-        <h3>Sleep Improvement</h3>
-        <p>Triethylene glycol and withanolides enhance sleep quality, reduce sleep latency and promote deeper REM cycles.</p>
-        <div class="med-progress"><div class="med-bar" style="--w:85%"></div></div>
-        <span class="med-percent">85% Efficacy</span>
-      </div>
-      <div class="med-card gsap-up" style="--delay:0.16s">
-        <div class="med-icon-wrap">
-          <i class="fa-solid fa-lightbulb"></i>
-          <div class="med-ring"></div>
-        </div>
-        <h3>Cognitive Enhancement</h3>
-        <p>Improves memory, reaction time, and executive function. Promotes neurogenesis through BDNF expression.</p>
-        <div class="med-progress"><div class="med-bar" style="--w:78%"></div></div>
-        <span class="med-percent">78% Efficacy</span>
-      </div>
-      <div class="med-card gsap-up" style="--delay:0.24s">
-        <div class="med-icon-wrap">
-          <i class="fa-solid fa-shield-virus"></i>
-          <div class="med-ring"></div>
-        </div>
-        <h3>Immune Support</h3>
-        <p>Increases NK cell activity, lymphocyte proliferation, and immunoglobulin levels. Potent immunomodulatory effects.</p>
-        <div class="med-progress"><div class="med-bar" style="--w:88%"></div></div>
-        <span class="med-percent">88% Efficacy</span>
-      </div>
-      <div class="med-card gsap-up" style="--delay:0.32s">
-        <div class="med-icon-wrap">
-          <i class="fa-solid fa-droplet"></i>
-          <div class="med-ring"></div>
-        </div>
-        <h3>Metabolic &amp; Diabetic</h3>
-        <p>Lowers blood glucose, improves insulin sensitivity. Comparable to oral hypoglycemic agents in some studies.</p>
-        <div class="med-progress"><div class="med-bar" style="--w:74%"></div></div>
-        <span class="med-percent">74% Efficacy</span>
-      </div>
-      <div class="med-card gsap-up" style="--delay:0.40s">
-        <div class="med-icon-wrap">
-          <i class="fa-solid fa-dumbbell"></i>
-          <div class="med-ring"></div>
-        </div>
-        <h3>Muscle &amp; Endurance</h3>
-        <p>Increases VO₂ max, muscle strength, and recovery. Reduces exercise-induced muscle damage biomarkers.</p>
-        <div class="med-progress"><div class="med-bar" style="--w:82%"></div></div>
-        <span class="med-percent">82% Efficacy</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 5 — TRADITIONAL USES
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-5" class="section dark-section" data-section="5">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Ayurveda</div>
-      <h2 class="section-title">Traditional Uses</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="trad-grid">
-      <div class="trad-card gsap-up" style="--delay:0s">
-        <div class="trad-front">
-          <div class="trad-icon"><i class="fa-solid fa-bed"></i></div>
-          <h3>Insomnia</h3>
-          <p>Promotes natural sleep</p>
-          <span class="trad-tap">Click for details</span>
-        </div>
-        <div class="trad-back">
-          <h3>Insomnia &amp; Sleep</h3>
-          <p>Root powder mixed with warm milk and honey, taken before bed. Triethylene glycol promotes non-REM sleep. Traditionally: 1 tsp churna + milk.</p>
-        </div>
-      </div>
-      <div class="trad-card gsap-up" style="--delay:0.1s">
-        <div class="trad-front">
-          <div class="trad-icon"><i class="fa-solid fa-person-cane"></i></div>
-          <h3>Arthritis</h3>
-          <p>Reduces joint inflammation</p>
-          <span class="trad-tap">Click for details</span>
-        </div>
-        <div class="trad-back">
-          <h3>Arthritis &amp; Pain</h3>
-          <p>Withanolides inhibit NF-κB reducing inflammatory cytokines. Applied as herbal paste externally or ingested as decoction for rheumatic pain.</p>
-        </div>
-      </div>
-      <div class="trad-card gsap-up" style="--delay:0.2s">
-        <div class="trad-front">
-          <div class="trad-icon"><i class="fa-solid fa-battery-half"></i></div>
-          <h3>Fatigue &amp; Weakness</h3>
-          <p>Restorative tonic</p>
-          <span class="trad-tap">Click for details</span>
-        </div>
-        <div class="trad-back">
-          <h3>Weakness &amp; Fatigue</h3>
-          <p>Rasayana formulation: Ashwagandha + Shatavari + Ghee. Adaptogenic action modulates cortisol and DHEA to restore energy balance.</p>
-        </div>
-      </div>
-      <div class="trad-card gsap-up" style="--delay:0.3s">
-        <div class="trad-front">
-          <div class="trad-icon"><i class="fa-solid fa-venus-mars"></i></div>
-          <h3>Aphrodisiac</h3>
-          <p>Fertility support</p>
-          <span class="trad-tap">Click for details</span>
-        </div>
-        <div class="trad-back">
-          <h3>Aphrodisiac &amp; Fertility</h3>
-          <p>Increases testosterone levels, sperm count, and motility in males. In females, improves hormonal balance and libido. Traditional Vajikarna herb.</p>
-        </div>
-      </div>
-      <div class="trad-card gsap-up" style="--delay:0.4s">
-        <div class="trad-front">
-          <div class="trad-icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
-          <h3>Fever &amp; Infection</h3>
-          <p>Anti-pyretic use</p>
-          <span class="trad-tap">Click for details</span>
-        </div>
-        <div class="trad-back">
-          <h3>Fever &amp; Infections</h3>
-          <p>Root decoction used as anti-pyretic and antibacterial. Active against Staphylococcus, Salmonella and E. coli. Immunostimulant during illness.</p>
-        </div>
-      </div>
-      <div class="trad-card gsap-up" style="--delay:0.5s">
-        <div class="trad-front">
-          <div class="trad-icon"><i class="fa-solid fa-child-reaching"></i></div>
-          <h3>Child Tonic</h3>
-          <p>Growth &amp; development</p>
-          <span class="trad-tap">Click for details</span>
-        </div>
-        <div class="trad-back">
-          <h3>Paediatric Tonic</h3>
-          <p>Mixed with milk and sugar for underweight children. Promotes healthy weight gain, bone density, and cognitive development. Traditional Balya herb.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 6 — PHARMACOLOGICAL ACTIONS
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-6" class="section dark-section alt-bg" data-section="6">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Mechanism</div>
-      <h2 class="section-title">Pharmacological Actions</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="accord-wrap gsap-up" style="--delay:0.1s">
-      <div class="accord-item">
-        <button class="accord-btn">
-          <div class="accord-icon-wrap"><i class="fa-solid fa-shield-heart"></i></div>
-          <span>Adaptogenic &amp; Anti-Stress</span>
-          <div class="accord-chevron"><i class="fa-solid fa-chevron-down"></i></div>
-        </button>
-        <div class="accord-body">
-          <p>Regulates HPA (Hypothalamic–Pituitary–Adrenal) axis. Reduces serum cortisol and adrenal hypertrophy under chronic stress. Sitoindosides and Withanolide D are key active compounds. Multiple RCTs confirm reduction in perceived stress and anxiety scores.</p>
-          <div class="accord-tags"><span>HPA Axis</span><span>Cortisol ↓</span><span>GABAergic</span><span>Sitoindosides</span></div>
-        </div>
-      </div>
-      <div class="accord-item">
-        <button class="accord-btn">
-          <div class="accord-icon-wrap"><i class="fa-solid fa-syringe"></i></div>
-          <span>Anti-Diabetic Potential</span>
-          <div class="accord-chevron"><i class="fa-solid fa-chevron-down"></i></div>
-        </button>
-        <div class="accord-body">
-          <p>Withanolides stimulate insulin secretion from pancreatic β-cells and enhance GLUT4 expression in muscle tissue. Reduces fasting blood glucose, HbA1c, and oxidative stress markers in Type 2 diabetics. Comparable effects to metformin in animal studies.</p>
-          <div class="accord-tags"><span>Insulin Sensitizer</span><span>β-cell protection</span><span>GLUT4 ↑</span><span>HbA1c ↓</span></div>
-        </div>
-      </div>
-      <div class="accord-item">
-        <button class="accord-btn">
-          <div class="accord-icon-wrap"><i class="fa-solid fa-brain"></i></div>
-          <span>Neuroprotective &amp; Anxiolytic</span>
-          <div class="accord-chevron"><i class="fa-solid fa-chevron-down"></i></div>
-        </button>
-        <div class="accord-body">
-          <p>Inhibits acetylcholinesterase, enhances BDNF (Brain-Derived Neurotrophic Factor), and reduces β-amyloid plaques. Anxiolytic effect mediated through GABA-A receptor modulation. Comparable to diazepam in mouse models without sedation. Reverses aluminium-induced neurodegeneration.</p>
-          <div class="accord-tags"><span>BDNF ↑</span><span>AChE inhibitor</span><span>GABA-A</span><span>Neuroprotection</span></div>
-        </div>
-      </div>
-      <div class="accord-item">
-        <button class="accord-btn">
-          <div class="accord-icon-wrap"><i class="fa-solid fa-heart-pulse"></i></div>
-          <span>Cardio-Protective Effects</span>
-          <div class="accord-chevron"><i class="fa-solid fa-chevron-down"></i></div>
-        </button>
-        <div class="accord-body">
-          <p>β-Sitosterol reduces LDL cholesterol. Withanolides show cardioprotective effects by reducing lipid peroxidation and oxidative damage to cardiac tissue. Mild antihypertensive effect through NO-mediated vasodilation. Reduces triglycerides by 11–15% in clinical trials.</p>
-          <div class="accord-tags"><span>LDL ↓</span><span>Vasodilation</span><span>Antioxidant</span><span>Lipid peroxidation ↓</span></div>
-        </div>
-      </div>
-      <div class="accord-item">
-        <button class="accord-btn">
-          <div class="accord-icon-wrap"><i class="fa-solid fa-fire"></i></div>
-          <span>Anti-Inflammatory &amp; Antioxidant</span>
-          <div class="accord-chevron"><i class="fa-solid fa-chevron-down"></i></div>
-        </button>
-        <div class="accord-body">
-          <p>Withaferin A powerfully inhibits NF-κB and IκBα kinase, blocking pro-inflammatory cytokine production (TNF-α, IL-1β, IL-6). Scavenges ROS via SOD, CAT, and GPx pathway upregulation. Comparable to hydrocortisone in arthritis models without GI side effects.</p>
-          <div class="accord-tags"><span>NF-κB ↓</span><span>TNF-α ↓</span><span>SOD ↑</span><span>Withaferin A</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 7 — MISCONCEPTIONS
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-7" class="section dark-section" data-section="7">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Myth vs Reality</div>
-      <h2 class="section-title">Common Misconceptions</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="flip-grid">
-      <div class="flip-card gsap-up" style="--delay:0s">
-        <div class="flip-inner">
-          <div class="flip-front">
-            <div class="flip-x-icon"><i class="fa-solid fa-xmark"></i></div>
-            <h3>Instant Results</h3>
-            <p>"Ashwagandha works overnight"</p>
-            <span class="flip-hint">Tap card to reveal truth</span>
-          </div>
-          <div class="flip-back">
-            <div class="flip-check-icon"><i class="fa-solid fa-check"></i></div>
-            <h3>Reality</h3>
-            <p>Works gradually over 4–8 weeks of consistent use. Adaptogenic effects require cumulative supplementation for measurable benefits.</p>
-          </div>
-        </div>
-      </div>
-      <div class="flip-card gsap-up" style="--delay:0.15s">
-        <div class="flip-inner">
-          <div class="flip-front">
-            <div class="flip-x-icon"><i class="fa-solid fa-xmark"></i></div>
-            <h3>Gym-Only Herb</h3>
-            <p>"Only useful for bodybuilders"</p>
-            <span class="flip-hint">Tap card to reveal truth</span>
-          </div>
-          <div class="flip-back">
-            <div class="flip-check-icon"><i class="fa-solid fa-check"></i></div>
-            <h3>Reality</h3>
-            <p>Multi-system benefits: stress, sleep, cognition, immunity, diabetes, cardioprotection, fertility. Not limited to muscle building.</p>
-          </div>
-        </div>
-      </div>
-      <div class="flip-card gsap-up" style="--delay:0.3s">
-        <div class="flip-inner">
-          <div class="flip-front">
-            <div class="flip-x-icon"><i class="fa-solid fa-xmark"></i></div>
-            <h3>Zero Side Effects</h3>
-            <p>"100% safe in any dose"</p>
-            <span class="flip-hint">Tap card to reveal truth</span>
-          </div>
-          <div class="flip-back">
-            <div class="flip-check-icon"><i class="fa-solid fa-check"></i></div>
-            <h3>Reality</h3>
-            <p>High doses may cause GI upset, drowsiness, or thyroid hormone changes. Avoid in pregnancy. Consult a physician before use.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 8 — DOSAGE FORMS WITH 360 VIEWER
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-8" class="section dark-section alt-bg" data-section="8">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Formulations</div>
-      <h2 class="section-title">Dosage Forms</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="dosage-layout">
-
-      <!-- LEFT — CAPSULES -->
-      <div class="dosage-side gsap-left">
-        <div class="dosage-product-card">
-          <div class="dosage-img-wrap">
-            <img src="assets/products/ashwagandha-capsules.webp" alt="Ashwagandha Capsules" class="dosage-img" id="img-capsules"/>
-          </div>
-          <div class="dosage-info">
-            <h3>Capsules / Tablets</h3>
-            <div class="dosage-spec">
-              <span><i class="fa-solid fa-flask-vial"></i> 250–600 mg extract</span>
-              <span><i class="fa-solid fa-clock"></i> Once or twice daily</span>
-              <span><i class="fa-solid fa-utensils"></i> With food or milk</span>
+                </div>
             </div>
-            <p>Standardized to 5% withanolides. Most bioavailable form for stress and anxiety management.</p>
-          </div>
-        </div>
-      </div>
 
-      <!-- CENTER — 360° VIEWER -->
-      <div class="dosage-center gsap-up">
-        <div class="viewer-container">
-          <div class="viewer-badge">
-            <i class="fa-solid fa-sliders"></i> Manual 360° Viewer
-          </div>
-          <div class="viewer-stage" id="viewer-stage">
-            <img id="viewer-img" src="assets/products/product-360/product-1.webp" alt="360 Product View" class="viewer-360-img" onerror="this.parentElement.classList.add('viewer-fallback')"/>
-            <div class="viewer-fallback-text" style="display:none">
-              <i class="fa-solid fa-rotate fa-3x"></i>
-              <p>360° Interactive View</p>
+            <!-- Floating Controls -->
+            <div class="absolute bottom-24 left-1/2 -translate-x-1/2 flex items-center bg-white/80 backdrop-blur-xl p-1.5 rounded-full shadow-lg border border-black/5 z-30 transition-transform hover:scale-105">
+                
+                <!-- Reset Button -->
+                <button id="reset-btn" class="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full hover:bg-gray-100 transition-colors text-black active:bg-gray-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Reset
+                </button>
+                
+                <div class="w-[1px] h-6 bg-gray-300 mx-1"></div>
+                
+                <!-- Auto Rotate Button -->
+                <button id="auto-rotate-btn" class="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 bg-transparent text-black hover:bg-gray-100 active:bg-gray-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                    </svg>
+                    Auto Rotate
+                </button>
+
             </div>
-          </div>
-          <div class="viewer-instructions">
-            <i class="fa-solid fa-hand-pointer"></i>
-            <span>Rotate only with drag or slider — no scroll spin</span>
-          </div>
-          <div class="viewer-controls manual-only-controls">
-            <div class="viewer-slider-wrap">
-              <input type="range" id="viewer-slider" min="0" max="8" value="0" step="1" class="viewer-slider"/>
-            </div>
-            <button id="viewer-reset" class="viewer-reset-btn" aria-label="Reset viewer">
-              <i class="fa-solid fa-arrows-rotate"></i>
-            </button>
-          </div>
-          <div class="viewer-frames">
-            <span id="viewer-frame-num">1</span> / 9
-          </div>
-        </div>
-      </div>
+        </main>
 
-      <!-- RIGHT — POWDER -->
-      <div class="dosage-side gsap-right">
-        <div class="dosage-product-card">
-          <div class="dosage-img-wrap">
-            <img src="assets/products/ashwagandha-powder.webp" alt="Ashwagandha Powder" class="dosage-img" id="img-powder"/>
-          </div>
-          <div class="dosage-info">
-            <h3>Churna (Powder)</h3>
-            <div class="dosage-spec">
-              <span><i class="fa-solid fa-flask-vial"></i> 3–6 g per day</span>
-              <span><i class="fa-solid fa-mug-hot"></i> With warm milk/honey</span>
-              <span><i class="fa-solid fa-mortar-pestle"></i> Traditional preparation</span>
-            </div>
-            <p>Raw root powder — traditional Ayurvedic preparation. Higher dose required vs extract; bioavailability enhanced by ghee/fat.</p>
-          </div>
-        </div>
-      </div>
+        <!-- Bottom Bar -->
+        <footer class="h-16 w-full glass absolute bottom-0 z-30 flex items-center justify-between px-6 sm:px-10">
+            <span class="text-xs sm:text-sm font-medium text-gray-500">v1.0.0</span>
+            <span class="text-xs sm:text-sm font-medium text-gray-700">
+                Made by 
+                <strong class="bg-gradient-to-r from-gray-900 to-gray-500 bg-clip-text text-transparent font-bold">Haris (Horizon)</strong>
+            </span>
+        </footer>
 
-    </div><!-- /dosage-layout -->
+    </div>
 
-    <!-- Other dosage forms -->
-    <div class="other-dosages gsap-up" style="--delay:0.2s">
-      <h4>Other Dosage Forms</h4>
-      <div class="other-dosage-list">
-        <div class="other-dosage-item"><i class="fa-solid fa-droplet"></i><span>Liquid Extract</span><small>2–4 mL tincture</small></div>
-        <div class="other-dosage-item"><i class="fa-solid fa-mug-saucer"></i><span>Herbal Tea</span><small>Root decoction</small></div>
-        <div class="other-dosage-item"><i class="fa-solid fa-jar"></i><span>Ashwagandharishta</span><small>Fermented syrup</small></div>
-        <div class="other-dosage-item"><i class="fa-solid fa-hand-dots"></i><span>Medicated Oil</span><small>Topical application</small></div>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- Application Logic -->
+    <script>
+        const viewer = document.querySelector('#main-viewer');
+        const splashScreen = document.getElementById('splash-screen');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const tutorialOverlay = document.getElementById('tutorial-overlay');
+        const autoRotateBtn = document.getElementById('auto-rotate-btn');
+        const resetBtn = document.getElementById('reset-btn');
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 9 — CONCLUSION
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-9" class="section dark-section" data-section="9">
-  <div class="container conclusion-container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Summary</div>
-      <h2 class="section-title">Conclusion</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="conclusion-card gsap-up" style="--delay:0.15s">
-      <div class="conclusion-quote"><i class="fa-solid fa-quote-left"></i></div>
-      <p class="conclusion-text">
-        <em>Withania somnifera</em> is a cornerstone medicinal plant of the <strong class="hl">Solanaceae</strong> family with an unparalleled record in traditional medicine. Its rich <strong class="hl">withanolide</strong> content supports both classical Ayurvedic applications and modern pharmacological interventions—particularly in <strong class="hl">stress management</strong>, <strong class="hl">neuroprotection</strong>, and <strong class="hl">immune modulation</strong>. As an <strong class="hl">adaptogen</strong>, it uniquely addresses multiple organ systems simultaneously without significant toxicity, making it one of the most versatile herbal medicines under contemporary clinical investigation.
-      </p>
-    </div>
-    <div class="conclusion-stats gsap-up" style="--delay:0.3s">
-      <div class="c-stat">
-        <div class="c-stat-num" data-target="3000">0</div>
-        <div class="c-stat-label">Years of Use</div>
-      </div>
-      <div class="c-stat">
-        <div class="c-stat-num" data-target="35">0</div>
-        <div class="c-stat-label">+ Withanolides</div>
-      </div>
-      <div class="c-stat">
-        <div class="c-stat-num" data-target="500">0</div>
-        <div class="c-stat-label">+ Clinical Studies</div>
-      </div>
-      <div class="c-stat">
-        <div class="c-stat-num" data-target="12">0</div>
-        <div class="c-stat-label">Pharmacol. Actions</div>
-      </div>
-    </div>
-  </div>
-</section>
+        // 1. Loading Progress and Splash Screen Management
+        viewer.addEventListener('progress', (event) => {
+            const progress = (event.detail.totalProgress * 100).toFixed(0);
+            progressBar.style.width = `${progress}%`;
+            progressText.innerText = `Loading Model ${progress}%`;
+        });
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 10 — TEAM MEMBERS
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-10" class="section dark-section alt-bg" data-section="10">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Presenters</div>
-      <h2 class="section-title">Team Members</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="team-grid">
-      <div class="team-card gsap-up" style="--delay:0s">
-        <div class="team-avatar-wrap">
-          <div class="team-glow-ring"></div>
-          <img src="assets/team/haris-horizon.webp" alt="Haris" class="team-avatar" onerror="this.src=''; this.classList.add('avatar-fallback')"/>
-          <div class="team-avatar-fallback"><i class="fa-solid fa-user"></i></div>
-        </div>
-        <div class="team-info">
-          <h3>Haris Horizon</h3>
-          <span class="team-roll">Pharm D • Roll No: DP-2420</span>
-        </div>
-      </div>
-      <div class="team-card gsap-up" style="--delay:0.1s">
-        <div class="team-avatar-wrap">
-          <div class="team-glow-ring"></div>
-          <img src="assets/team/zohaib-tahir.webp" alt="Zohaib Tahir" class="team-avatar" onerror="this.src=''; this.classList.add('avatar-fallback')"/>
-          <div class="team-avatar-fallback"><i class="fa-solid fa-user"></i></div>
-        </div>
-        <div class="team-info">
-          <h3>Zohaib</h3>
-          <span class="team-roll">Pharm D • Roll No: DP-2403</span>
-        </div>
-      </div>
-      <div class="team-card gsap-up" style="--delay:0.2s">
-        <div class="team-avatar-wrap">
-          <div class="team-glow-ring"></div>
-          <img src="assets/team/ali-haider.webp" alt="Ali Haider" class="team-avatar" onerror="this.style.opacity='0'"/>
-          <div class="team-avatar-fallback"><i class="fa-solid fa-user"></i></div>
-        </div>
-        <div class="team-info">
-          <h3>Ali Haider</h3>
-          <span class="team-roll">Pharm D • Roll No: DP-2426</span>
-        </div>
-      </div>
-      <div class="team-card gsap-up" style="--delay:0.3s">
-        <div class="team-avatar-wrap">
-          <div class="team-glow-ring"></div>
-          <img src="assets/team/salman.webp" alt="Salman" class="team-avatar" onerror="this.style.opacity='0'"/>
-          <div class="team-avatar-fallback"><i class="fa-solid fa-user"></i></div>
-        </div>
-        <div class="team-info">
-          <h3>Salman</h3>
-          <span class="team-roll">Pharm D • Roll No: DP-2419</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        viewer.addEventListener('load', () => {
+            // Fade out splash screen
+            splashScreen.style.opacity = '0';
+            
+            setTimeout(() => {
+                splashScreen.style.display = 'none';
+                
+                // Fade in tutorial overlay
+                tutorialOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                tutorialOverlay.classList.add('opacity-100');
+                
+                // Hide tutorial function
+                const hideTutorial = () => {
+                    tutorialOverlay.classList.remove('opacity-100');
+                    tutorialOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    // Clean up event listeners so it doesn't trigger repeatedly
+                    viewer.removeEventListener('pointerdown', hideTutorial);
+                    viewer.removeEventListener('camera-change', hideTutorial);
+                };
+                
+                // Hide after 6 seconds automatically, OR when user touches/interacts with the model
+                setTimeout(hideTutorial, 6000);
+                viewer.addEventListener('pointerdown', hideTutorial);
+                viewer.addEventListener('camera-change', hideTutorial);
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 11 — PRESENTED TO
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-11" class="section dark-section" data-section="11">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Supervision</div>
-      <h2 class="section-title">Presented To</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="instructor-wrap gsap-up" style="--delay:0.15s">
-      <div class="instructor-card">
-        <div class="instructor-glow-ring"></div>
-        <div class="instructor-avatar-wrap">
-          <img src="assets/team/dr-zeenat-aman.webp" alt="Dr. Zeenat Aman" class="instructor-avatar" onerror="this.src=''; this.classList.add('avatar-fallback')"/>
-          <div class="instructor-avatar-fallback"><i class="fa-solid fa-user-tie"></i></div>
-        </div>
-        <div class="instructor-info">
-          <div class="instructor-title-badge">Course Instructor</div>
-          <h3>Dr. Zeenat Aman</h3>
-          <p>Pharmacognosy &amp; Natural Products</p>
-          <div class="instructor-dept">
-            <i class="fa-solid fa-building-columns"></i>
-            Quaid-e-Azam College of Pharmacy<br/>University of Sargodha
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+            }, 700); // Wait for the fade out transition
+        });
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 12 — REFERENCES
-═══════════════════════════════════════════════════════════ -->
-<section id="sec-12" class="section dark-section alt-bg" data-section="12">
-  <div class="container">
-    <div class="section-header gsap-up">
-      <div class="section-badge">Bibliography</div>
-      <h2 class="section-title">References</h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="refs-list">
-      <div class="ref-item gsap-left" style="--delay:0s">
-        <div class="ref-num">01</div>
-        <div class="ref-content">
-          <p><strong>Brady LR, Robbers JE.</strong> Tyler's Pharmacognosy. <em>Lea &amp; Febiger, Philadelphia.</em></p>
-        </div>
-      </div>
-      <div class="ref-item gsap-left" style="--delay:0.08s">
-        <div class="ref-num">02</div>
-        <div class="ref-content">
-          <p><strong>Charaka Samhita.</strong> Chikitsasthana. Ancient Ayurvedic text describing Rasayana and Vajikarna preparations including Ashwagandha.</p>
-        </div>
-      </div>
-      <div class="ref-item gsap-left" style="--delay:0.16s">
-        <div class="ref-num">03</div>
-        <div class="ref-content">
-          <p><strong>Sushruta Samhita.</strong> Sutrasthana. Classical surgical text with pharmacological descriptions of <em>Withania somnifera</em>.</p>
-        </div>
-      </div>
-      <div class="ref-item gsap-left" style="--delay:0.24s">
-        <div class="ref-num">04</div>
-        <div class="ref-content">
-          <p><strong>Singh N, Bhalla M, de Jager P, Gilca M.</strong> (2011). An overview on Ashwagandha: A Rasayana (rejuvenator) of Ayurveda. <em>African Journal of Traditional, Complementary and Alternative Medicines, 8(5S).</em></p>
-        </div>
-      </div>
-      <div class="ref-item gsap-left" style="--delay:0.32s">
-        <div class="ref-num">05</div>
-        <div class="ref-content">
-          <p><strong>Choudhary D, Bhattacharyya S, Bose S.</strong> (2017). Efficacy and Safety of Ashwagandha Root Extract on Cognitive Functions in Healthy Adults. <em>Journal of Dietary Supplements, 14(6), 599–612.</em></p>
-        </div>
-      </div>
-      <div class="ref-item gsap-left" style="--delay:0.40s">
-        <div class="ref-num">06</div>
-        <div class="ref-content">
-          <p><strong>Chandrasekhar K, Kapoor J, Anishetty S.</strong> (2012). A prospective, randomized double-blind, placebo-controlled study of safety and efficacy of a high-concentration full-spectrum extract of Ashwagandha root in reducing stress and anxiety. <em>Indian Journal of Psychological Medicine, 34(3), 255–262.</em></p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        // 2. Auto Rotate Premium Toggle functionality
+        let isAutoRotate = false;
+        autoRotateBtn.addEventListener('click', () => {
+            isAutoRotate = !isAutoRotate;
+            if (isAutoRotate) {
+                viewer.setAttribute('auto-rotate', '');
+                viewer.setAttribute('rotation-per-second', '30deg'); // Smooth rotation speed
+                // Style as active (Black background, white text)
+                autoRotateBtn.classList.remove('bg-transparent', 'text-black', 'hover:bg-gray-100');
+                autoRotateBtn.classList.add('bg-black', 'text-white', 'shadow-md');
+            } else {
+                viewer.removeAttribute('auto-rotate');
+                // Style as inactive (Transparent background, black text)
+                autoRotateBtn.classList.remove('bg-black', 'text-white', 'shadow-md');
+                autoRotateBtn.classList.add('bg-transparent', 'text-black', 'hover:bg-gray-100');
+            }
+        });
 
-<!-- ═══════════════════════════════════════════════════════════
-     FOOTER
-═══════════════════════════════════════════════════════════ -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-leaf"><i class="fa-solid fa-leaf"></i></div>
-    <p><em>Withania somnifera</em> — Pharmacognosy Presentation</p>
-    <p>Quaid-e-Azam College of Pharmacy · University of Sargodha</p>
-  </div>
-</footer>
-
-<!-- GSAP -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="js/main.js"></script>
+        // 3. Reset Model Position
+        resetBtn.addEventListener('click', () => {
+            // Setting camera orbit and target to auto forces the model to re-center dynamically
+            viewer.cameraOrbit = 'auto auto auto';
+            viewer.cameraTarget = 'auto auto auto';
+            viewer.fieldOfView = 'auto'; // Reset zoom level as well
+            
+            // Add a subtle click feedback animation
+            resetBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => { resetBtn.style.transform = 'scale(1)'; }, 150);
+        });
+    </script>
 </body>
 </html>
+
+```
