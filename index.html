@@ -41,6 +41,14 @@
   --radius-lg: 22px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Universal soft corners — ensures no sharp corners anywhere */
+img, video, iframe { border-radius: 8px; }
+button { border-radius: 10px; }
+.product-card img,
+.team-hero-img,
+.team-member-img,
+.hero-bg,
+.model-img-wrap img { border-radius: 0; } /* keep these as their wrappers already round-clip */
 html, body {
   font-family: 'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--cream);
@@ -140,8 +148,8 @@ html, body {
 .hero {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  min-height: 320px;
+  aspect-ratio: 16 / 10;
+  min-height: 300px;
   overflow: hidden;
   isolation: isolate;
   background: linear-gradient(135deg, #0F4C2A 0%, #1B5E20 50%, #0E3F11 100%);
@@ -203,8 +211,8 @@ html, body {
   position: relative;
   white-space: nowrap;
 }
-.hero-title .word.withania { font-size: clamp(34px, 9vw, 92px); }
-.hero-title .word.somnifera { font-size: clamp(38px, 9.6vw, 100px); margin-top: 2px; font-style: italic; }
+.hero-title .word.withania { font-size: clamp(26px, 6.8vw, 68px); font-style: italic; }
+.hero-title .word.somnifera { font-size: clamp(30px, 7.6vw, 76px); margin-top: 2px; font-style: italic; }
 
 .hero-title .word .ltr {
   display: inline-block;
@@ -247,13 +255,15 @@ html, body {
   opacity: 0;
 }
 
-/* Per-letter glitch — each letter glitches in sequence (a,h,s,w… style cascade) */
+/* Per-letter glitch — STRONGER, more dramatic cascade */
 @keyframes letterGlitch {
   0%, 100% { opacity: 0; transform: translate(0,0); }
-  20%      { opacity: .9; transform: translate(-2px,-1px); color: #00ffaa; clip-path: inset(0 0 60% 0); }
-  35%      { opacity: .9; transform: translate(2px, 1px); color: #ff3344; clip-path: inset(60% 0 0 0); }
-  50%      { opacity: .8; transform: translate(-1px,1px); color: #00ffaa; clip-path: inset(0 0 70% 0); }
-  70%      { opacity: 0; transform: translate(0,0); }
+  10%      { opacity: 1; transform: translate(-5px,-3px) scale(1.03); color: #00ffaa; clip-path: inset(0 0 65% 0); }
+  20%      { opacity: 1; transform: translate(5px, 3px) scale(0.97); color: #ff3344; clip-path: inset(65% 0 0 0); }
+  35%      { opacity: 1; transform: translate(-4px,2px); color: #00ffaa; clip-path: inset(15% 0 60% 0); }
+  50%      { opacity: 1; transform: translate(4px,-2px); color: #ff3344; clip-path: inset(45% 0 20% 0); }
+  65%      { opacity: .9; transform: translate(-2px,1px); color: #00ffaa; clip-path: inset(0 0 75% 0); }
+  80%      { opacity: 0; transform: translate(0,0); }
 }
 
 /* WHOLE-WORD master cycle (drives golden phase + idle wobble) */
@@ -284,13 +294,16 @@ html, body {
 .hero-title .word.glitching .ltr::before { animation: letterGlitch 0.55s ease both; }
 .hero-title .word.glitching .ltr::after  { animation: letterGlitch 0.55s ease both; animation-delay: .08s; }
 
-/* Letter shake during glitch */
+/* Letter shake during glitch — STRONGER */
 @keyframes letterShake {
   0%, 100% { transform: translate(0,0) skewX(0); }
-  25% { transform: translate(-2px, 1px) skewX(-3deg); }
-  50% { transform: translate(2px, -1px) skewX(3deg); }
-  75% { transform: translate(-1px, 0) skewX(-2deg); }
+  15% { transform: translate(-4px, 2px) skewX(-6deg) scale(1.04); }
+  30% { transform: translate(4px, -2px) skewX(6deg) scale(0.98); }
+  45% { transform: translate(-3px, 1px) skewX(-4deg); }
+  60% { transform: translate(3px, -1px) skewX(4deg); }
+  80% { transform: translate(-1px, 0) skewX(-2deg); }
 }
+.hero-title .word.glitching .ltr { animation: letterShake 0.55s cubic-bezier(.36,.07,.19,.97) !important; }
 .hero-title .word.glitching .ltr { animation: letterShake 0.5s ease; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -302,6 +315,46 @@ html, body {
 .hero-rule {
   width: 70px; height: 3px; border-radius: 3px; margin-top: 4px;
   background: linear-gradient(to right, var(--gold), transparent);
+}
+
+/* Decorative band under hero so the cream area feels intentional, not like an ad slot */
+.post-hero-band {
+  position: relative;
+  margin: 0; padding: 18px 16px 4px;
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(46,125,50,0.08), transparent 70%),
+    linear-gradient(180deg, rgba(46,125,50,0.06) 0%, transparent 100%);
+  text-align: center;
+  overflow: hidden;
+}
+.post-hero-band::before, .post-hero-band::after {
+  content: ""; position: absolute; height: 1px;
+  top: 50%;
+  background: linear-gradient(to right, transparent, rgba(15,76,42,0.18), transparent);
+  width: 28%;
+}
+.post-hero-band::before { left: 4%; }
+.post-hero-band::after  { right: 4%; }
+.post-hero-mark {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 3.5px;
+  color: var(--green-deep);
+  text-transform: uppercase;
+  padding: 6px 14px;
+  position: relative;
+}
+.post-hero-mark .leaf {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: linear-gradient(135deg, #DFF1E2, #C3E6CB);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--green-deep); font-size: 11px;
+  box-shadow: inset 0 0 0 1px rgba(15,76,42,0.18);
+  animation: leafSpin 9s linear infinite;
+}
+@keyframes leafSpin {
+  0% { transform: rotate(0); }
+  100% { transform: rotate(360deg); }
 }
 .hero-tagline {
   font-family: 'Fraunces', 'Playfair Display', serif;
@@ -344,7 +397,9 @@ html, body {
 }
 
 /* ===================== UNIFIED SECTION PILL TITLE ===================== */
-.section-title-block { text-align: center; margin: 38px 16px 18px; }
+.section-title-block { text-align: center; margin: 22px 16px 14px; }
+/* tighter gap right after the hero so the cream area doesn't look like an ad slot */
+.hero + .section-title-block { margin-top: 18px; }
 .section-eyebrow {
   display: inline-block;
   font-family: 'Outfit', 'Manrope', sans-serif;
@@ -411,6 +466,38 @@ html, body {
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.20), 0 4px 10px rgba(0,0,0,0.15);
   position: relative; z-index: 2;
 }
+/* dashed rotating ring on each profile-item icon (matches pharmacology look) */
+.profile-item .pi-ic::after {
+  content: ""; position: absolute; inset: -4px;
+  border-radius: 14px;
+  border: 1.4px dashed rgba(255,214,107,0.55);
+  animation: rotateRing 14s linear infinite;
+  pointer-events: none;
+}
+/* GLOBAL gentle shimmer sweep across various tiles */
+.shine {
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.10) 50%, transparent 70%);
+  background-size: 220% 100%;
+  background-position: 120% 0;
+  pointer-events: none; z-index: 1;
+  border-radius: inherit;
+  animation: shineSweep 5.8s ease-in-out infinite;
+}
+.zig-item:nth-child(even) .shine,
+.profile-item:nth-child(even) .shine,
+.team-member:nth-child(even) .shine { animation-delay: -2.6s; }
+@keyframes shineSweep {
+  0%, 55% { background-position: 120% 0; }
+  78%     { background-position: -20% 0; }
+  100%    { background-position: -20% 0; }
+}
+/* the host elements need positioning + clipping */
+.profile-item, .flip-front, .pharm-front, .myth-front, .product-card,
+.zig-card, .team-member, .team-hero, .instructor-card {
+  position: relative;
+  overflow: hidden;
+}
 .profile-item .pi-text { flex: 1; min-width: 0; position: relative; z-index: 2; }
 .profile-item .pk {
   font-family: 'Space Grotesk', 'Outfit', sans-serif;
@@ -464,13 +551,28 @@ html, body {
   border: 1px solid rgba(0,0,0,0.04);
   position: relative;
 }
-/* Variant A : cream/peach */
+/* Variant A : warm terracotta — pops against cream */
 .zig-item:nth-child(odd) .zig-card {
-  background: linear-gradient(135deg, #FFF8EC 0%, #FBEFD9 100%);
+  background: linear-gradient(135deg, #FFE2C7 0%, #F4B07C 60%, #E08A4A 100%);
+  color: #3A1F0A;
+  box-shadow: 0 8px 22px rgba(180,83,9,0.22), inset 0 1px 0 rgba(255,255,255,0.5);
 }
-/* Variant B : sage-mint */
+/* Variant B : deep teal — strong contrast against cream */
 .zig-item:nth-child(even) .zig-card {
-  background: linear-gradient(135deg, #EAF6EC 0%, #D4EBD8 100%);
+  background: linear-gradient(135deg, #1F6E5C 0%, #0F4C44 60%, #0B3A36 100%);
+  color: #EAF7F1;
+  box-shadow: 0 8px 22px rgba(15,76,68,0.30), inset 0 1px 0 rgba(255,255,255,0.10);
+}
+.zig-item:nth-child(even) .zig-head { color: #FFFFFF; }
+.zig-item:nth-child(even) .zig-body { color: rgba(255,255,255,0.92); }
+.zig-item:nth-child(even) .zig-body strong { color: #FFE9A8; }
+.zig-item:nth-child(even) .zig-year { color: #FFD66B !important; }
+/* subtle floating shimmer on each card */
+.zig-card { animation: zigFloat 5s ease-in-out infinite; }
+.zig-item:nth-child(even) .zig-card { animation-delay: -2.5s; }
+@keyframes zigFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
 }
 .zig-item.left .zig-card  { border-left: 3px solid var(--maroon); }
 .zig-item.right .zig-card { border-right: 3px solid var(--maroon); }
@@ -496,8 +598,9 @@ html, body {
 .chem-stack { display: flex; flex-direction: column; gap: 16px; }
 .chem-tile {
   position: relative;
-  aspect-ratio: 16 / 9;
-  border-radius: 20px;
+  aspect-ratio: 16 / 10.5;   /* a touch taller so content distributes nicely */
+  min-height: 200px;
+  border-radius: 22px;
   perspective: 1600px;
   cursor: pointer;
   opacity: 0;
@@ -523,14 +626,14 @@ html, body {
 
 .chem-face {
   position: absolute; inset: 0;
-  border-radius: 20px;
+  border-radius: 22px;
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   display: flex; flex-direction: column;
-  padding: 18px 20px;
+  padding: 16px 18px;
   box-shadow:
     0 10px 26px rgba(15,76,42,0.32),
     inset 0 1px 0 rgba(255,255,255,0.12);
@@ -543,7 +646,9 @@ html, body {
     radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.14), transparent 55%),
     linear-gradient(135deg, #0F4C2A 0%, #1F6E3D 55%, #2E8B4A 100%);
   color: #fff;
-  justify-content: space-between;
+  /* now properly distribute content in the center space */
+  justify-content: flex-start;
+  gap: 10px;
 }
 .chem-tile.ct-1 .chem-face.front { background: radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, #0F4C2A 0%, #1B6936 55%, #2E8B4A 100%); }
 .chem-tile.ct-2 .chem-face.front { background: radial-gradient(140% 100% at 100% 0%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, #103A26 0%, #195C30 50%, #2E7D32 100%); }
@@ -567,9 +672,9 @@ html, body {
 
 .chem-tile-head { display: flex; align-items: center; gap: 12px; position: relative; z-index: 2; }
 .chem-ic {
-  width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+  width: 44px; height: 44px; border-radius: 13px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 19px; color: #FFE9A8;
+  font-size: 18px; color: #FFE9A8;
   background: rgba(255,255,255,0.14);
   backdrop-filter: blur(6px);
   border: 1px solid rgba(255,214,107,0.35);
@@ -582,8 +687,8 @@ html, body {
 }
 .chem-term {
   font-family: 'Bricolage Grotesque', 'Fraunces', serif;
-  font-size: 21px; font-weight: 700; color: #fff; flex: 1;
-  letter-spacing: -0.4px; line-height: 1.15;
+  font-size: 18px; font-weight: 700; color: #fff; flex: 1;
+  letter-spacing: -0.3px; line-height: 1.15;
   text-shadow: 0 1px 3px rgba(0,0,0,0.28);
 }
 .chem-badge {
@@ -609,24 +714,45 @@ html, body {
 
 .chem-front-body {
   position: relative; z-index: 2;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  flex: 1; gap: 6px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  flex: 1; gap: 10px;
+  padding-top: 4px;
 }
-.chem-compounds { display: flex; flex-wrap: wrap; gap: 5px; }
+.chem-blurb {
+  font-family: 'Manrope', sans-serif;
+  font-size: 12.5px; font-weight: 500;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.45;
+  letter-spacing: 0.1px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.chem-blurb strong {
+  color: #FFE9A8; font-weight: 700;
+}
+.chem-compounds { display: flex; flex-wrap: wrap; gap: 6px; align-content: center; }
 .chem-tag {
-  font-size: 10.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
-  background: rgba(255,255,255,0.14);
-  border: 1px solid rgba(255,255,255,0.24);
+  font-size: 11px; font-weight: 600; padding: 5px 11px; border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.28);
   color: #F8FBEF;
   backdrop-filter: blur(6px);
   font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.2px;
+  transition: transform .2s ease, background .2s ease;
 }
+.chem-tile:hover .chem-tag { background: rgba(255,255,255,0.22); }
 .chem-tap-hint {
   display: flex; align-items: center; gap: 6px;
-  font-size: 10px; color: rgba(255,233,168,0.95);
-  font-weight: 600; letter-spacing: .4px;
+  font-size: 10.5px; color: rgba(255,233,168,0.98);
+  font-weight: 700; letter-spacing: .5px;
+  padding-top: 2px;
+  border-top: 1px dashed rgba(255,214,107,0.25);
+  margin-top: 2px;
 }
-.chem-tap-hint i { font-size: 9px; color: #FFD66B; }
+.chem-tap-hint i { font-size: 10px; color: #FFD66B; }
 
 .chem-face.back {
   transform: rotateY(180deg) translateZ(1px);
@@ -661,10 +787,12 @@ html, body {
 
 @media (max-width: 480px) {
   .chem-term { font-size: 16px; }
-  .chem-ic { width: 40px; height: 40px; font-size: 16px; }
-  .chem-tile { aspect-ratio: 16 / 10; }
+  .chem-ic { width: 38px; height: 38px; font-size: 15px; border-radius: 11px; }
+  .chem-tile { aspect-ratio: auto; min-height: 210px; }
   .chem-face { padding: 14px 14px; }
-  .chem-tag { font-size: 9.5px; padding: 3px 8px; }
+  .chem-tag { font-size: 10px; padding: 4px 9px; }
+  .chem-blurb { font-size: 11.5px; -webkit-line-clamp: 3; }
+  .chem-tap-hint { font-size: 10px; }
 }
 
 /* ===================== INFO MODAL ===================== */
@@ -919,6 +1047,15 @@ html, body {
   border: 1px solid rgba(255,214,107,0.40);
   color: #FFE9A8;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 4px 12px rgba(0,0,0,0.20);
+  position: relative;
+  animation: floatY 4.5s ease-in-out infinite;
+}
+.flip-card .flip-icon::after {
+  content: ""; position: absolute; inset: -3px;
+  border-radius: 16px;
+  border: 1.4px dashed rgba(255,214,107,0.50);
+  animation: rotateRing 13s linear infinite;
+  pointer-events: none;
 }
 .flip-card .flip-back {
   background:
@@ -985,13 +1122,27 @@ html, body {
   pointer-events: none;
 }
 .myth-icon-img {
-  width: 84px; height: 84px; flex-shrink: 0; border-radius: 16px;
-  background: rgba(255,255,255,0.92); padding: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.6);
+  width: 78px; height: 78px; flex-shrink: 0; border-radius: 18px;
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFF6EC 100%);
+  padding: 8px;
+  box-shadow:
+    0 6px 14px rgba(0,0,0,0.22),
+    inset 0 0 0 1.5px rgba(255,214,107,0.55),
+    inset 0 0 0 3px rgba(255,255,255,0.9);
   display: flex; align-items: center; justify-content: center;
   position: relative; z-index: 2;
+  overflow: hidden;
 }
-.myth-icon-img img { width: 100%; height: 100%; object-fit: contain; }
+.myth-icon-img img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  display: block;
+}
+@media (max-width: 480px) {
+  .myth-icon-img { width: 68px; height: 68px; padding: 6px; border-radius: 16px; }
+  .myth-icon-img img { border-radius: 10px; }
+}
 .myth-content { flex: 1; min-width: 0; position: relative; z-index: 2; }
 .myth-top {
   display: flex; align-items: center; justify-content: space-between;
@@ -1049,7 +1200,8 @@ html, body {
 .fact-text strong { color: #1B5E20; font-weight: 700; }
 
 /* ===================== PRODUCTS ===================== */
-.products-section { margin: 22px 16px; }
+.products-section { margin: 22px 16px; box-sizing: border-box; }
+.products-section, .products-section * { box-sizing: border-box; }
 .products-hint { font-size: 11.5px; color: var(--green); font-style: italic; margin-bottom: 16px; text-align:center; display: flex; align-items: center; justify-content:center; gap: 5px; }
 .products-hint i { color: var(--green-soft); }
 .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; max-width: 760px; margin-left: auto; margin-right: auto; }
@@ -1064,47 +1216,165 @@ html, body {
 .product-badge { position: absolute; top: 8px; right: 8px; background: var(--green); color: #fff; font-size: 8.5px; font-weight: 800; padding: 3px 7px; border-radius: 10px; letter-spacing: .5px; box-shadow: 0 2px 6px rgba(46,125,50,0.4); }
 .product-badge.gold { background: linear-gradient(135deg, var(--gold), #A87520); }
 
-/* 3D PRODUCT VIEWER — refreshed frame: deep teal-green w/ curved edges */
+/* 3D PRODUCT VIEWER — premium midnight indigo frame with curved corners */
 .viewer-section {
-  margin-top: 4px;
+  margin-top: 14px;
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(46,232,117,0.10), transparent 60%),
-    linear-gradient(135deg, #0F3D2C 0%, #1A5A40 50%, #0E3F2A 100%);
-  border-radius: 26px;
+    radial-gradient(120% 80% at 50% 0%, rgba(255,214,107,0.10), transparent 60%),
+    linear-gradient(135deg, #1A1340 0%, #2A1B5C 45%, #1F1247 100%);
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(15,76,42,0.35), inset 0 1px 0 rgba(255,255,255,0.10);
-  position: relative; max-width: 760px; margin-left: auto; margin-right: auto;
-  border: 1px solid rgba(255,214,107,0.25);
+  box-shadow:
+    0 18px 44px rgba(20,14,60,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.10);
+  position: relative;
+  max-width: 760px;
+  margin-left: auto; margin-right: auto;
+  border: 1.5px solid rgba(255,214,107,0.30);
+  box-sizing: border-box;
 }
-.viewer-header { padding: 14px 18px 8px; display: flex; align-items: center; justify-content: space-between; }
-.viewer-title { font-size: 11px; font-weight: 800; color: #FFE9A8; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', sans-serif; }
-.viewer-title i { color: var(--gold); }
-.viewer-360-badge { background: linear-gradient(135deg, var(--gold), #A87520); color: #fff; font-size: 9px; font-weight: 800; padding: 4px 9px; border-radius: 12px; letter-spacing: 1px; box-shadow: 0 2px 8px rgba(201,149,42,0.4); }
-.viewer-stage {
-  position: relative; width: 100%; aspect-ratio: 1/1;
+.viewer-section::before {
+  content: ""; position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, rgba(11,40,28,0.95) 75%);
+    radial-gradient(circle at 100% 0%, rgba(255,214,107,0.10), transparent 40%),
+    radial-gradient(circle at 0% 100%, rgba(140,90,255,0.12), transparent 45%);
+  pointer-events: none;
+}
+.viewer-header {
+  padding: 14px 18px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 2;
+}
+.viewer-title {
+  font-size: 11px; font-weight: 800; color: #FFE9A8;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.viewer-title i { color: var(--gold); }
+.viewer-360-badge {
+  background: linear-gradient(135deg, var(--gold), #A87520);
+  color: #fff; font-size: 9.5px; font-weight: 800;
+  padding: 4px 10px; border-radius: 999px;
+  letter-spacing: 1px; box-shadow: 0 2px 8px rgba(201,149,42,0.4);
+}
+.viewer-stage {
+  position: relative;
+  width: auto;
+  aspect-ratio: 1/1;
+  background:
+    radial-gradient(ellipse at center, rgba(255,255,255,0.10) 0%, rgba(15,10,40,0.95) 75%);
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden; cursor: grab; user-select: none; touch-action: pan-y;
+  overflow: hidden;
+  cursor: grab; user-select: none; touch-action: pan-y;
   margin: 0 14px;
-  border-radius: 22px; /* curved edges as requested */
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 0 60px rgba(0,0,0,0.35);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,214,107,0.18),
+    inset 0 0 60px rgba(0,0,0,0.40);
+  box-sizing: border-box;
 }
 .viewer-stage:active { cursor: grabbing; }
-.viewer-stage::before { content: ""; position: absolute; bottom: 12%; left: 50%; transform: translateX(-50%); width: 60%; height: 16px; background: radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, transparent 70%); border-radius: 50%; filter: blur(6px); }
-.viewer-stage img { width: 78%; height: 78%; object-fit: contain; position: relative; z-index: 2; transition: opacity 0.05s linear; filter: drop-shadow(0 12px 18px rgba(0,0,0,0.45)); pointer-events: none; }
-.viewer-spin-icon { position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.12); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--gold); border: 1px solid rgba(255,255,255,0.18); animation: spin 4s linear infinite; z-index: 3; }
+.viewer-stage::before {
+  content: ""; position: absolute;
+  bottom: 10%; left: 50%; transform: translateX(-50%);
+  width: 60%; height: 18px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, transparent 70%);
+  border-radius: 50%; filter: blur(6px);
+}
+.viewer-stage img {
+  max-width: 72%; max-height: 72%;
+  width: auto; height: auto;
+  object-fit: contain;
+  border-radius: 14px; /* curved corners on the actual image too */
+  position: relative; z-index: 2;
+  transition: opacity 0.05s linear;
+  filter: drop-shadow(0 12px 22px rgba(0,0,0,0.50));
+  pointer-events: none;
+  background: transparent;
+}
+.viewer-spin-icon {
+  position: absolute; top: 12px; right: 12px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.14);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--gold);
+  border: 1px solid rgba(255,214,107,0.28);
+  animation: spin 4s linear infinite;
+  z-index: 3;
+}
 @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-.viewer-progress { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); width: 70%; height: 4px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; z-index: 3; }
-.viewer-progress-bar { height: 100%; width: 0; background: linear-gradient(to right, var(--gold), #FFD66B); border-radius: 4px; transition: width 0.05s linear; box-shadow: 0 0 8px rgba(201,149,42,0.6); }
-.viewer-frame-count { position: absolute; bottom: 22px; right: 20px; font-size: 9.5px; font-weight: 700; color: rgba(255,255,255,0.8); letter-spacing: .5px; z-index: 3; }
-.viewer-footer { padding: 14px 18px 16px; display: flex; align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 12px; }
-.viewer-instruction { flex: 1; font-size: 10.5px; color: rgba(255,233,168,0.85); line-height: 1.4; display: flex; align-items: center; gap: 6px; }
+.viewer-progress {
+  position: absolute; bottom: 14px; left: 50%;
+  transform: translateX(-50%);
+  width: 70%; height: 4px;
+  background: rgba(255,255,255,0.14);
+  border-radius: 999px; overflow: hidden; z-index: 3;
+}
+.viewer-progress-bar {
+  height: 100%; width: 0;
+  background: linear-gradient(to right, var(--gold), #FFD66B);
+  border-radius: 999px;
+  transition: width 0.05s linear;
+  box-shadow: 0 0 8px rgba(201,149,42,0.6);
+}
+.viewer-frame-count {
+  position: absolute; bottom: 22px; right: 20px;
+  font-size: 9.5px; font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: .5px; z-index: 3;
+}
+.viewer-footer {
+  padding: 14px 18px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 14px;
+  position: relative; z-index: 2;
+}
+.viewer-instruction {
+  flex: 1; min-width: 0;
+  font-size: 10.5px; color: rgba(255,233,168,0.85);
+  line-height: 1.4;
+  display: flex; align-items: center; gap: 6px;
+}
 .viewer-instruction i { color: var(--gold); font-size: 12px; }
-.viewer-actions { display: flex; gap: 6px; }
-.viewer-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .15s ease; }
-.viewer-btn:active { background: rgba(255,255,255,0.25); }
+.viewer-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.viewer-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,214,107,0.30);
+  color: #fff; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .15s ease, transform .15s ease;
+}
+.viewer-btn:hover { background: rgba(255,255,255,0.22); }
+.viewer-btn:active { transform: scale(0.92); }
 .viewer-btn.playing { background: var(--gold); color: #fff; border-color: var(--gold); }
+
+/* Loader shown while 360° images load */
+.viewer-loader {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; color: rgba(255,233,168,0.85);
+  font-size: 11px; font-weight: 600; letter-spacing: 1.4px;
+  text-transform: uppercase;
+  font-family: 'Space Grotesk', sans-serif;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.viewer-loader.hidden { opacity: 0; }
+.viewer-loader-ring {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,214,107,0.20);
+  border-top-color: var(--gold);
+  animation: viewerSpin 0.9s linear infinite;
+}
+@keyframes viewerSpin { to { transform: rotate(360deg); } }
+#viewerImg { opacity: 0; transition: opacity .25s ease; }
+#viewerImg.ready { opacity: 1; }
 
 /* ===================== CONCLUSION ===================== */
 .conclusion-card {
@@ -1177,8 +1447,8 @@ html, body {
 .team-hero-inner { position: relative; z-index: 2; display: flex; align-items: center; gap: 16px; }
 .team-hero-img-wrap { position: relative; flex-shrink: 0; }
 .team-hero-img {
-  width: 96px; height: 96px; border-radius: 50%;
-  object-fit: cover; object-position: center 25%;
+  width: 104px; height: 104px; border-radius: 50%;
+  object-fit: cover; object-position: center 18%;
   border: 4px solid #FFD66B;
   box-shadow:
     0 0 0 3px rgba(255,255,255,0.85),
@@ -1241,7 +1511,7 @@ html, body {
 }
 .team-member-img-wrap {
   position: relative; z-index: 2;
-  width: 76px; height: 76px; margin: 0 auto 8px;
+  width: 84px; height: 84px; margin: 0 auto 8px;
   border-radius: 50%; padding: 3px;
   background: linear-gradient(135deg, #FFD66B 0%, #C9952A 100%);
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
@@ -1253,7 +1523,7 @@ html, body {
 }
 .team-member-img {
   position: relative; z-index: 2;
-  width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center 25%;
+  width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center 22%;
   background: linear-gradient(135deg,#eee,#ddd);
   display: flex; align-items:center; justify-content:center;
   font-family: 'Bricolage Grotesque', 'Fraunces', serif; font-weight:800;
@@ -1275,6 +1545,11 @@ html, body {
 }
 .team-member.tm-2 .team-member-role { background: linear-gradient(135deg, #FFF4D6, #FFE9A8); color: #8A5A12; border-color: rgba(201,149,42,0.30); }
 .team-member.tm-3 .team-member-role { background: linear-gradient(135deg, #FBF6EC, #F4E9D6); color: var(--maroon); border-color: rgba(123,30,30,0.18); }
+/* per-portrait crop tuning so faces sit nicely inside circular frames */
+.team-hero-img { object-position: 50% 22%; }
+.team-member.tm-1 .team-member-img { object-position: 50% 28%; }
+.team-member.tm-2 .team-member-img { object-position: 50% 25%; }
+.team-member.tm-3 .team-member-img { object-position: 50% 20%; }
 .team-member-roll { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: .3px; font-family: 'Space Grotesk', sans-serif; }
 
 .instructor-card { margin-top: 18px; background: var(--card); border-radius: var(--radius); padding: 16px; display: flex; align-items: flex-start; gap: 14px; box-shadow: var(--shadow-sm); border: 1.5px solid rgba(123,30,30,0.12); }
@@ -1364,6 +1639,15 @@ html, body {
     </div>
   </div>
 </header>
+
+<!-- Decorative band fills the cream gap under the banner -->
+<div class="post-hero-band" aria-hidden="true">
+  <div class="post-hero-mark">
+    <span class="leaf"><i class="fa-solid fa-leaf"></i></span>
+    Solanaceae · Adaptogen · Withanolides
+    <span class="leaf"><i class="fa-solid fa-mortar-pestle"></i></span>
+  </div>
+</div>
 
 <!-- ===================== TAXONOMICAL PROFILE ===================== -->
 <div class="section-title-block">
@@ -1490,6 +1774,7 @@ html, body {
               <button class="info-btn" aria-label="Info" data-title="Withanolides" data-info="Withanolides are naturally occurring C28-steroidal lactones found exclusively in the genus Withania. They are the primary bioactive compounds responsible for adaptogenic, anti-inflammatory, anti-tumor, and immunomodulatory effects. Withaferin A is the most studied withanolide with proven anti-cancer activity."><i class="fa-solid fa-circle-info"></i></button>
             </div>
             <div class="chem-front-body">
+              <p class="chem-blurb">C28-steroidal lactones <strong>unique to Withania</strong> — the principal bioactives behind adaptogenic, anti-tumor and immunomodulatory effects.</p>
               <div class="chem-compounds">
                 <span class="chem-tag">Withaferin A</span>
                 <span class="chem-tag">Withanolide D</span>
@@ -1518,6 +1803,7 @@ html, body {
               <button class="info-btn" aria-label="Info" data-title="Alkaloids" data-info="Alkaloids are nitrogen-containing organic compounds with profound physiological effects. Ashwagandha alkaloids like Somniferine and Anaferine contribute to its sedative, analgesic, and muscle-relaxant properties by acting on the central nervous system."><i class="fa-solid fa-circle-info"></i></button>
             </div>
             <div class="chem-front-body">
+              <p class="chem-blurb">Nitrogen-containing compounds with potent <strong>CNS activity</strong> — sedative, analgesic and muscle-relaxant via GABA modulation.</p>
               <div class="chem-compounds">
                 <span class="chem-tag">Somniferine</span>
                 <span class="chem-tag">Anaferine</span>
@@ -1546,6 +1832,7 @@ html, body {
               <button class="info-btn" aria-label="Info" data-title="Glycosides" data-info="Glycosides are compounds where a sugar molecule is bonded to a non-sugar moiety (aglycone). In Ashwagandha, Withanosides and Sitoindosides are key glycosides. They enhance bioavailability and support neuroprotection, memory enhancement, and immunomodulation."><i class="fa-solid fa-circle-info"></i></button>
             </div>
             <div class="chem-front-body">
+              <p class="chem-blurb">Sugar-conjugated bioactives that boost <strong>bioavailability</strong>, support neuro-regeneration and balance innate &amp; adaptive immunity.</p>
               <div class="chem-compounds">
                 <span class="chem-tag">Withanosides</span>
                 <span class="chem-tag">Sitoindosides</span>
@@ -1573,6 +1860,7 @@ html, body {
               <button class="info-btn" aria-label="Info" data-title="Flavonoids &amp; Sterols" data-info="Flavonoids are polyphenolic antioxidants. Sterols like Beta-sitosterol have structural similarity to cholesterol and competitively inhibit its intestinal absorption, supporting cardiovascular health and reducing LDL levels."><i class="fa-solid fa-circle-info"></i></button>
             </div>
             <div class="chem-front-body">
+              <p class="chem-blurb">Polyphenolic <strong>antioxidants</strong> and plant sterols. β-Sitosterol competes with cholesterol absorption and supports cardiovascular health.</p>
               <div class="chem-compounds">
                 <span class="chem-tag">β-Sitosterol</span>
                 <span class="chem-tag">Flavonoids</span>
@@ -1968,7 +2256,11 @@ html, body {
     </div>
     <div class="viewer-stage" id="viewerStage">
       <div class="viewer-spin-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
-      <img id="viewerImg" src="assets/products/product-360/product-1.webp" alt="Product 360 view" onerror="this.style.opacity=0.2">
+      <div class="viewer-loader" id="viewerLoader">
+        <div class="viewer-loader-ring"></div>
+        <span>Loading 360°…</span>
+      </div>
+      <img id="viewerImg" src="assets/products/product-360/product-1.webp" alt="Product 360 view" onerror="this.onerror=null;this.src='assets/products/ashwagandha-capsules.webp';this.classList.add('ready');">
       <div class="viewer-frame-count" id="frameCount">1 / 9</div>
       <div class="viewer-progress"><div class="viewer-progress-bar" id="progressBar"></div></div>
     </div>
@@ -2014,7 +2306,7 @@ html, body {
         <div class="team-hero-name">Muhammad Haris</div>
         <div class="horizon-badge">★ HORIZON</div>
         <div class="horizon-role"><i class="fa-solid fa-bullhorn"></i> Media Cell Head, QCP</div>
-        <div class="team-hero-roll">Roll No: DP-2620</div>
+        <div class="team-hero-roll">Roll No: DP-2420</div>
       </div>
     </div>
   </div>
@@ -2034,7 +2326,7 @@ html, body {
       </div>
       <div class="team-member-name">Ali Haider</div>
       <div class="team-member-role">CR</div>
-      <div class="team-member-roll">DP-2626</div>
+      <div class="team-member-roll">DP-2426</div>
     </div>
     <div class="team-member tm-3">
       <div class="team-member-img-wrap">
@@ -2082,6 +2374,33 @@ html, body {
 </div>
 
 <script>
+/* ============================================================
+   INJECT SHINE LAYERS into tiles for subtle sweep animation
+   ============================================================ */
+(function injectShineLayers(){
+  const targets = document.querySelectorAll('.profile-item, .flip-front, .pharm-front, .myth-front, .product-card, .zig-card, .team-member, .team-hero, .instructor-card');
+  targets.forEach(el => {
+    if (el.querySelector('.shine')) return;
+    const s = document.createElement('span');
+    s.className = 'shine';
+    s.setAttribute('aria-hidden', 'true');
+    el.appendChild(s);
+  });
+})();
+
+/* ============================================================
+   IMAGE OPTIMIZATION — add native lazy-loading + decoding hints
+   to all <img> below the fold to reduce jank during scroll.
+   ============================================================ */
+(function optimizeImages(){
+  const imgs = document.querySelectorAll('img');
+  imgs.forEach((img, i) => {
+    // first 2 images (logos / hero) load eagerly; the rest lazy
+    if (i > 1 && !img.hasAttribute('loading')) img.setAttribute('loading','lazy');
+    if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
+  });
+})();
+
 /* ============================================================
    STICKY NAV — full-width on load, floats into pill on scroll
    ============================================================ */
@@ -2134,13 +2453,14 @@ html, body {
         ltr.style.willChange = 'transform, filter';
         ltr.animate(
           [
-            { transform: 'translate(0,0) skewX(0deg)', filter: 'none' },
-            { transform: 'translate(-3px,1px) skewX(-4deg)', filter: 'hue-rotate(-30deg) drop-shadow(0 0 8px #00ffaa)' },
-            { transform: 'translate(3px,-1px) skewX(4deg)', filter: 'hue-rotate(40deg) drop-shadow(0 0 8px #ff3344)' },
-            { transform: 'translate(-1px,0) skewX(-2deg)', filter: 'hue-rotate(-15deg)' },
-            { transform: 'translate(0,0) skewX(0deg)', filter: 'none' }
+            { transform: 'translate(0,0) skewX(0deg) scale(1)', filter: 'none', opacity: 1 },
+            { transform: 'translate(-6px,3px) skewX(-8deg) scale(1.06)', filter: 'hue-rotate(-50deg) drop-shadow(0 0 14px #00ffaa) blur(0.4px)', opacity: 0.92 },
+            { transform: 'translate(7px,-3px) skewX(8deg) scale(0.96)', filter: 'hue-rotate(60deg) drop-shadow(0 0 14px #ff3344) blur(0.5px)', opacity: 0.95 },
+            { transform: 'translate(-5px,2px) skewX(-5deg) scale(1.03)', filter: 'hue-rotate(-25deg) drop-shadow(0 0 10px #00ffaa)', opacity: 0.9 },
+            { transform: 'translate(4px,-1px) skewX(4deg) scale(0.99)', filter: 'hue-rotate(20deg) drop-shadow(0 0 8px #ff3344)', opacity: 0.95 },
+            { transform: 'translate(0,0) skewX(0deg) scale(1)', filter: 'none', opacity: 1 }
           ],
-          { duration: 480, easing: 'ease-in-out' }
+          { duration: 600, easing: 'cubic-bezier(.36,.07,.19,.97)' }
         );
       }, i * 90);
     });
@@ -2248,14 +2568,42 @@ document.addEventListener('visibilitychange', () => {
   const TOTAL_FRAMES = 9;
   const stage = document.getElementById('viewerStage');
   const img = document.getElementById('viewerImg');
+  const loader = document.getElementById('viewerLoader');
   const frameCount = document.getElementById('frameCount');
   const progressBar = document.getElementById('progressBar');
   const autoplayBtn = document.getElementById('autoplayBtn');
   if (!stage || !img) return;
   let currentFrame = 0, isDragging = false, startX = 0, startFrame = 0, autoplayId = null;
+
+  // Preload all frames so dragging is smooth and we know if any are missing
+  const frames = [];
+  let loadedCount = 0, failedCount = 0;
+  for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    const im = new Image();
+    im.onload = () => { loadedCount++; if (loadedCount + failedCount === 1) revealFirst(); };
+    im.onerror = () => { failedCount++; if (loadedCount + failedCount === 1) revealFirst(); };
+    im.src = `assets/products/product-360/product-${i}.webp`;
+    frames.push(im);
+  }
+  function revealFirst() {
+    if (loader) loader.classList.add('hidden');
+    img.classList.add('ready');
+    // Fallback if first frame failed: show capsule product image instead
+    if (failedCount > 0 && !frames[0].complete) {
+      img.src = 'assets/products/ashwagandha-capsules.webp';
+    }
+  }
+  // safety: if onload never fires (cached), reveal after a tick
+  setTimeout(revealFirst, 800);
+
   const setFrame = (idx) => {
     currentFrame = ((idx % TOTAL_FRAMES) + TOTAL_FRAMES) % TOTAL_FRAMES;
-    img.src = `assets/products/product-360/product-${currentFrame + 1}.webp`;
+    const cached = frames[currentFrame];
+    if (cached && cached.complete && cached.naturalWidth > 0) {
+      img.src = cached.src;
+    } else {
+      img.src = `assets/products/product-360/product-${currentFrame + 1}.webp`;
+    }
     frameCount.textContent = `${currentFrame + 1} / ${TOTAL_FRAMES}`;
     progressBar.style.width = `${((currentFrame + 1) / TOTAL_FRAMES) * 100}%`;
   };
