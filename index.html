@@ -594,33 +594,48 @@ html, body {
 .zig-body em { font-style: italic; }
 .zig-body strong { color: var(--text); }
 
-/* ===================== CHEMICAL CONSTITUENTS — 16:9 with unique entry animations ===================== */
-.chem-stack { display: flex; flex-direction: column; gap: 16px; }
+/* ===================== CHEMICAL CONSTITUENTS — premium animated tiles ===================== */
+.chem-stack { display: flex; flex-direction: column; gap: 18px; perspective: 1800px; }
 .chem-tile {
   position: relative;
-  aspect-ratio: 16 / 10.5;   /* a touch taller so content distributes nicely */
-  min-height: 200px;
+  /* Use auto height so content is never clipped */
+  min-height: 260px;
   border-radius: 22px;
   perspective: 1600px;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.18,.9,.3,1.1);
+  transition:
+    opacity 0.85s cubic-bezier(.22,.9,.32,1),
+    transform 0.85s cubic-bezier(.18,.9,.3,1.1),
+    box-shadow 0.4s ease;
+  will-change: transform, opacity;
 }
-/* unique entry per tile */
-.chem-tile.ct-1 { transform: translateX(-60px) rotate(-2deg); }
-.chem-tile.ct-2 { transform: translateX(60px) rotate(2deg); }
-.chem-tile.ct-3 { transform: translateY(40px) scale(.92); }
-.chem-tile.ct-4 { transform: translateX(-60px) scale(.92) rotate(-1.5deg); }
+/* Unique entry per tile */
+.chem-tile.ct-1 { transform: translateX(-70px) rotate(-3deg) scale(.94); }
+.chem-tile.ct-2 { transform: translateX(70px)  rotate(3deg)  scale(.94); }
+.chem-tile.ct-3 { transform: translateY(50px)  rotate(-1.5deg) scale(.92); }
+.chem-tile.ct-4 { transform: translateX(-70px) rotate(1.5deg) scale(.92); }
 .chem-tile.in-view { opacity: 1; transform: translate(0,0) rotate(0) scale(1); }
-.chem-tile.ct-2.in-view { transition-delay: .12s; }
-.chem-tile.ct-3.in-view { transition-delay: .24s; }
-.chem-tile.ct-4.in-view { transition-delay: .36s; }
+.chem-tile.ct-1.in-view { transition-delay: .05s; }
+.chem-tile.ct-2.in-view { transition-delay: .18s; }
+.chem-tile.ct-3.in-view { transition-delay: .31s; }
+.chem-tile.ct-4.in-view { transition-delay: .44s; }
+
+/* Gentle floating idle animation */
+@keyframes chemFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.chem-tile.in-view { animation: chemFloat 6s ease-in-out infinite; }
+.chem-tile.ct-2.in-view { animation-delay: -1.5s; }
+.chem-tile.ct-3.in-view { animation-delay: -3s; }
+.chem-tile.ct-4.in-view { animation-delay: -4.5s; }
 
 .chem-inner {
-  position: relative; width: 100%; height: 100%;
-  transition: transform 0.85s cubic-bezier(0.4, 0.0, 0.2, 1);
+  position: relative; width: 100%; height: 100%; min-height: inherit;
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
   transform-style: preserve-3d;
-  border-radius: 20px;
+  border-radius: 22px;
 }
 .chem-inner.flipped { transform: rotateY(180deg); }
 
@@ -630,25 +645,43 @@ html, body {
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
   display: flex; flex-direction: column;
-  padding: 16px 18px;
+  padding: 18px 18px 16px;
   box-shadow:
-    0 10px 26px rgba(15,76,42,0.32),
-    inset 0 1px 0 rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.10);
+    0 14px 34px rgba(15,76,42,0.30),
+    0 4px 10px rgba(15,76,42,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.12);
   will-change: transform;
 }
+.chem-tile:hover { box-shadow: 0 20px 42px rgba(15,76,42,0.38); }
 .chem-face.front {
-  transform: rotateY(0deg) translateZ(1px);
+  transform: rotateY(0deg);
   background:
-    radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.14), transparent 55%),
+    radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.16), transparent 55%),
     linear-gradient(135deg, #0F4C2A 0%, #1F6E3D 55%, #2E8B4A 100%);
   color: #fff;
-  /* now properly distribute content in the center space */
   justify-content: flex-start;
-  gap: 10px;
+  gap: 12px;
+}
+/* Subtle moving sheen across the front face */
+.chem-face.front .sheen {
+  position: absolute; inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.12) 45%, transparent 60%);
+  transform: translateX(-100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.chem-tile.in-view .chem-face.front .sheen {
+  animation: chemSheen 4.5s ease-in-out infinite;
+}
+.chem-tile.ct-2.in-view .chem-face.front .sheen { animation-delay: 1s; }
+.chem-tile.ct-3.in-view .chem-face.front .sheen { animation-delay: 2s; }
+.chem-tile.ct-4.in-view .chem-face.front .sheen { animation-delay: 3s; }
+@keyframes chemSheen {
+  0%   { transform: translateX(-100%); }
+  55%  { transform: translateX(120%); }
+  100% { transform: translateX(120%); }
 }
 .chem-tile.ct-1 .chem-face.front { background: radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, #0F4C2A 0%, #1B6936 55%, #2E8B4A 100%); }
 .chem-tile.ct-2 .chem-face.front { background: radial-gradient(140% 100% at 100% 0%, rgba(255,255,255,0.14), transparent 55%), linear-gradient(135deg, #103A26 0%, #195C30 50%, #2E7D32 100%); }
@@ -755,14 +788,14 @@ html, body {
 .chem-tap-hint i { font-size: 10px; color: #FFD66B; }
 
 .chem-face.back {
-  transform: rotateY(180deg) translateZ(1px);
+  transform: rotateY(180deg);
   background:
-    radial-gradient(140% 100% at 100% 0%, rgba(255,255,255,0.10), transparent 55%),
+    radial-gradient(140% 100% at 100% 0%, rgba(46,125,50,0.10), transparent 55%),
     linear-gradient(135deg, #FFFFFF 0%, #F4F9F5 100%);
   color: var(--text);
   border: 2px solid var(--green-soft);
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
 }
 .chem-back-tag {
   align-self: flex-start;
@@ -786,13 +819,19 @@ html, body {
 .chem-footnote i { color: var(--gold); margin-right: 4px; }
 
 @media (max-width: 480px) {
-  .chem-term { font-size: 16px; }
-  .chem-ic { width: 38px; height: 38px; font-size: 15px; border-radius: 11px; }
-  .chem-tile { aspect-ratio: auto; min-height: 210px; }
-  .chem-face { padding: 14px 14px; }
-  .chem-tag { font-size: 10px; padding: 4px 9px; }
-  .chem-blurb { font-size: 11.5px; -webkit-line-clamp: 3; }
+  .chem-stack { gap: 16px; }
+  .chem-tile { min-height: 280px; border-radius: 20px; }
+  .chem-face { padding: 16px 15px 14px; border-radius: 20px; }
+  .chem-tile-head { gap: 10px; }
+  .chem-ic { width: 40px; height: 40px; font-size: 15px; border-radius: 12px; }
+  .chem-term { font-size: 16.5px; letter-spacing: -0.3px; }
+  .chem-badge { font-size: 8px; padding: 4px 9px; letter-spacing: 1px; }
+  .info-btn { padding: 5px 8px; font-size: 12px; }
+  .chem-blurb { font-size: 12px; -webkit-line-clamp: 4; line-height: 1.5; }
+  .chem-tag { font-size: 10.5px; padding: 4px 10px; }
   .chem-tap-hint { font-size: 10px; }
+  .chem-back-title { font-size: 15px; }
+  .chem-back-text { font-size: 11.5px; }
 }
 
 /* ===================== INFO MODAL ===================== */
@@ -1767,6 +1806,7 @@ html, body {
       <div class="chem-tile ct-1">
         <div class="chem-inner">
           <div class="chem-face front">
+            <span class="sheen"></span>
             <div class="chem-tile-head">
               <div class="chem-ic"><i class="fa-solid fa-atom"></i></div>
               <div class="chem-term">Withanolides</div>
@@ -1796,6 +1836,7 @@ html, body {
       <div class="chem-tile ct-2">
         <div class="chem-inner">
           <div class="chem-face front">
+            <span class="sheen"></span>
             <div class="chem-tile-head">
               <div class="chem-ic"><i class="fa-solid fa-pen-nib"></i></div>
               <div class="chem-term">Alkaloids</div>
@@ -1825,6 +1866,7 @@ html, body {
       <div class="chem-tile ct-3">
         <div class="chem-inner">
           <div class="chem-face front">
+            <span class="sheen"></span>
             <div class="chem-tile-head">
               <div class="chem-ic"><i class="fa-solid fa-dna"></i></div>
               <div class="chem-term">Glycosides</div>
@@ -1853,6 +1895,7 @@ html, body {
       <div class="chem-tile ct-4">
         <div class="chem-inner">
           <div class="chem-face front">
+            <span class="sheen"></span>
             <div class="chem-tile-head">
               <div class="chem-ic"><i class="fa-solid fa-shield-halved"></i></div>
               <div class="chem-term">Flavonoids &amp; Sterols</div>
