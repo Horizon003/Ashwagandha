@@ -1,248 +1,954 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ashwagandha 3D | Haris (Horizon)</title>
-    
-    <!-- Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Model Viewer -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Withania Somnifera | Ashwagandha — Quaid-e-Azam College of Pharmacy</title>
 
-    <style>
-        /* Hide Default Progress Bar of Model Viewer */
-        model-viewer::part(default-progress-bar) {
-            display: none;
-        }
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        /* Apple Style Background */
-        .apple-bg {
-            background-color: #f5f5f7;
-        }
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 
-        /* Glassmorphism Utilities */
-        .glass {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-top: 1px solid rgba(0,0,0,0.05);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
+<style>
+  /* ============================================================
+     COLOR PALETTE (from mockup)
+     ============================================================
+     Primary Maroon:  #7B1E1E  (titles, primary buttons)
+     Deep Red:        #5A1414
+     Accent Green:    #2E7D32  (overview, leaves)
+     Soft Green:      #4CAF50
+     Cream BG:        #FBF6EC
+     Warm Beige:      #F4E9D6
+     Card BG:         #FFFFFF
+     Text Dark:       #2B2B2B
+     Text Muted:      #6B6B6B
+     Bullet Red:      #B53A3A
+     ============================================================ */
 
-        /* --- Tutorial Animations --- */
-        .touch-indicator {
-            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
-            animation: pulse-ring 2s infinite;
-        }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        @keyframes pulse-ring {
-            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.3); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
-            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
-        }
+  :root {
+    --maroon: #7B1E1E;
+    --maroon-deep: #5A1414;
+    --maroon-light: #A23B3B;
+    --green: #2E7D32;
+    --green-soft: #4CAF50;
+    --green-light: #E8F5E9;
+    --cream: #FBF6EC;
+    --beige: #F4E9D6;
+    --card: #FFFFFF;
+    --text: #2B2B2B;
+    --muted: #6B6B6B;
+    --bullet: #B53A3A;
+    --shadow-sm: 0 2px 6px rgba(0,0,0,0.06);
+    --shadow: 0 6px 18px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 30px rgba(0,0,0,0.12);
+    --radius: 16px;
+    --radius-lg: 22px;
+  }
 
-        /* Drag / Swipe Animation */
-        @keyframes swipeAnim {
-            0% { transform: translateX(-20px); }
-            50% { transform: translateX(20px); }
-            100% { transform: translateX(-20px); }
-        }
-        .anim-swipe {
-            animation: swipeAnim 2.5s ease-in-out infinite;
-        }
+  html, body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
 
-        /* Pinch Animation */
-        @keyframes pinchTop {
-            0%, 100% { transform: translate(-15px, -15px); }
-            50% { transform: translate(5px, 5px); }
-        }
-        @keyframes pinchBottom {
-            0%, 100% { transform: translate(15px, 15px); }
-            50% { transform: translate(-5px, -5px); }
-        }
-        .anim-pinch-1 { animation: pinchTop 2.5s ease-in-out infinite; }
-        .anim-pinch-2 { animation: pinchBottom 2.5s ease-in-out infinite; }
-    </style>
+  body { padding-bottom: 90px; }
+
+  .container { max-width: 480px; margin: 0 auto; background: var(--cream); position: relative; }
+
+  /* ===================== TOP NAV ===================== */
+  .top-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 50;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand img { width: 32px; height: 32px; object-fit: contain; }
+  .brand-text { line-height: 1.1; }
+  .brand-text .title { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--maroon); font-size: 14px; }
+  .brand-text .sub { font-size: 9px; color: var(--muted); letter-spacing: .5px; }
+
+  .uni { display: flex; align-items: center; gap: 6px; margin-left: auto; margin-right: 12px; }
+  .uni .uni-text { text-align: right; line-height: 1.05; }
+  .uni .uni-text .l1 { font-size: 8px; color: var(--muted); letter-spacing: 1px; font-weight: 600; }
+  .uni .uni-text .l2 { font-size: 10px; color: var(--maroon); font-weight: 700; letter-spacing: .5px; }
+  .uni img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+
+  .menu-btn {
+    background: transparent; border: 0; font-size: 20px; color: var(--text); cursor: pointer; padding: 4px 6px;
+  }
+
+  /* ===================== HERO ===================== */
+  .hero {
+    position: relative;
+    padding: 22px 20px 26px;
+    background: linear-gradient(135deg, #FBF6EC 0%, #F1E4C9 60%, #E8D5AE 100%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ""; position: absolute; right: -40px; top: -40px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(46,125,50,0.12), transparent 70%);
+    border-radius: 50%;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    color: var(--maroon);
+    font-size: 30px;
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 .italic { font-style: italic; display: block; }
+  .hero .tagline {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .hero .desc {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--muted);
+    max-width: 70%;
+    line-height: 1.55;
+  }
+  .hero-img {
+    position: absolute;
+    right: 8px; bottom: 10px;
+    width: 180px; height: 230px;
+    object-fit: contain;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .hero-dots { display: flex; gap: 6px; margin-top: 18px; }
+  .hero-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.18); }
+  .hero-dots span.active { background: var(--maroon); width: 18px; border-radius: 4px; }
+
+  /* ===================== TAB GRID ===================== */
+  .tabs {
+    margin: 18px 16px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .tab {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 8px 12px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .2s ease;
+    border: 1.5px solid transparent;
+    user-select: none;
+  }
+  .tab:active { transform: scale(0.97); }
+  .tab.active { border-color: var(--green); box-shadow: 0 0 0 3px rgba(46,125,50,0.12), var(--shadow); }
+  .tab .icon-circle {
+    width: 40px; height: 40px; margin: 0 auto 6px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .tab .label { font-size: 12px; font-weight: 600; color: var(--text); }
+  .tab.t-overview .icon-circle { background: #E8F5E9; color: var(--green); }
+  .tab.t-uses     .icon-circle { background: #F3E8F7; color: #7B3FA8; }
+  .tab.t-actions  .icon-circle { background: #FDECEC; color: var(--maroon); }
+  .tab.t-products .icon-circle { background: #FFF1E6; color: #B45309; }
+  .tab.t-more     .icon-circle { background: #E6F0FF; color: #2563EB; }
+
+  .tabs-row2 {
+    margin: 10px 16px 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  .tabs-row2 .tab:last-child { grid-column: span 1; }
+
+  /* ===================== CARD ===================== */
+  .card {
+    background: var(--card);
+    margin: 16px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 16px 18px;
+    border-bottom: 1px solid #F1ECE0;
+  }
+  .card-header .ic {
+    width: 32px; height: 32px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--green-light); color: var(--green); font-size: 14px;
+  }
+  .card-header h2 {
+    font-size: 12.5px; font-weight: 700; letter-spacing: 1.2px;
+    color: var(--text); text-transform: uppercase;
+    flex: 1;
+  }
+  .card-header .chev { color: var(--muted); }
+  .card-body { padding: 18px; }
+
+  /* Botanical profile */
+  .profile-grid { display: grid; grid-template-columns: 100px 1fr; gap: 8px 10px; font-size: 13px; }
+  .profile-grid .k { color: var(--bullet); font-weight: 600; position: relative; padding-left: 12px; }
+  .profile-grid .k::before { content: ""; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: var(--bullet); border-radius: 50%; }
+  .profile-grid .v { color: var(--text); }
+  .profile-grid .v em { font-style: italic; }
+
+  .profile-wrap { position: relative; }
+  .profile-illustration {
+    position: absolute; right: -8px; top: 0; width: 110px; height: auto; pointer-events: none; opacity: .95;
+  }
+  .profile-pager {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px;
+  }
+  .pager-dots { display: flex; gap: 5px; }
+  .pager-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.15); }
+  .pager-dots span.active { background: var(--maroon); width: 14px; border-radius: 4px; }
+  .pager-count {
+    background: var(--green-light); color: var(--green);
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+  }
+
+  /* ===================== HISTORICAL ===================== */
+  .historical .card-header .ic { background: #FDECEC; color: var(--maroon); }
+  .historical p { font-size: 13px; color: #3a3a3a; margin-bottom: 10px; }
+  .historical strong { color: var(--maroon); font-weight: 700; }
+  .flip-btn {
+    margin-top: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%;
+    background: linear-gradient(135deg, var(--maroon), var(--maroon-deep));
+    color: #fff; border: 0; padding: 11px;
+    border-radius: 12px; font-weight: 600; font-size: 13px; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(123,30,30,0.25);
+  }
+
+  /* ===================== CHEMICAL ===================== */
+  .chemical .card-header .ic { background: var(--green-light); color: var(--green); }
+  .chem-list { list-style: none; padding: 0; }
+  .chem-list li {
+    padding: 6px 0 6px 18px;
+    position: relative;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .chem-list li::before {
+    content: ""; position: absolute; left: 0; top: 12px;
+    width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+  }
+  .chem-list li strong { color: var(--green); font-weight: 700; }
+  .chem-note { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+
+  /* ===================== 3D MODEL ===================== */
+  .three-d {
+    margin: 16px;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .three-d-head {
+    padding: 14px 18px 8px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1.2px;
+    color: var(--text);
+  }
+  .three-d-frame {
+    position: relative;
+    height: 340px;
+    background: linear-gradient(180deg, #F7F2E6 0%, #E8DFC8 100%);
+    overflow: hidden;
+  }
+  .three-d-frame iframe {
+    width: 100%; height: 100%; border: 0; display: block;
+    background: transparent;
+  }
+  .rotate-badge {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(255,255,255,0.85); backdrop-filter: blur(6px);
+    border-radius: 14px; padding: 8px 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 9px; color: var(--muted); font-weight: 600;
+    box-shadow: var(--shadow-sm);
+    pointer-events: none;
+  }
+  .rotate-badge .num { font-size: 14px; color: var(--maroon); font-weight: 800; }
+  .rotate-badge i { font-size: 12px; color: var(--green); }
+
+  /* ===================== PHARMACOLOGICAL ACTIONS ===================== */
+  .pharm { margin: 16px; }
+  .section-title {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.4px;
+    color: var(--text); margin-bottom: 12px;
+  }
+  .pharm-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  .pharm-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 8px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform .15s ease;
+  }
+  .pharm-card:active { transform: scale(0.97); }
+  .pharm-card .pic {
+    width: 36px; height: 36px; margin: 0 auto 8px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #fff;
+  }
+  .pharm-card .pic.g { background: var(--green); }
+  .pharm-card .pic.b { background: #2563EB; }
+  .pharm-card .pic.t { background: #14B8A6; }
+  .pharm-card .pic.p { background: #7B3FA8; }
+  .pharm-card .pic.r { background: var(--maroon); }
+  .pharm-card .pic.o { background: #E07B00; }
+  .pharm-card .ttl { font-size: 10.5px; font-weight: 600; color: var(--text); line-height: 1.25; }
+
+  .learn-more {
+    margin-top: 12px;
+    width: 100%;
+    background: var(--green);
+    color: #fff; border: 0; padding: 11px;
+    border-radius: 24px; font-weight: 600; font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 4px 12px rgba(46,125,50,0.25);
+  }
+
+  /* ===================== TRADITIONAL USES ===================== */
+  .trad { margin: 16px; }
+  .trad-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .trad-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px 6px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .trad-card .ic {
+    width: 32px; height: 32px; margin: 0 auto 6px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .trad-card.c1 .ic { background: #E0F2FE; color: #0369A1; }
+  .trad-card.c2 .ic { background: #FEE2E2; color: #B91C1C; }
+  .trad-card.c3 .ic { background: #FEF3C7; color: #B45309; }
+  .trad-card.c4 .ic { background: #FCE7F3; color: #BE185D; }
+  .trad-card .ttl { font-size: 9.5px; font-weight: 600; color: var(--text); line-height: 1.3; }
+
+  /* ===================== MISCONCEPTIONS ===================== */
+  .misc { margin: 16px; }
+  .misc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .misc-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px 6px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .misc-card .ic {
+    width: 36px; height: 36px; margin: 0 auto 6px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 16px;
+  }
+  .misc-card.m1 .ic { background: var(--green-soft); }
+  .misc-card.m2 .ic { background: #DC2626; }
+  .misc-card.m3 .ic { background: #F59E0B; }
+  .misc-card.m4 .ic { background: #475569; }
+  .misc-card .ttl { font-size: 9.5px; font-weight: 600; color: var(--text); line-height: 1.3; }
+
+  /* ===================== PRODUCTS / 360 SLIDER ===================== */
+  .products-section { margin: 16px; }
+  .products-card {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .products-360 {
+    position: relative;
+    height: 240px;
+    background: linear-gradient(180deg, #F7F2E6 0%, #ECE0C5 100%);
+    overflow: hidden;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+  }
+  .products-360.dragging { cursor: grabbing; }
+  .products-360 .frame {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .products-360 .frame img {
+    max-width: 90%; max-height: 90%;
+    object-fit: contain;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    transition: opacity .05s linear;
+  }
+  .products-360 .badge {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(255,255,255,0.9); backdrop-filter: blur(6px);
+    padding: 6px 12px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    color: var(--maroon);
+    box-shadow: var(--shadow-sm);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .products-360 .badge i { color: var(--green); }
+  .products-360 .hint {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.65); color: #fff;
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 10px; font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  .products-360 .frame-counter {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(123,30,30,0.9); color: #fff;
+    padding: 4px 10px; border-radius: 14px;
+    font-size: 10px; font-weight: 700;
+  }
+
+  .product-list { padding: 14px 16px 18px; }
+  .product-list .ttl { font-size: 12px; font-weight: 700; letter-spacing: 1.2px; color: var(--text); margin-bottom: 10px; }
+  .pl-row { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--text); padding: 4px 0; }
+  .pl-row i { color: var(--green); margin-top: 4px; font-size: 8px; }
+  .pl-note {
+    margin-top: 10px;
+    background: var(--green-light);
+    color: #1B5E20;
+    font-size: 11.5px;
+    padding: 8px 12px; border-radius: 10px;
+    border-left: 3px solid var(--green);
+  }
+  .pl-note strong { font-weight: 700; }
+
+  /* ===================== CONCLUSION ===================== */
+  .conclusion-card {
+    margin: 16px;
+    background: linear-gradient(135deg, #F3E8F7 0%, #E8DBF0 100%);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .conclusion-card .head {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1.2px;
+    color: #5B2C8A; margin-bottom: 10px;
+  }
+  .conclusion-card p {
+    font-size: 12.5px; color: #2B2B2B; line-height: 1.6;
+  }
+  .conclusion-card p em { font-style: italic; font-weight: 600; }
+  .conclusion-btn {
+    margin-top: 14px; width: 100%;
+    background: linear-gradient(135deg, #7B3FA8, #5B2C8A);
+    color: #fff; border: 0; padding: 12px;
+    border-radius: 24px; font-weight: 600; font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 4px 12px rgba(91,44,138,0.3);
+  }
+
+  /* ===================== TEAM ===================== */
+  .team-section { margin: 16px; }
+  .team-section .section-title { text-align: center; }
+  .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .team-card { text-align: center; }
+  .team-card img {
+    width: 64px; height: 64px; border-radius: 50%;
+    object-fit: cover; border: 3px solid #fff; box-shadow: var(--shadow-sm);
+    margin-bottom: 6px;
+    background: #ddd;
+  }
+  .team-card .name { font-size: 10.5px; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .team-card .roll { font-size: 9px; color: var(--muted); margin-top: 2px; }
+
+  .instructor-card {
+    margin: 14px 16px 0;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .instructor-card img {
+    width: 64px; height: 64px; border-radius: 50%;
+    object-fit: cover; border: 3px solid var(--maroon); flex-shrink: 0;
+    background: #ddd;
+  }
+  .instructor-card .info .ptd { font-size: 9.5px; color: var(--muted); letter-spacing: 1px; font-weight: 600; }
+  .instructor-card .info .nm { font-size: 14px; color: var(--maroon); font-weight: 700; font-family: 'Playfair Display', serif; }
+  .instructor-card .info .rl { font-size: 10.5px; color: var(--green); font-weight: 600; margin-bottom: 4px; }
+  .instructor-card .info .ds { font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+
+  /* ===================== REFERENCES ===================== */
+  .references {
+    margin: 16px;
+    background: linear-gradient(135deg, var(--maroon-deep), var(--maroon));
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .references .head {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.4px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .references .body {
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .references ul {
+    list-style: none; flex: 1; font-size: 10.5px; line-height: 1.7;
+  }
+  .references ul li { padding-left: 10px; position: relative; opacity: .92; }
+  .references ul li::before { content: "•"; position: absolute; left: 0; }
+  .qr-block { text-align: center; }
+  .qr-block .qr {
+    width: 70px; height: 70px;
+    background: #fff; border-radius: 8px;
+    padding: 4px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .qr-block .qr img { width: 100%; height: 100%; object-fit: contain; }
+  .qr-block .qr-label { font-size: 9px; margin-top: 4px; opacity: .9; }
+
+  /* ===================== BOTTOM NAV ===================== */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0,0,0,0.06);
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    padding: 8px 0 14px;
+    z-index: 100;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+  }
+  .bottom-nav a {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    text-decoration: none; color: var(--muted);
+    font-size: 9.5px; font-weight: 600;
+    padding: 4px 0;
+    transition: color .15s;
+  }
+  .bottom-nav a i { font-size: 16px; }
+  .bottom-nav a.active { color: var(--maroon); }
+  .bottom-nav a.active i { color: var(--maroon); }
+
+  /* ===================== UTIL ===================== */
+  .img-placeholder {
+    background: linear-gradient(135deg, #ddd, #ccc);
+    display: flex; align-items: center; justify-content: center;
+    color: #888; font-size: 10px; font-weight: 600;
+  }
+
+  @media (min-width: 481px) {
+    .container { box-shadow: 0 0 60px rgba(0,0,0,0.08); min-height: 100vh; }
+  }
+</style>
 </head>
-<body class="overflow-hidden bg-black text-black font-sans selection:bg-gray-300 antialiased">
+<body>
 
-    <!-- Splash Screen with Loading Bar -->
-    <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white transition-opacity duration-700">
-        <div class="mb-8 flex flex-col items-center">
-            <!-- Sleek Icon -->
-            <svg class="w-16 h-16 mb-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path>
-            </svg>
-            <h1 class="text-2xl font-semibold tracking-tight text-black">Ashwagandha 3D</h1>
-            <p class="text-sm text-gray-500 mt-2" id="progress-text">Loading Model 0%</p>
+<div class="container">
+
+  <!-- ===================== TOP NAV ===================== -->
+  <nav class="top-nav" aria-label="Primary">
+    <div class="brand">
+      <img src="assets/logos/qacp-logo.webp" alt="QACP Logo" onerror="this.style.display='none'">
+      <div class="brand-text">
+        <div class="title">Quaid-e-Azam</div>
+        <div class="sub">College of Pharmacy</div>
+      </div>
+    </div>
+    <div class="uni">
+      <div class="uni-text">
+        <div class="l1">UNIVERSITY of</div>
+        <div class="l2">SARGODHA</div>
+      </div>
+      <img src="assets/logos/uos-logo.webp" alt="UOS Logo" onerror="this.style.display='none'">
+    </div>
+    <button class="menu-btn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero" id="overview">
+    <h1>WITHANIA<br><span class="italic">SOMNIFERA</span></h1>
+    <p class="tagline">A Scientific &amp; Pharmacognostic Overview</p>
+    <p class="desc">An important medicinal plant of the Solanaceae family, rich in withanolides with wide-ranging therapeutic applications.</p>
+    <img class="hero-img" src="assets/main/ashwagandha-main.webp" alt="Ashwagandha plant" onerror="this.style.opacity=0.3">
+    <div class="hero-dots" aria-hidden="true">
+      <span class="active"></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <!-- ===================== TABS ===================== -->
+  <div class="tabs" role="tablist">
+    <div class="tab t-overview active" role="tab"><div class="icon-circle"><i class="fa-solid fa-seedling"></i></div><div class="label">Overview</div></div>
+    <div class="tab t-uses" role="tab"><div class="icon-circle"><i class="fa-solid fa-mortar-pestle"></i></div><div class="label">Uses</div></div>
+    <div class="tab t-actions" role="tab"><div class="icon-circle"><i class="fa-solid fa-flask"></i></div><div class="label">Actions</div></div>
+  </div>
+  <div class="tabs-row2">
+    <div class="tab t-products" role="tab"><div class="icon-circle"><i class="fa-solid fa-prescription-bottle-medical"></i></div><div class="label">Products</div></div>
+    <div class="tab t-more" role="tab"><div class="icon-circle"><i class="fa-solid fa-ellipsis"></i></div><div class="label">More</div></div>
+  </div>
+
+  <!-- ===================== BOTANICAL PROFILE ===================== -->
+  <section class="card">
+    <div class="card-header">
+      <div class="ic"><i class="fa-solid fa-leaf"></i></div>
+      <h2>Botanical &amp; Pharmacognostic Profile</h2>
+      <i class="fa-solid fa-chevron-up chev"></i>
+    </div>
+    <div class="card-body profile-wrap">
+      <img class="profile-illustration" src="assets/main/ashwagandha-main.webp" alt="" onerror="this.style.display='none'">
+      <div class="profile-grid" style="max-width: 70%;">
+        <div class="k">Botanical Name:</div><div class="v"><em>Withania somnifera</em> (L.) Dunal</div>
+        <div class="k">Family:</div><div class="v">Solanaceae</div>
+        <div class="k">Common Name:</div><div class="v">Ashwagandha, Indian Ginseng, Winter Cherry</div>
+        <div class="k">Part Used:</div><div class="v">Dried roots and stem bases</div>
+        <div class="k">Habit:</div><div class="v">Widely cultivated in dry regions of Pakistan, India, Middle East, and Africa</div>
+      </div>
+      <div class="profile-pager">
+        <div class="pager-dots">
+          <span class="active"></span><span></span><span></span><span></span><span></span><span></span>
         </div>
-        <!-- Progress Bar -->
-        <div class="w-64 h-[2px] bg-gray-200 rounded-full overflow-hidden">
-            <div id="progress-bar" class="h-full bg-black w-0 transition-all duration-300 ease-out"></div>
+        <div class="pager-count">1/6</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HISTORICAL ===================== -->
+  <section class="card historical">
+    <div class="card-header">
+      <div class="ic"><i class="fa-solid fa-hourglass-half"></i></div>
+      <h2>Historical Background</h2>
+    </div>
+    <div class="card-body">
+      <p>Used in <strong>Ayurveda</strong> for over <strong>3000 years</strong>. Mentioned in <strong>Charaka Samhita</strong> and <strong>Sushruta Samhita</strong>.</p>
+      <p>The name means <strong>“smell of horse”</strong>, symbolizing strength and vitality. Classified as a <strong>Rasayana</strong> (rejuvenative tonic).</p>
+      <button class="flip-btn"><i class="fa-solid fa-rotate"></i> Tap to Flip</button>
+    </div>
+  </section>
+
+  <!-- ===================== CHEMICAL CONSTITUENTS ===================== -->
+  <section class="card chemical">
+    <div class="card-header">
+      <div class="ic"><i class="fa-solid fa-flask-vial"></i></div>
+      <h2>Chemical Constituents</h2>
+    </div>
+    <div class="card-body">
+      <ul class="chem-list">
+        <li><strong>Withanolides</strong> (Withaferin A, Withanolide D) – main active compounds</li>
+        <li><strong>Alkaloids</strong> (Somniferine, Anaferine)</li>
+        <li><strong>Glycosides</strong> (Withanosides, Sitoindosides)</li>
+        <li><strong>Flavonoids &amp; sterols</strong></li>
+      </ul>
+      <p class="chem-note">Withanolides are responsible for most pharmacological activities.</p>
+      <button class="flip-btn" style="margin-top:14px;"><i class="fa-solid fa-rotate"></i> Tap to Flip</button>
+    </div>
+  </section>
+
+  <!-- ===================== 3D PLANT MODEL ===================== -->
+  <section class="three-d" id="model3d">
+    <div class="three-d-head">3D PLANT MODEL</div>
+    <div class="three-d-frame">
+      <iframe src="https://ash3d.netlify.app/" title="Ashwagandha 3D Model" loading="lazy" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+      <div class="rotate-badge">
+        <div class="num">360°</div>
+        <i class="fa-solid fa-hand-pointer"></i>
+        <div>Drag to rotate</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PHARMACOLOGICAL ACTIONS ===================== -->
+  <section class="pharm" id="actions">
+    <div class="section-title">PHARMACOLOGICAL ACTIONS</div>
+    <div class="pharm-grid">
+      <div class="pharm-card"><div class="pic g"><i class="fa-solid fa-leaf"></i></div><div class="ttl">Adaptogenic &amp; Anti-Stress</div></div>
+      <div class="pharm-card"><div class="pic b"><i class="fa-solid fa-shield-virus"></i></div><div class="ttl">Immunomodulatory</div></div>
+      <div class="pharm-card"><div class="pic t"><i class="fa-solid fa-droplet"></i></div><div class="ttl">Anti-Diabetic Potential</div></div>
+      <div class="pharm-card"><div class="pic p"><i class="fa-solid fa-brain"></i></div><div class="ttl">Neuroprotective &amp; Analytic</div></div>
+      <div class="pharm-card"><div class="pic r"><i class="fa-solid fa-heart-pulse"></i></div><div class="ttl">Cardio-Protective Effects</div></div>
+      <div class="pharm-card"><div class="pic o"><i class="fa-solid fa-fire"></i></div><div class="ttl">Anti-Inflammatory &amp; Antioxidant</div></div>
+    </div>
+    <button class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></button>
+  </section>
+
+  <!-- ===================== TRADITIONAL USES ===================== -->
+  <section class="trad" id="uses">
+    <div class="section-title">TRADITIONAL USES</div>
+    <div class="trad-grid">
+      <div class="trad-card c1"><div class="ic"><i class="fa-solid fa-moon"></i></div><div class="ttl">Insomnia</div></div>
+      <div class="trad-card c2"><div class="ic"><i class="fa-solid fa-bone"></i></div><div class="ttl">Arthritis</div></div>
+      <div class="trad-card c3"><div class="ic"><i class="fa-solid fa-brain"></i></div><div class="ttl">Nervous exhaustion</div></div>
+      <div class="trad-card c4"><div class="ic"><i class="fa-solid fa-heart"></i></div><div class="ttl">Weakness &amp; fatigue</div></div>
+    </div>
+    <div class="trad-grid" style="margin-top:8px; grid-template-columns: 1fr;">
+      <div class="trad-card c4" style="display:flex; align-items:center; justify-content:center; gap:10px; padding:10px;">
+        <div class="ic" style="margin:0;"><i class="fa-solid fa-heart"></i></div>
+        <div class="ttl" style="font-size:11px;">Aphrodisiac &amp; fertility support</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MISCONCEPTIONS ===================== -->
+  <section class="misc">
+    <div class="section-title">MISCONCEPTIONS</div>
+    <div class="misc-grid">
+      <div class="misc-card m1"><div class="ic"><i class="fa-solid fa-check"></i></div><div class="ttl">Works gradually</div></div>
+      <div class="misc-card m2"><div class="ic"><i class="fa-solid fa-xmark"></i></div><div class="ttl">Only for men use</div></div>
+      <div class="misc-card m3"><div class="ic"><i class="fa-solid fa-exclamation"></i></div><div class="ttl">No side effects</div></div>
+      <div class="misc-card m4"><div class="ic"><i class="fa-solid fa-shield"></i></div><div class="ttl">High doses may cause mild GI upset or sedation</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== PRODUCTS / 360 SLIDER ===================== -->
+  <section class="products-section" id="products">
+    <div class="section-title">MODERN DOSAGE FORMS (PAKISTAN)</div>
+    <div class="products-card">
+      <div class="products-360" id="product360">
+        <div class="badge"><i class="fa-solid fa-arrows-rotate"></i> 360° VIEW</div>
+        <div class="frame-counter"><span id="frameNum">1</span>/9</div>
+        <div class="frame">
+          <img id="product360Img" src="assets/products/product-360/product-1.webp" alt="Ashwagandha Product 360° view" draggable="false">
         </div>
+        <div class="hint" id="dragHint"><i class="fa-solid fa-hand-pointer"></i> Drag left or right to rotate</div>
+      </div>
+
+      <div class="product-list">
+        <div class="ttl">AVAILABLE FORMS</div>
+        <div class="pl-row"><i class="fa-solid fa-circle"></i><div>Capsules (250–600 mg extract)</div></div>
+        <div class="pl-row"><i class="fa-solid fa-circle"></i><div>Tablets</div></div>
+        <div class="pl-row"><i class="fa-solid fa-circle"></i><div>Powder (Churna)</div></div>
+        <div class="pl-row"><i class="fa-solid fa-circle"></i><div>Syrup (polyherbal)</div></div>
+        <div class="pl-row"><i class="fa-solid fa-circle"></i><div>Softgels</div></div>
+        <div class="pl-note">Standard extracts often contain about <strong>5% withanolides</strong>.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONCLUSION ===================== -->
+  <section class="conclusion-card">
+    <div class="head"><i class="fa-solid fa-circle-check"></i> CONCLUSION</div>
+    <p><em>Withania somnifera</em> is an important medicinal plant of the Solanaceae family. Its rich withanolide content supports both traditional Ayurvedic uses and modern pharmacological applications, especially in stress management and immune support.</p>
+    <button class="conclusion-btn">Explore Full Scientific Overview <i class="fa-solid fa-arrow-right"></i></button>
+  </section>
+
+  <!-- ===================== TEAM ===================== -->
+  <section class="team-section">
+    <div class="section-title">PRESENTED BY</div>
+    <div class="team-grid">
+      <div class="team-card">
+        <img src="assets/team/haris-horizon.webp" alt="Haris Horizon" onerror="this.classList.add('img-placeholder');this.alt='Photo'">
+        <div class="name">Haris Horizon</div>
+        <div class="roll">DP-2620</div>
+      </div>
+      <div class="team-card">
+        <img src="assets/team/zohaib-tahir.webp" alt="Zohaib Tahir" onerror="this.classList.add('img-placeholder');this.alt='Photo'">
+        <div class="name">Zohaib Tahir</div>
+        <div class="roll">DP-2403</div>
+      </div>
+      <div class="team-card">
+        <img src="assets/team/ali-haider.webp" alt="Ali Haider" onerror="this.classList.add('img-placeholder');this.alt='Photo'">
+        <div class="name">Ali Haider (CR)</div>
+        <div class="roll">DP-2626</div>
+      </div>
+      <div class="team-card">
+        <img src="assets/team/salman.webp" alt="Salman" onerror="this.classList.add('img-placeholder');this.alt='Photo'">
+        <div class="name">Salman</div>
+        <div class="roll">DP-2419</div>
+      </div>
     </div>
 
-    <!-- Main Application Area -->
-    <div class="h-screen w-full flex flex-col apple-bg relative">
-        
-        <!-- Top Bar -->
-        <header class="h-16 w-full glass absolute top-0 z-30 flex items-center justify-center px-6">
-            <h2 class="text-lg font-medium tracking-wide">3D Model Overview</h2>
-        </header>
-
-        <!-- 3D Model Viewer Container -->
-        <main class="flex-grow w-full relative">
-            <model-viewer
-                id="main-viewer"
-                src="ashwagandha.glb"
-                camera-controls
-                touch-action="pan-y"
-                shadow-intensity="1.5"
-                shadow-softness="1"
-                environment-image="neutral"
-                exposure="1"
-                class="w-full h-full outline-none"
-                alt="A 3D model of Ashwagandha">
-            </model-viewer>
-
-            <!-- Tutorial Overlay (Fades in after load) -->
-            <div id="tutorial-overlay" class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-1000">
-                <div class="bg-white/80 backdrop-blur-xl px-10 py-8 rounded-3xl shadow-2xl flex gap-12 border border-gray-200/50">
-                    
-                    <!-- Drag to Rotate Indicator -->
-                    <div class="flex flex-col items-center">
-                        <div class="relative w-20 h-20 flex items-center justify-center mb-4 bg-gray-100 rounded-full">
-                            <div class="w-6 h-6 bg-black rounded-full absolute anim-swipe touch-indicator"></div>
-                        </div>
-                        <span class="text-sm font-semibold text-gray-800 text-center tracking-tight">1 Finger<br><span class="text-gray-500 font-normal">Drag to Rotate</span></span>
-                    </div>
-
-                    <!-- Pinch to Zoom Indicator -->
-                    <div class="flex flex-col items-center">
-                        <div class="relative w-20 h-20 flex items-center justify-center mb-4 bg-gray-100 rounded-full">
-                            <div class="w-5 h-5 border-2 border-black rounded-full absolute anim-pinch-1 touch-indicator"></div>
-                            <div class="w-5 h-5 border-2 border-black rounded-full absolute anim-pinch-2 touch-indicator"></div>
-                        </div>
-                        <span class="text-sm font-semibold text-gray-800 text-center tracking-tight">2 Fingers<br><span class="text-gray-500 font-normal">Pinch to Zoom</span></span>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Floating Controls -->
-            <div class="absolute bottom-24 left-1/2 -translate-x-1/2 flex items-center bg-white/80 backdrop-blur-xl p-1.5 rounded-full shadow-lg border border-black/5 z-30 transition-transform hover:scale-105">
-                
-                <!-- Reset Button -->
-                <button id="reset-btn" class="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full hover:bg-gray-100 transition-colors text-black active:bg-gray-200">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                    Reset
-                </button>
-                
-                <div class="w-[1px] h-6 bg-gray-300 mx-1"></div>
-                
-                <!-- Auto Rotate Button -->
-                <button id="auto-rotate-btn" class="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 bg-transparent text-black hover:bg-gray-100 active:bg-gray-200">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
-                    </svg>
-                    Auto Rotate
-                </button>
-
-            </div>
-        </main>
-
-        <!-- Bottom Bar -->
-        <footer class="h-16 w-full glass absolute bottom-0 z-30 flex items-center justify-between px-6 sm:px-10">
-            <span class="text-xs sm:text-sm font-medium text-gray-500">v1.0.0</span>
-            <span class="text-xs sm:text-sm font-medium text-gray-700">
-                Made by 
-                <strong class="bg-gradient-to-r from-gray-900 to-gray-500 bg-clip-text text-transparent font-bold">Haris (Horizon)</strong>
-            </span>
-        </footer>
-
+    <div class="section-title" style="margin-top:18px;">PRESENTED TO</div>
+    <div class="instructor-card">
+      <img src="assets/team/dr-zeenat-aman.webp" alt="Dr. Zeenat Aman" onerror="this.classList.add('img-placeholder');this.alt='Photo'">
+      <div class="info">
+        <div class="ptd">PRESENTED TO</div>
+        <div class="nm">Dr. Zeenat Aman</div>
+        <div class="rl">Course Instructor — Pharmacognosy</div>
+        <div class="ds">A dedicated and inspiring educator whose guidance has shaped our academic journey.</div>
+      </div>
     </div>
+  </section>
 
-    <!-- Application Logic -->
-    <script>
-        const viewer = document.querySelector('#main-viewer');
-        const splashScreen = document.getElementById('splash-screen');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
-        const tutorialOverlay = document.getElementById('tutorial-overlay');
-        const autoRotateBtn = document.getElementById('auto-rotate-btn');
-        const resetBtn = document.getElementById('reset-btn');
+  <!-- ===================== REFERENCES ===================== -->
+  <section class="references">
+    <div class="head"><i class="fa-solid fa-book-open"></i> REFERENCES</div>
+    <div class="body">
+      <ul>
+        <li>Brady LR, Robbers JE. Tyler's Pharmacognosy.</li>
+        <li>Charaka Samhita, Classical Ayurvedic text.</li>
+        <li>Sushruta Samhita, Classical Ayurvedic text.</li>
+        <li>Singh N, et al. (2011). Ashwagandha: An overview. African Journal of Traditional, Complementary and Alternative Medicines.</li>
+      </ul>
+      <div class="qr-block">
+        <div class="qr">
+          <!-- Auto-generated QR code via api.qrserver.com (replace data with your own URL) -->
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Fash3d.netlify.app%2F" alt="QR Code">
+        </div>
+        <div class="qr-label">QR Code<br>(Website)</div>
+      </div>
+    </div>
+  </section>
 
-        // 1. Loading Progress and Splash Screen Management
-        viewer.addEventListener('progress', (event) => {
-            const progress = (event.detail.totalProgress * 100).toFixed(0);
-            progressBar.style.width = `${progress}%`;
-            progressText.innerText = `Loading Model ${progress}%`;
-        });
+</div>
 
-        viewer.addEventListener('load', () => {
-            // Fade out splash screen
-            splashScreen.style.opacity = '0';
-            
-            setTimeout(() => {
-                splashScreen.style.display = 'none';
-                
-                // Fade in tutorial overlay
-                tutorialOverlay.classList.remove('opacity-0', 'pointer-events-none');
-                tutorialOverlay.classList.add('opacity-100');
-                
-                // Hide tutorial function
-                const hideTutorial = () => {
-                    tutorialOverlay.classList.remove('opacity-100');
-                    tutorialOverlay.classList.add('opacity-0', 'pointer-events-none');
-                    // Clean up event listeners so it doesn't trigger repeatedly
-                    viewer.removeEventListener('pointerdown', hideTutorial);
-                    viewer.removeEventListener('camera-change', hideTutorial);
-                };
-                
-                // Hide after 6 seconds automatically, OR when user touches/interacts with the model
-                setTimeout(hideTutorial, 6000);
-                viewer.addEventListener('pointerdown', hideTutorial);
-                viewer.addEventListener('camera-change', hideTutorial);
+<!-- ===================== BOTTOM NAV ===================== -->
+<nav class="bottom-nav" aria-label="Bottom">
+  <a href="#overview" class="active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="#uses"><i class="fa-solid fa-mortar-pestle"></i><span>Uses</span></a>
+  <a href="#actions"><i class="fa-solid fa-flask"></i><span>Actions</span></a>
+  <a href="#products"><i class="fa-solid fa-prescription-bottle-medical"></i><span>Products</span></a>
+  <a href="#"><i class="fa-solid fa-ellipsis"></i><span>More</span></a>
+</nav>
 
-            }, 700); // Wait for the fade out transition
-        });
+<script>
+/* ============================================================
+   360° PRODUCT SLIDER
+   ------------------------------------------------------------
+   Mechanism:
+   - 9 frames (product-1.webp .. product-9.webp)
+   - Drag horizontally to rotate
+   - Each ~15-25px of drag advances a frame
+   - Loops continuously (so user feels infinite rotation)
+   ============================================================ */
+(function() {
+  const TOTAL_FRAMES = 9;
+  const SENSITIVITY = 22; // px per frame
+  const container = document.getElementById('product360');
+  const img = document.getElementById('product360Img');
+  const counter = document.getElementById('frameNum');
+  const hint = document.getElementById('dragHint');
 
-        // 2. Auto Rotate Premium Toggle functionality
-        let isAutoRotate = false;
-        autoRotateBtn.addEventListener('click', () => {
-            isAutoRotate = !isAutoRotate;
-            if (isAutoRotate) {
-                viewer.setAttribute('auto-rotate', '');
-                viewer.setAttribute('rotation-per-second', '30deg'); // Smooth rotation speed
-                // Style as active (Black background, white text)
-                autoRotateBtn.classList.remove('bg-transparent', 'text-black', 'hover:bg-gray-100');
-                autoRotateBtn.classList.add('bg-black', 'text-white', 'shadow-md');
-            } else {
-                viewer.removeAttribute('auto-rotate');
-                // Style as inactive (Transparent background, black text)
-                autoRotateBtn.classList.remove('bg-black', 'text-white', 'shadow-md');
-                autoRotateBtn.classList.add('bg-transparent', 'text-black', 'hover:bg-gray-100');
-            }
-        });
+  // Preload all frames for smooth rotation
+  const frames = [];
+  for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    const im = new Image();
+    im.src = `assets/products/product-360/product-${i}.webp`;
+    frames.push(im);
+  }
 
-        // 3. Reset Model Position
-        resetBtn.addEventListener('click', () => {
-            // Setting camera orbit and target to auto forces the model to re-center dynamically
-            viewer.cameraOrbit = 'auto auto auto';
-            viewer.cameraTarget = 'auto auto auto';
-            viewer.fieldOfView = 'auto'; // Reset zoom level as well
-            
-            // Add a subtle click feedback animation
-            resetBtn.style.transform = 'scale(0.95)';
-            setTimeout(() => { resetBtn.style.transform = 'scale(1)'; }, 150);
-        });
-    </script>
+  let currentFrame = 0;
+  let isDragging = false;
+  let startX = 0;
+  let lastFrame = 0;
+  let hintHidden = false;
+
+  function setFrame(idx) {
+    // wrap around (positive modulo)
+    idx = ((idx % TOTAL_FRAMES) + TOTAL_FRAMES) % TOTAL_FRAMES;
+    currentFrame = idx;
+    img.src = frames[idx].src;
+    counter.textContent = (idx + 1);
+  }
+
+  function hideHint() {
+    if (!hintHidden) {
+      hintHidden = true;
+      hint.style.opacity = '0';
+      setTimeout(() => { hint.style.display = 'none'; }, 300);
+    }
+  }
+
+  function getX(e) {
+    if (e.touches && e.touches.length) return e.touches[0].clientX;
+    return e.clientX;
+  }
+
+  function onStart(e) {
+    isDragging = true;
+    startX = getX(e);
+    lastFrame = currentFrame;
+    container.classList.add('dragging');
+    hideHint();
+  }
+
+  function onMove(e) {
+    if (!isDragging) return;
+    const dx = getX(e) - startX;
+    const delta = Math.round(dx / SENSITIVITY);
+    setFrame(lastFrame + delta);
+    if (e.cancelable && e.touches) e.preventDefault();
+  }
+
+  function onEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    container.classList.remove('dragging');
+  }
+
+  // Mouse
+  container.addEventListener('mousedown', onStart);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onEnd);
+
+  // Touch
+  container.addEventListener('touchstart', onStart, { passive: true });
+  container.addEventListener('touchmove', onMove, { passive: false });
+  container.addEventListener('touchend', onEnd);
+  container.addEventListener('touchcancel', onEnd);
+
+  // Auto-hide hint after 5 seconds even if user doesn't interact
+  setTimeout(hideHint, 5000);
+})();
+
+/* ============================================================
+   TAB ACTIVE STATE
+   ============================================================ */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+/* ============================================================
+   BOTTOM NAV ACTIVE STATE
+   ============================================================ */
+document.querySelectorAll('.bottom-nav a').forEach(a => {
+  a.addEventListener('click', (e) => {
+    document.querySelectorAll('.bottom-nav a').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+  });
+});
+
+/* ============================================================
+   FLIP BUTTONS (placeholder - just visual feedback for now)
+   ============================================================ */
+document.querySelectorAll('.flip-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.style.transform = 'scale(0.96)';
+    setTimeout(() => btn.style.transform = '', 150);
+  });
+});
+</script>
+
 </body>
 </html>
-
-```
