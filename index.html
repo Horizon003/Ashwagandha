@@ -431,14 +431,14 @@ html, body {
 /* ===================== TAXONOMICAL PROFILE — clean cream + maroon ===================== */
 .profile-stack { display: flex; flex-direction: column; gap: 12px; }
 .profile-item {
-  background: #FFFFFF;
+  background: linear-gradient(135deg, #7B1E1E 0%, #A52828 45%, #C0392B 100%);
   border-radius: 14px; padding: 16px 18px;
-  border: 1px solid rgba(123,30,30,0.10);
-  border-left: 4px solid var(--maroon);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-left: 4px solid #FFD27A;
   display: flex; align-items: center; gap: 14px;
   box-shadow:
-    0 4px 12px rgba(123,30,30,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.6);
+    0 6px 18px rgba(123,30,30,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.18);
   position: relative; overflow: hidden;
   opacity: 0; transform: translateX(-30px);
   transition: opacity 0.55s ease, transform 0.55s cubic-bezier(.2,.9,.3,1), box-shadow .25s ease;
@@ -453,23 +453,23 @@ html, body {
 .profile-item:nth-child(7).in-view { transition-delay: .36s; }
 .profile-item::before {
   content: ""; position: absolute; inset: 0;
-  background: radial-gradient(120% 100% at 0% 0%, rgba(123,30,30,0.04), transparent 55%);
+  background: radial-gradient(120% 100% at 0% 0%, rgba(255,255,255,0.14), transparent 55%);
   pointer-events: none;
 }
-.profile-item:hover { box-shadow: 0 8px 20px rgba(123,30,30,0.12), inset 0 1px 0 rgba(255,255,255,0.6); transform: translateX(0) translateY(-2px); }
+.profile-item:hover { box-shadow: 0 10px 26px rgba(123,30,30,0.36), inset 0 1px 0 rgba(255,255,255,0.22); transform: translateX(0) translateY(-2px); }
 .profile-item .pi-ic {
   width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #FBF6EC 0%, #F4E9D6 100%);
+  background: linear-gradient(135deg, #FFF5E6 0%, #F4E1C2 100%);
   color: var(--maroon); font-size: 17px;
-  box-shadow: inset 0 0 0 1px rgba(123,30,30,0.15), 0 2px 6px rgba(0,0,0,0.06);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5), 0 2px 8px rgba(0,0,0,0.18);
   position: relative; z-index: 2;
 }
 /* subtle dashed ring on each profile-item icon */
 .profile-item .pi-ic::after {
   content: ""; position: absolute; inset: -4px;
   border-radius: 14px;
-  border: 1.2px dashed rgba(123,30,30,0.25);
+  border: 1.2px dashed rgba(255,255,255,0.55);
   animation: rotateRing 14s linear infinite;
   pointer-events: none;
 }
@@ -500,23 +500,28 @@ html, body {
 .profile-item .pi-text { flex: 1; min-width: 0; position: relative; z-index: 2; }
 .profile-item .pk {
   font-family: 'Space Grotesk', 'Outfit', sans-serif;
-  font-size: 10.5px; font-weight: 800; color: var(--maroon);
+  font-size: 10.5px; font-weight: 800; color: #FFD27A;
   text-transform: uppercase; letter-spacing: 1.8px; margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
 }
 .profile-item .pv {
   font-family: 'Bricolage Grotesque', 'Syne', 'Outfit', sans-serif;
-  font-size: 15px; color: #1F1F1F; font-weight: 700;
+  font-size: 15px; color: #FFFFFF; font-weight: 700;
   line-height: 1.35; letter-spacing: -0.2px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.28);
 }
 .profile-item .pv em {
   font-style: italic;
   font-family: 'DM Serif Display', 'Fraunces', serif;
-  color: var(--maroon);
+  color: #FFE4B0;
   font-weight: 500;
 }
-.profile-item.gold-accent { border-left-color: var(--gold); background: #FFFFFF; }
-.profile-item.gold-accent .pi-ic { background: linear-gradient(135deg, #FFF8E5 0%, #F5E6C0 100%); color: #A87520; box-shadow: inset 0 0 0 1px rgba(201,149,42,0.30), 0 2px 6px rgba(0,0,0,0.06); }
-.profile-item.gold-accent .pk { color: #A87520; }
+.profile-item.gold-accent {
+  border-left-color: #FFD27A;
+  background: linear-gradient(135deg, #8B2323 0%, #B83232 50%, #D14B3A 100%);
+}
+.profile-item.gold-accent .pi-ic { background: linear-gradient(135deg, #FFF8E5 0%, #F5E6C0 100%); color: #A87520; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5), 0 2px 8px rgba(0,0,0,0.18); }
+.profile-item.gold-accent .pk { color: #FFE9B3; }
 
 /* ===================== ZIGZAG TIMELINE ===================== */
 .timeline-section { margin: 22px 16px; }
