@@ -2693,11 +2693,31 @@ html, body {
   };
 
   // Render a word into an element
-  const renderWord = (el, text) => {
+  // NOTE: when text is empty we keep the element in the layout (visibility hidden)
+  // and stuff it with a non-breaking space so the banner height/space stays
+  // identical between phases (otherwise the banner visibly "collapses" between
+  // multi-line phases like WITHANIA / SOMNIFERA and single-line phases
+  // like ASHWAGANDHA).
+  const renderWord = (el, text, opts = {}) => {
     el.innerHTML = '';
-    if (!text) { el.style.display = 'none'; return; }
     el.style.display = '';
-    [...text].forEach(ch => el.appendChild(makeLtr(ch)));
+    if (!text) {
+      el.style.visibility = 'hidden';
+      const filler = makeLtr('\u00A0');
+      filler.style.animation = 'none';
+      filler.style.opacity = '1';
+      el.appendChild(filler);
+      return;
+    }
+    el.style.visibility = 'visible';
+    const stagger = opts.stagger || 60; // ms between letters — slightly lazy continuous cascade
+    [...text].forEach((ch, i) => {
+      const sp = makeLtr(ch);
+      // override per-letter delay for a smoother, longer continuous series
+      sp.style.animation = 'letterReveal .7s cubic-bezier(.22,.7,.2,1) both';
+      sp.style.animationDelay = (i * stagger / 1000).toFixed(3) + 's';
+      el.appendChild(sp);
+    });
   };
 
   // Render initial phase
@@ -2757,42 +2777,47 @@ html, body {
   };
 
   // Run a full glitch transition on both lines, then swap to next phase
+  // Tightened timing so the banner doesn't "go blank" between phases.
+  // The new text starts revealing almost immediately after the glitch,
+  // and each letter cascades in with a slightly lazy easing so the whole
+  // sequence feels like one continuous series instead of break points.
   const transitionTo = (nextPhase) => {
     // Phase A: shake current letters
     shakeLetters(w);
     shakeLetters(s);
 
-    // Phase B: morph each visible letter into glitch symbols
+    // Phase B: morph each visible letter into glitch symbols (sooner)
     setTimeout(() => {
       morphToSymbols(w);
       morphToSymbols(s);
-    }, 350);
+    }, 220);
 
-    // Phase C: re-shuffle the glitch symbols a couple of times for a richer effect
-    setTimeout(() => { morphToSymbols(w); morphToSymbols(s); }, 700);
-    setTimeout(() => { morphToSymbols(w); morphToSymbols(s); }, 1000);
+    // Phase C: one more re-shuffle for richness (shorter total glitch window)
+    setTimeout(() => { morphToSymbols(w); morphToSymbols(s); }, 460);
 
-    // Phase D: render the next phase, then play golden reveal
+    // Phase D: render the next phase quickly so there is no empty gap.
+    // Letters cascade in via the per-letter staggered reveal in renderWord().
     setTimeout(() => {
       w.classList.remove('glitching');
       s.classList.remove('glitching');
       renderPhase(nextPhase);
-      // Golden reveal flourish
+      // Subtle reveal flourish — keep it short so the cascade itself reads
       w.classList.add('golden');
       s.classList.add('golden');
       setTimeout(() => {
         w.classList.remove('golden');
         s.classList.remove('golden');
-      }, 1400);
-    }, 1300);
+      }, 900);
+    }, 700);
   };
 
   let idx = 0;
-  // Hold each phase visible for ~3.2s, then transition (~1.3s) before showing the next
+  // Hold each phase visible for ~3.0s, then transition (~0.7s glitch + cascade)
+  // Total cycle ≈ 3.7s — feels continuous, no "blank banner" pause between names.
   setInterval(() => {
     idx = (idx + 1) % PHASES.length;
     transitionTo(PHASES[idx]);
-  }, 4500);
+  }, 3700);
 })();
 
 /* ============================================================
