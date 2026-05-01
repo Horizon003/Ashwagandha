@@ -196,14 +196,11 @@ html, body {
   isolation: isolate;
   border-radius: 22px;
   background: linear-gradient(135deg, #0F4C2A 0%, #1B5E20 50%, #0E3F11 100%);
-  /* Glassmorphism prominent boundary */
-  border: 1.5px solid rgba(255,255,255,0.45);
+  /* Clean boundary — no heavy black shadow */
+  border: 1px solid rgba(15,76,42,0.18);
   box-shadow:
-    0 30px 60px -18px rgba(15,76,42,0.55),
-    0 18px 40px -12px rgba(0,0,0,0.35),
-    0 0 0 1px rgba(255,255,255,0.25) inset,
-    0 1px 0 rgba(255,255,255,0.65) inset,
-    0 -1px 0 rgba(0,0,0,0.25) inset;
+    0 6px 18px -10px rgba(15,76,42,0.22),
+    0 0 0 1px rgba(255,255,255,0.18) inset;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   animation: heroFloat 6s ease-in-out infinite;
@@ -299,45 +296,70 @@ html, body {
 .hero-eyebrow i { color: var(--gold); font-size: 10px; }
 
 .hero-title {
-  font-family: 'Cinzel', 'Playfair Display', serif;
-  line-height: .95;
-  letter-spacing: 1.5px;
+  font-family: 'Bricolage Grotesque', 'Fraunces', 'Playfair Display', serif;
+  line-height: 1;
+  letter-spacing: -0.5px;
   margin-top: 2px;
-  text-shadow: 0 4px 22px rgba(0,0,0,0.35);
+  text-shadow: 0 4px 22px rgba(0,0,0,0.45);
   position: relative;
 }
 
-/* ===== PER-LETTER GLITCH → GOLDEN ITALIC → NORMAL animated cycle ===== */
+/* ===== PER-LETTER GLITCH → SOLID REVEAL → NORMAL animated cycle ===== */
 .hero-title .word {
   display: block;
-  font-family: 'Cinzel', 'Playfair Display', serif;
-  font-weight: 800;
-  letter-spacing: 4px;
+  font-family: 'Bricolage Grotesque', 'Fraunces', 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: -0.5px;
   position: relative;
   white-space: nowrap;
 }
-.hero-title .word.withania { font-size: clamp(26px, 6.8vw, 68px); font-style: italic; }
-.hero-title .word.somnifera { font-size: clamp(30px, 7.6vw, 76px); margin-top: 2px; font-style: italic; }
+.hero-title .word.withania { font-size: clamp(28px, 7.2vw, 72px); font-style: italic; }
+.hero-title .word.somnifera { font-size: clamp(32px, 8vw, 80px); margin-top: 2px; font-style: italic; }
 
 .hero-title .word .ltr {
   display: inline-block;
   position: relative;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  /* default fills set per word */
+  /* SOLID contrast color — ivory/cream against dark green herbal background */
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: #FBF6EC;
+  color: #FBF6EC;
   transition: none;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: letterReveal .55s cubic-bezier(.2,.7,.2,1) forwards;
 }
 
-/* Unified ivory-cream theme fill (justifies the green herbal theme + cream frame) */
+/* Solid fill — no gradient, no golden tint */
 .hero-title .word.withania .ltr,
 .hero-title .word.somnifera .ltr {
-  background-image: linear-gradient(135deg, #FFFBEC 0%, #FFF1C9 28%, #F3DCA0 60%, #D8B670 100%);
+  background: none;
+  -webkit-text-fill-color: #FBF6EC;
+  color: #FBF6EC;
   filter:
-    drop-shadow(0 0 8px rgba(255,241,201,0.55))
-    drop-shadow(0 0 22px rgba(216,182,112,0.35))
-    drop-shadow(0 2px 6px rgba(0,0,0,0.55));
+    drop-shadow(0 2px 4px rgba(0,0,0,0.55))
+    drop-shadow(0 0 14px rgba(0,0,0,0.35));
 }
+
+/* Per-letter staggered reveal animation (like Taxonomical Profile feel) */
+@keyframes letterReveal {
+  0%   { opacity: 0; transform: translateY(14px) scale(.96); filter: blur(4px); }
+  60%  { opacity: 1; transform: translateY(-2px) scale(1.02); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.hero-title .word .ltr:nth-child(1)  { animation-delay: .00s; }
+.hero-title .word .ltr:nth-child(2)  { animation-delay: .05s; }
+.hero-title .word .ltr:nth-child(3)  { animation-delay: .10s; }
+.hero-title .word .ltr:nth-child(4)  { animation-delay: .15s; }
+.hero-title .word .ltr:nth-child(5)  { animation-delay: .20s; }
+.hero-title .word .ltr:nth-child(6)  { animation-delay: .25s; }
+.hero-title .word .ltr:nth-child(7)  { animation-delay: .30s; }
+.hero-title .word .ltr:nth-child(8)  { animation-delay: .35s; }
+.hero-title .word .ltr:nth-child(9)  { animation-delay: .40s; }
+.hero-title .word .ltr:nth-child(10) { animation-delay: .45s; }
+.hero-title .word .ltr:nth-child(11) { animation-delay: .50s; }
+.hero-title .word .ltr:nth-child(12) { animation-delay: .55s; }
 
 /* glitch ghost slices on each letter */
 .hero-title .word .ltr::before,
@@ -376,14 +398,21 @@ html, body {
   100% { }
 }
 
-/* GOLDEN ITALIC phase */
+/* SOLID REVEAL phase (replaces golden) — pure ivory white, slight scale pop */
 .hero-title .word.golden .ltr {
-  background-image: linear-gradient(135deg, #FFF4C2 0%, #FFD66B 30%, #E6B23A 60%, #B07A1A 100%) !important;
+  background: none !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  color: #FFFFFF !important;
   filter:
-    drop-shadow(0 0 10px rgba(255,214,107,0.85))
-    drop-shadow(0 0 26px rgba(201,149,42,0.5))
-    drop-shadow(0 2px 4px rgba(0,0,0,0.5)) !important;
+    drop-shadow(0 0 12px rgba(255,255,255,0.55))
+    drop-shadow(0 2px 6px rgba(0,0,0,0.55)) !important;
   font-style: italic;
+  animation: solidPulse 1.2s ease both;
+}
+@keyframes solidPulse {
+  0%   { transform: scale(.98); letter-spacing: 0; }
+  50%  { transform: scale(1.04); letter-spacing: 1px; }
+  100% { transform: scale(1); letter-spacing: 0; }
 }
 .hero-title .word.somnifera.golden .ltr { font-style: italic; }
 .hero-title .word.withania.golden { font-style: italic; }
@@ -491,31 +520,44 @@ html, body {
   position: absolute;
   right: 16px; bottom: 16px;
   z-index: 5;
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 14px;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 20px;
   border-radius: 999px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(9.5px, 1.2vw, 11.5px);
-  font-weight: 700; letter-spacing: 1.6px;
-  text-transform: uppercase;
-  color: #FFF8E5;
-  background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08));
-  border: 1px solid rgba(255,255,255,0.42);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  /* Match Taxonomical Profile typography */
+  font-family: 'Bricolage Grotesque', 'Syne', 'Outfit', sans-serif;
+  font-size: clamp(11px, 1.35vw, 13.5px);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.2px;
+  text-transform: none;
+  color: #2A1810;
+  background: linear-gradient(135deg, #FFF8E5 0%, #F5E6C0 55%, #E8C98A 100%);
+  border: 1px solid rgba(168,117,32,0.38);
+  backdrop-filter: blur(10px) saturate(125%);
+  -webkit-backdrop-filter: blur(10px) saturate(125%);
   box-shadow:
-    0 8px 22px rgba(0,0,0,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.55);
+    0 10px 26px rgba(8,33,18,0.26),
+    0 2px 8px rgba(168,117,32,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.92);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.45);
   animation: chipFloat 3.6s ease-in-out infinite;
 }
-.hero-species-chip i { color: #FFD27A; font-size: 11px; }
-.hero-species-chip em { font-style: italic; font-family: 'DM Serif Display', serif; font-weight: 500; letter-spacing: .5px; }
+.hero-species-chip i { color: #A87520; font-size: 12px; }
+.hero-species-chip em {
+  font-style: italic;
+  /* Same italic display font as Taxonomical Profile values */
+  font-family: 'DM Serif Display', 'Fraunces', 'Playfair Display', serif;
+  font-weight: 500;
+  letter-spacing: .1px;
+  color: #5A2A0A;
+  font-size: 1.05em;
+}
 @keyframes chipFloat {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-3px); }
 }
 @media (max-width: 480px) {
-  .hero-species-chip { right: 10px; bottom: 10px; padding: 6px 11px; font-size: 9px; letter-spacing: 1.2px; }
+  .hero-species-chip { right: 10px; bottom: 10px; padding: 7px 13px; font-size: 10.5px; letter-spacing: -0.1px; }
 }
 
 @media (max-width: 480px) {
@@ -2885,6 +2927,7 @@ document.addEventListener('visibilitychange', () => {
 })();
 </script>
 
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
