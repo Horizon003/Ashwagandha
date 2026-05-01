@@ -144,15 +144,83 @@ html, body {
 .uni-text .l1 { font-size: 8.5px; color: var(--muted); letter-spacing: 1.4px; font-weight: 600; }
 .uni-text .l2 { font-size: 11px; color: var(--maroon); font-weight: 800; letter-spacing: .6px; }
 
-/* ===================== HERO BANNER (16:9 on mobile, taller on desktop) ===================== */
+/* ===================== HERO — FLOATING GLASS FRAME on CREAM ===================== */
+/* Outer wrapper — cream stage on which the floating frame sits */
+.hero-stage {
+  position: relative;
+  width: 100%;
+  padding: 26px 16px 32px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(46,125,50,0.07), transparent 70%),
+    linear-gradient(180deg, #FBF4E4 0%, #F6ECD2 100%);
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Floating monograph chip — sits ABOVE the glass frame */
+.hero-monograph-float {
+  display: inline-flex; align-items: center; gap: 9px;
+  margin: 0 auto 14px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.30));
+  border: 1px solid rgba(15,76,42,0.22);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow:
+    0 10px 28px rgba(15,76,42,0.18),
+    0 2px 6px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(9.5px, 1.3vw, 11px);
+  font-weight: 800; letter-spacing: 3px;
+  color: #0F4C2A;
+  text-transform: uppercase;
+  position: relative; z-index: 5;
+  animation: monoFloat 4.2s ease-in-out infinite;
+}
+.hero-monograph-float i { color: #C9952A; font-size: 11px; }
+.hero-monograph-wrap { text-align: center; }
+@keyframes monoFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
 .hero {
   position: relative;
   width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
   aspect-ratio: 16 / 10;
   min-height: 300px;
   overflow: hidden;
   isolation: isolate;
+  border-radius: 22px;
   background: linear-gradient(135deg, #0F4C2A 0%, #1B5E20 50%, #0E3F11 100%);
+  /* Glassmorphism prominent boundary */
+  border: 1.5px solid rgba(255,255,255,0.45);
+  box-shadow:
+    0 30px 60px -18px rgba(15,76,42,0.55),
+    0 18px 40px -12px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(255,255,255,0.25) inset,
+    0 1px 0 rgba(255,255,255,0.65) inset,
+    0 -1px 0 rgba(0,0,0,0.25) inset;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: heroFloat 6s ease-in-out infinite;
+}
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+/* Glass highlight ring */
+.hero::after {
+  content: ""; position: absolute; inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.20) 0%, transparent 35%, transparent 65%, rgba(255,255,255,0.10) 100%);
+  z-index: 4;
+  mix-blend-mode: overlay;
 }
 .hero-bg {
   position: absolute; inset: 0;
@@ -163,14 +231,51 @@ html, body {
   display: block;
 }
 @media (max-width: 600px) {
-  .hero { aspect-ratio: 16 / 9; min-height: 0; }
+  .hero { aspect-ratio: 16 / 9; min-height: 0; border-radius: 16px; }
   .hero-bg { object-position: 70% center; }
+  .hero-stage { padding: 18px 12px 22px; }
 }
 .hero-overlay {
   position: absolute; inset: 0; z-index: 1;
   background:
     linear-gradient(120deg, rgba(10,30,15,0.78) 0%, rgba(15,55,25,0.55) 45%, rgba(20,70,30,0.30) 100%),
     radial-gradient(120% 80% at 0% 0%, rgba(0,0,0,0.55), transparent 60%);
+}
+
+/* === GLITCH BACKDROP — symbols + alphabets dancing behind the title === */
+.hero-glitch-bg {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  font-family: 'Space Grotesk', monospace;
+  font-weight: 800;
+}
+.hero-glitch-bg .gx {
+  position: absolute;
+  font-size: clamp(14px, 2.6vw, 28px);
+  letter-spacing: 2px;
+  color: #7FE3B0;
+  text-shadow:
+    1px 0 #FF4D6D,
+   -1px 0 #4DD0E1,
+    0 0 8px rgba(127,227,176,0.45);
+  white-space: nowrap;
+  animation: glitchSlide 7s linear infinite, glitchFlick 0.18s steps(2) infinite;
+}
+.hero-glitch-bg .gx:nth-child(1) { top: 12%; left: -10%; animation-duration: 9s, .22s; }
+.hero-glitch-bg .gx:nth-child(2) { top: 32%; left: -20%; animation-duration: 11s, .17s; opacity: .8; }
+.hero-glitch-bg .gx:nth-child(3) { top: 55%; left: -15%; animation-duration: 8s, .14s; }
+.hero-glitch-bg .gx:nth-child(4) { top: 72%; left: -25%; animation-duration: 13s, .2s; opacity: .75; }
+.hero-glitch-bg .gx:nth-child(5) { top: 88%; left: -8%;  animation-duration: 10s, .19s; }
+@keyframes glitchSlide {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(140vw); }
+}
+@keyframes glitchFlick {
+  0%, 100% { transform: translateX(0) skewX(0); filter: hue-rotate(0deg); }
+  50%      { transform: translateX(2px) skewX(-4deg); filter: hue-rotate(40deg); }
 }
 .hero-content {
   position: relative; z-index: 2;
@@ -224,21 +329,14 @@ html, body {
   transition: none;
 }
 
-/* Default GREEN fill */
-.hero-title .word.withania .ltr {
-  background-image: linear-gradient(135deg, #B8FFB8 0%, #5BFF8A 25%, #2EE875 55%, #00C853 80%, #007E33 100%);
-  filter:
-    drop-shadow(0 0 6px rgba(46,232,117,0.55))
-    drop-shadow(0 0 18px rgba(0,200,83,0.30))
-    drop-shadow(0 2px 4px rgba(0,0,0,0.45));
-}
-/* Default RED fill */
+/* Unified ivory-cream theme fill (justifies the green herbal theme + cream frame) */
+.hero-title .word.withania .ltr,
 .hero-title .word.somnifera .ltr {
-  background-image: linear-gradient(135deg, #FFD0C2 0%, #FF6B5A 25%, #FF3B30 55%, #D81B30 80%, #7B1E1E 100%);
+  background-image: linear-gradient(135deg, #FFFBEC 0%, #FFF1C9 28%, #F3DCA0 60%, #D8B670 100%);
   filter:
-    drop-shadow(0 0 6px rgba(255,59,48,0.55))
-    drop-shadow(0 0 18px rgba(216,27,48,0.30))
-    drop-shadow(0 2px 4px rgba(0,0,0,0.45));
+    drop-shadow(0 0 8px rgba(255,241,201,0.55))
+    drop-shadow(0 0 22px rgba(216,182,112,0.35))
+    drop-shadow(0 2px 6px rgba(0,0,0,0.55));
 }
 
 /* glitch ghost slices on each letter */
@@ -388,6 +486,38 @@ html, body {
 }
 .hero-chip i { font-size: 10px; color: var(--gold-light); }
 
+/* Floating species chip — pinned bottom-right inside the glass frame */
+.hero-species-chip {
+  position: absolute;
+  right: 16px; bottom: 16px;
+  z-index: 5;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(9.5px, 1.2vw, 11.5px);
+  font-weight: 700; letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #FFF8E5;
+  background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08));
+  border: 1px solid rgba(255,255,255,0.42);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  box-shadow:
+    0 8px 22px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.55);
+  animation: chipFloat 3.6s ease-in-out infinite;
+}
+.hero-species-chip i { color: #FFD27A; font-size: 11px; }
+.hero-species-chip em { font-style: italic; font-family: 'DM Serif Display', serif; font-weight: 500; letter-spacing: .5px; }
+@keyframes chipFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+@media (max-width: 480px) {
+  .hero-species-chip { right: 10px; bottom: 10px; padding: 6px 11px; font-size: 9px; letter-spacing: 1.2px; }
+}
+
 @media (max-width: 480px) {
   .hero-content { padding: 5% 5% 5%; gap: 6px; }
   .hero-eyebrow { font-size: 8.5px; padding: 3px 9px; letter-spacing: 2px; }
@@ -431,14 +561,14 @@ html, body {
 /* ===================== TAXONOMICAL PROFILE — clean cream + maroon ===================== */
 .profile-stack { display: flex; flex-direction: column; gap: 12px; }
 .profile-item {
-  background: linear-gradient(135deg, #7B1E1E 0%, #A52828 45%, #C0392B 100%);
+  background: linear-gradient(135deg, #3A0A0A 0%, #5A1414 45%, #7B1E1E 100%);
   border-radius: 14px; padding: 16px 18px;
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.12);
   border-left: 4px solid #FFD27A;
   display: flex; align-items: center; gap: 14px;
   box-shadow:
-    0 6px 18px rgba(123,30,30,0.28),
-    inset 0 1px 0 rgba(255,255,255,0.18);
+    0 6px 20px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.12);
   position: relative; overflow: hidden;
   opacity: 0; transform: translateX(-30px);
   transition: opacity 0.55s ease, transform 0.55s cubic-bezier(.2,.9,.3,1), box-shadow .25s ease;
@@ -456,7 +586,7 @@ html, body {
   background: radial-gradient(120% 100% at 0% 0%, rgba(255,255,255,0.14), transparent 55%);
   pointer-events: none;
 }
-.profile-item:hover { box-shadow: 0 10px 26px rgba(123,30,30,0.36), inset 0 1px 0 rgba(255,255,255,0.22); transform: translateX(0) translateY(-2px); }
+.profile-item:hover { box-shadow: 0 12px 30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.18); transform: translateX(0) translateY(-2px); }
 .profile-item .pi-ic {
   width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
@@ -518,7 +648,7 @@ html, body {
 }
 .profile-item.gold-accent {
   border-left-color: #FFD27A;
-  background: linear-gradient(135deg, #8B2323 0%, #B83232 50%, #D14B3A 100%);
+  background: linear-gradient(135deg, #4A0F0F 0%, #6B1A1A 50%, #8B2323 100%);
 }
 .profile-item.gold-accent .pi-ic { background: linear-gradient(135deg, #FFF8E5 0%, #F5E6C0 100%); color: #A87520; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5), 0 2px 8px rgba(0,0,0,0.18); }
 .profile-item.gold-accent .pk { color: #FFE9B3; }
@@ -1681,26 +1811,31 @@ html, body {
   </div>
 </nav>
 
-<!-- ===================== HERO BANNER (16:9) ===================== -->
-<header class="hero" id="overview">
-  <img class="hero-bg" src="assets/main/ashwagandha-main.png" alt="Ashwagandha plant" onerror="this.style.opacity=0.3">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <span class="hero-eyebrow"><i class="fa-solid fa-mortar-pestle"></i> Pharmacognostic Monograph</span>
-    <h1 class="hero-title">
-      <span class="word withania" id="wordWithania"></span>
-      <span class="word somnifera" id="wordSomnifera"></span>
-    </h1>
-    <div class="hero-rule"></div>
-    <p class="hero-tagline">A Scientific &amp; Pharmacognostic Overview</p>
-    <p class="hero-desc">An important medicinal plant of the Solanaceae family, rich in withanolides with wide-ranging therapeutic applications across traditional and modern medicine.</p>
-    <div class="hero-meta">
-      <span class="hero-chip"><i class="fa-solid fa-leaf"></i> Solanaceae</span>
-      <span class="hero-chip"><i class="fa-solid fa-flask"></i> Withanolides</span>
-      <span class="hero-chip"><i class="fa-solid fa-shield-heart"></i> Adaptogen</span>
-    </div>
+<!-- ===================== HERO — FLOATING GLASS FRAME ON CREAM ===================== -->
+<section class="hero-stage" id="overview">
+  <!-- Independent floating monograph chip (sits ABOVE the glass frame) -->
+  <div class="hero-monograph-wrap">
+    <span class="hero-monograph-float"><i class="fa-solid fa-mortar-pestle"></i> Pharmacognostic Monograph</span>
   </div>
-</header>
+
+  <header class="hero">
+    <img class="hero-bg" src="assets/main/ashwagandha-main.png" alt="Ashwagandha plant" onerror="this.style.opacity=0.3">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="word withania" id="wordWithania"></span>
+        <span class="word somnifera" id="wordSomnifera"></span>
+      </h1>
+      <div class="hero-rule"></div>
+      <p class="hero-tagline">A Scientific &amp; Pharmacognostic Overview</p>
+      <p class="hero-desc">An important medicinal plant of the Solanaceae family, rich in withanolides with wide-ranging therapeutic applications across traditional and modern medicine.</p>
+    </div>
+
+    <!-- Floating species chip pinned to bottom-right -->
+    <span class="hero-species-chip"><i class="fa-solid fa-seedling"></i> <em>Ashwagandha</em></span>
+  </header>
+</section>
 
 <!-- Decorative band fills the cream gap under the banner -->
 <div class="post-hero-band" aria-hidden="true">
@@ -2488,34 +2623,69 @@ html, body {
             -> back to normal -> repeat
    ============================================================ */
 (function buildLetterTitle(){
-  const setup = (el, text) => {
-    el.innerHTML = '';
-    [...text].forEach((ch) => {
-      const s = document.createElement('span');
-      s.className = 'ltr';
-      s.textContent = ch;
-      s.setAttribute('data-l', ch);
-      el.appendChild(s);
-    });
-  };
   const w = document.getElementById('wordWithania');
   const s = document.getElementById('wordSomnifera');
-  if (w) setup(w, 'WITHANIA');
-  if (s) setup(s, 'Somnifera');
+  if (!w || !s) return;
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Glitch character pool — symbols/elements used during the transition phase
+  const GLITCH_POOL = ['@','£','%','$','€','¥','§','#','*','&','∆','Ω','π','∑','‡','¢','¶','µ','◊','✦','¤','±','≈','◆','▲','■','◉','¿','‽'];
 
-  function runCycle(wordEl){
+  // The cycle of names to display.
+  // Each entry: { line1: string, line2: string, italic: boolean (line1 italic style for "WITHANIA"-like) }
+  const PHASES = [
+    { line1: 'WITHANIA',  line2: 'SOMNIFERA',  italic: true  },
+    { line1: 'ASHWAGANDHA', line2: '',          italic: false },
+    { line1: 'INDIAN',    line2: 'GINSENG',    italic: false },
+    { line1: 'WINTER',    line2: 'CHERRY',     italic: false }
+  ];
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Build one letter span
+  const makeLtr = (ch) => {
+    const s = document.createElement('span');
+    s.className = 'ltr';
+    s.textContent = ch;
+    s.setAttribute('data-l', ch);
+    return s;
+  };
+
+  // Render a word into an element
+  const renderWord = (el, text) => {
+    el.innerHTML = '';
+    if (!text) { el.style.display = 'none'; return; }
+    el.style.display = '';
+    [...text].forEach(ch => el.appendChild(makeLtr(ch)));
+  };
+
+  // Render initial phase
+  const renderPhase = (phase) => {
+    // Toggle italic class on first word based on phase (only Withania/Somnifera was italic)
+    if (phase.italic) {
+      w.style.fontStyle = 'italic';
+      s.style.fontStyle = 'italic';
+    } else {
+      w.style.fontStyle = 'normal';
+      s.style.fontStyle = 'normal';
+    }
+    renderWord(w, phase.line1);
+    renderWord(s, phase.line2);
+  };
+
+  renderPhase(PHASES[0]);
+
+  if (reduceMotion) return;
+
+  // Random glitch character
+  const randGlitch = () => GLITCH_POOL[Math.floor(Math.random() * GLITCH_POOL.length)];
+
+  // Animate per-letter glitch shake on a word element
+  const shakeLetters = (wordEl) => {
     if (!wordEl) return;
     const letters = wordEl.querySelectorAll('.ltr');
-    if (!letters.length) return;
-
-    // PHASE 1: per-letter glitch cascade
     letters.forEach((ltr, i) => {
       setTimeout(() => {
-        ltr.classList.remove('done');
         wordEl.classList.add('glitching');
-        // small flicker per letter
         ltr.style.willChange = 'transform, filter';
         ltr.animate(
           [
@@ -2526,32 +2696,61 @@ html, body {
             { transform: 'translate(4px,-1px) skewX(4deg) scale(0.99)', filter: 'hue-rotate(20deg) drop-shadow(0 0 8px #ff3344)', opacity: 0.95 },
             { transform: 'translate(0,0) skewX(0deg) scale(1)', filter: 'none', opacity: 1 }
           ],
-          { duration: 600, easing: 'cubic-bezier(.36,.07,.19,.97)' }
+          { duration: 550, easing: 'cubic-bezier(.36,.07,.19,.97)' }
         );
-      }, i * 90);
+      }, i * 55);
     });
+  };
 
-    const cascadeMs = letters.length * 90 + 500;
+  // Replace text of a word with glitch symbols, letter-by-letter
+  const morphToSymbols = (wordEl) => {
+    if (!wordEl || wordEl.style.display === 'none') return;
+    const letters = wordEl.querySelectorAll('.ltr');
+    letters.forEach((ltr, i) => {
+      setTimeout(() => {
+        ltr.textContent = randGlitch();
+        ltr.setAttribute('data-l', ltr.textContent);
+      }, i * 50);
+    });
+  };
 
-    // PHASE 2: golden italic
+  // Run a full glitch transition on both lines, then swap to next phase
+  const transitionTo = (nextPhase) => {
+    // Phase A: shake current letters
+    shakeLetters(w);
+    shakeLetters(s);
+
+    // Phase B: morph each visible letter into glitch symbols
     setTimeout(() => {
-      wordEl.classList.remove('glitching');
-      wordEl.classList.add('golden');
-    }, cascadeMs);
+      morphToSymbols(w);
+      morphToSymbols(s);
+    }, 350);
 
-    // PHASE 3: back to normal
+    // Phase C: re-shuffle the glitch symbols a couple of times for a richer effect
+    setTimeout(() => { morphToSymbols(w); morphToSymbols(s); }, 700);
+    setTimeout(() => { morphToSymbols(w); morphToSymbols(s); }, 1000);
+
+    // Phase D: render the next phase, then play golden reveal
     setTimeout(() => {
-      wordEl.classList.remove('golden');
-    }, cascadeMs + 1800);
-  }
+      w.classList.remove('glitching');
+      s.classList.remove('glitching');
+      renderPhase(nextPhase);
+      // Golden reveal flourish
+      w.classList.add('golden');
+      s.classList.add('golden');
+      setTimeout(() => {
+        w.classList.remove('golden');
+        s.classList.remove('golden');
+      }, 1400);
+    }, 1300);
+  };
 
-  function loopAll(){
-    runCycle(w);
-    setTimeout(() => runCycle(s), 350);
-  }
-  loopAll();
-  // total cycle ≈ word*90 + 500 + 1800 + buffer
-  setInterval(loopAll, 6500);
+  let idx = 0;
+  // Hold each phase visible for ~3.2s, then transition (~1.3s) before showing the next
+  setInterval(() => {
+    idx = (idx + 1) % PHASES.length;
+    transitionTo(PHASES[idx]);
+  }, 4500);
 })();
 
 /* ============================================================
